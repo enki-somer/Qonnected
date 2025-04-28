@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    direction: rtl;
+    color-scheme: dark;
+  }
+
+  body {
+    direction: rtl;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .bg-grid-white\/5 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M24 0H0v24h24V0zm0 0H0v24h24V0zM0 24h24' stroke='rgba(255, 255, 255, 0.05)' stroke-width='.25'/%3E%3C/svg%3E");
+  }
+}
+
+/* Custom scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a2236;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFD700;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFE44D;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #FFD700 #1a2236;
+} 
