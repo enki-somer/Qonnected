@@ -1,24 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QonnectEd - منصة التعلم العربية
+
+QonnectEd is an Arabic learning platform designed to provide high-quality educational content in programming, web development, and technology.
+
+## Features
+
+- 📚 Comprehensive course catalog
+- 💻 Hands-on projects
+- 👥 Team collaboration
+- 🎯 Progress tracking
+- 🌐 Arabic-first interface
+
+## Tech Stack
+
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Heroicons
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+
+```bash
+git clone https://github.com/enki-somer/Qonnected.git
+```
+
+2. Install dependencies:
+
+```bash
+cd qonnected
+npm install
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/app` - Next.js app router pages
+- `/components` - Reusable React components
+- `/public` - Static assets
+- `/styles` - Global styles and Tailwind configuration
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Learn More
 
