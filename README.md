@@ -48,6 +48,21 @@ npm run dev
 - `/public` - Static assets
 - `/styles` - Global styles and Tailwind configuration
 
+## Deployment
+
+### Deploy to Netlify
+
+1. Fork this repository
+2. Log in to [Netlify](https://app.netlify.com)
+3. Click "New site from Git"
+4. Choose your forked repository
+5. Configure the build settings:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+6. Click "Deploy site"
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/enki-somer/Qonnected)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
