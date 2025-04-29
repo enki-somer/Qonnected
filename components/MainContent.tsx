@@ -13,6 +13,7 @@ import {
   Target,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 
 const features = [
   {
@@ -324,8 +325,9 @@ export default function MainContent() {
           {featuredCourses.map((course) => {
             const pattern = coursePatterns[course.category];
             return (
-              <div
+              <Link
                 key={course.id}
+                href={`/courses/${course.id}`}
                 className="group bg-primary-dark rounded-xl overflow-hidden hover:ring-2 hover:ring-accent transition-all cursor-pointer"
               >
                 <div
@@ -367,7 +369,7 @@ export default function MainContent() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
