@@ -201,20 +201,20 @@ export default function MainContent() {
           <div className="inline-flex items-center gap-2 text-accent mb-6 bg-accent/10 px-3 py-1 rounded-full">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">
-              منصة التعلم الأولى للمطورين العرب
+              منصة التعلم الشاملة باللغة العربية
             </span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            تعلم البرمجة بأسلوب
-            <span className="text-accent block mt-2"> تفاعلي وممتع</span>
+            تعلم مهارات المستقبل
+            <span className="text-accent block mt-2">بأسلوب تفاعلي وممتع</span>
           </h1>
 
           {/* Description */}
           <p className="text-text-muted text-base sm:text-lg md:text-xl max-w-2xl mb-8">
-            منصة تعليمية تجمع بين مشاهدة الفيديو والبرمجة في مكان واحد، مع
-            مشاريع عملية ومجتمع نشط
+            منصة تعليمية متكاملة تقدم دورات في البرمجة، التصميم، إدارة الأعمال،
+            اللغات، والتسويق الرقمي مع مشاريع عملية ومجتمع نشط
           </p>
 
           {/* CTA Buttons */}
