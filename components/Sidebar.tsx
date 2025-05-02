@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   HomeIcon,
@@ -12,7 +13,6 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import WhiteBackIcon from "./icons/WhiteBackIcon";
 
 const navigationItems = [
   { name: "الرئيسية", href: "/", icon: HomeIcon },
@@ -33,7 +33,7 @@ export default function Sidebar() {
         className="lg:hidden fixed top-4 right-4 z-50 bg-primary-dark p-2 rounded-lg hover:bg-primary/80 transition-colors"
       >
         {isMobileMenuOpen ? (
-          <WhiteBackIcon className="w-6 h-6" />
+          <XMarkIcon className="w-6 h-6 text-accent" />
         ) : (
           <Bars3Icon className="w-6 h-6 text-accent" />
         )}
@@ -61,30 +61,14 @@ export default function Sidebar() {
         `}
       >
         <div className="flex items-center gap-2">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 40 40"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-accent"
-          >
-            {/* Outer dark blue circle */}
-            <circle cx="20" cy="20" r="20" fill="#1a1b2e" />
-            {/* Yellow circle */}
-            <circle cx="20" cy="20" r="16" fill="#FFD700" />
-            {/* Inner dark blue circle */}
-            <circle cx="20" cy="20" r="12" fill="#1a1b2e" />
-            {/* Q tail - yellow rectangle */}
-            <rect
-              x="26"
-              y="22"
-              width="8"
-              height="4"
-              fill="#FFD700"
-              transform="rotate(45 26 22)"
+          <div className="relative w-10 h-10">
+            <Image
+              src="/white_back.svg"
+              alt="QonnectED Logo"
+              fill
+              className="object-contain"
             />
-          </svg>
+          </div>
           <div className="flex items-center flex-row-reverse">
             <span className="text-2xl font-bold" style={{ color: "#FFD700" }}>
               Q

@@ -10,8 +10,16 @@ const notoKufiArabic = Noto_Kufi_Arabic({
 });
 
 export const metadata = {
-  title: "QonnectEd - منصة التعلم العربية",
+  title: "QonnectED",
   description: "منصة تعليمية عربية للمطورين",
+  icons: {
+    icon: [
+      {
+        url: "/white_back.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
