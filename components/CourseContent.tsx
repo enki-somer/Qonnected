@@ -33,23 +33,21 @@ const CourseContent = ({
   const [expandedSections, setExpandedSections] = useState<number[]>([1]);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
 
-  // Load completion status from localStorage on mount
+  // Load completion status from localStorage on mount and when initialSections change
   useEffect(() => {
     const completedLessons = JSON.parse(
       localStorage.getItem(`course_${courseId}_progress`) || "[]"
     );
 
-    if (completedLessons.length > 0) {
-      const updatedSections = sections.map((section) => ({
-        ...section,
-        lessons: section.lessons.map((lesson) => ({
-          ...lesson,
-          isCompleted: completedLessons.includes(lesson.id),
-        })),
-      }));
-      setSections(updatedSections);
-    }
-  }, [courseId]);
+    const updatedSections = initialSections.map((section) => ({
+      ...section,
+      lessons: section.lessons.map((lesson) => ({
+        ...lesson,
+        isCompleted: completedLessons.includes(lesson.id),
+      })),
+    }));
+    setSections(updatedSections);
+  }, [courseId, initialSections]);
 
   const toggleSection = (sectionId: number) => {
     setExpandedSections((prev) =>
@@ -77,11 +75,22 @@ const CourseContent = ({
         ),
       }));
       setSections(updatedSections);
+
+      // Save to localStorage
+      const completedLessons = JSON.parse(
+        localStorage.getItem(`course_${courseId}_progress`) || "[]"
+      );
+      if (!completedLessons.includes(activeLesson.id)) {
+        localStorage.setItem(
+          `course_${courseId}_progress`,
+          JSON.stringify([...completedLessons, activeLesson.id])
+        );
+      }
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-right" dir="rtl">
       {activeLesson && activeLesson.videoId && (
         <div className="mb-6">
           <VideoPlayer
@@ -105,7 +114,7 @@ const CourseContent = ({
               className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <span className="text-accent font-mono">
+                <span className="text-accent font-mono text-lg">
                   {String(section.id).padStart(2, "0")}
                 </span>
                 <h3 className="font-medium text-lg">{section.title}</h3>
@@ -139,7 +148,7 @@ const CourseContent = ({
                         <Play className="w-6 h-6 text-accent" />
                       )}
                     </div>
-                    <div className="flex-grow text-left">
+                    <div className="flex-grow text-right">
                       <h4 className="font-medium mb-1">{lesson.title}</h4>
                       <div className="flex items-center gap-3 text-sm text-text-muted">
                         <span className="flex items-center gap-1">

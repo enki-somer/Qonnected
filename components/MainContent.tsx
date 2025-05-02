@@ -224,9 +224,12 @@ export default function MainContent() {
               <Play className="w-5 h-5" />
               ابدأ التعلم مجاناً
             </button>
-            <button className="w-full sm:w-auto bg-primary-dark hover:bg-primary/80 text-text px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors border border-white/10">
+            <Link
+              href="/courses"
+              className="w-full sm:w-auto bg-primary-dark hover:bg-primary/80 text-text px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors border border-white/10"
+            >
               استكشف الدورات
-            </button>
+            </Link>
           </div>
 
           {/* Features Section */}

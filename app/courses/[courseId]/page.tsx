@@ -8,7 +8,9 @@ import { notFound } from "next/navigation";
 export default function CoursePage() {
   const params = useParams();
   const courseId = Number(params.courseId);
-  const course = courses[courseId];
+
+  // Find course by ID instead of using array index
+  const course = courses.find((c) => c.id === courseId);
 
   if (!course) {
     notFound();

@@ -12,6 +12,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import WhiteBackIcon from "./icons/WhiteBackIcon";
 
 const navigationItems = [
   { name: "الرئيسية", href: "/", icon: HomeIcon },
@@ -32,7 +33,7 @@ export default function Sidebar() {
         className="lg:hidden fixed top-4 right-4 z-50 bg-primary-dark p-2 rounded-lg hover:bg-primary/80 transition-colors"
       >
         {isMobileMenuOpen ? (
-          <XMarkIcon className="w-6 h-6 text-accent" />
+          <WhiteBackIcon className="w-6 h-6" />
         ) : (
           <Bars3Icon className="w-6 h-6 text-accent" />
         )}
