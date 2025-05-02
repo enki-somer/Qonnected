@@ -204,37 +204,49 @@ export default function MainContent() {
             <div className="inline-flex items-center gap-2 text-accent mb-6 bg-accent/10 px-3 py-1 rounded-full animate-float">
               <Sparkles className="w-4 h-4 animate-pulse" />
               <span className="text-sm font-medium">
-                منصة التعلم الشاملة باللغة العربية
+                منصة تعليمية متكاملة مع شهادات معتمدة دولياً
               </span>
             </div>
 
             {/* Main Heading */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
               <span className="inline-block animate-slideFromRight">
-                تعلم مهارات المستقبل
+                طور مستقبلك المهني
               </span>
               <span className="text-accent block mt-2 animate-slideFromLeft">
-                بأسلوب تفاعلي وممتع
+                بشهادات معتمدة عالمياً
               </span>
             </h1>
 
             {/* Description */}
             <p className="text-text-muted text-base sm:text-lg md:text-xl max-w-2xl mb-8 animate-fadeIn">
-              منصة تعليمية متكاملة تقدم دورات في البرمجة، التصميم، إدارة
-              الأعمال، اللغات، والتسويق الرقمي مع مشاريع عملية ومجتمع نشط
+              ارتقِ بمسارك المهني مع منصة متكاملة تجمع بين التعليم التفاعلي
+              والشهادات المعتمدة دولياً. من TOEFL و IELTS إلى شهادات الأمن
+              السيبراني والتقنية
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <button className="group w-full sm:w-auto bg-accent hover:bg-accent-hover text-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 animate-slideUp">
-                <Play className="w-5 h-5 group-hover:animate-pulse" />
-                ابدأ التعلم مجاناً
-                <div className="absolute inset-0 rounded-lg bg-white/20 group-hover:scale-110 transition-transform duration-300 opacity-0 group-hover:opacity-10" />
-              </button>
+              <Link
+                href="/certifications"
+                className="group relative w-full sm:w-auto px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-all duration-500 animate-slideUp transform-gpu hover:scale-105 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-accent via-primary-light to-accent bg-[length:200%_100%] animate-gradient"></div>
+                <div className="relative flex items-center gap-2 text-primary font-semibold">
+                  <Trophy className="w-5 h-5" />
+                  <span>اكتشف الشهادات المهنية</span>
+                </div>
+                {/* 3D Effect Layers */}
+                <div className="absolute inset-0 rounded-xl bg-black/20 transform translate-y-1 scale-[0.98] blur-sm transition-transform duration-500 group-hover:translate-y-2"></div>
+                <div className="absolute inset-0 rounded-xl bg-black/10 transform translate-y-2 scale-[0.96] blur-md transition-transform duration-500 group-hover:translate-y-3"></div>
+                {/* Shine Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-transparent via-white to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000"></div>
+              </Link>
               <Link
                 href="/courses"
                 className="group w-full sm:w-auto bg-primary-dark hover:bg-primary/80 text-text px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 border border-white/10 animate-slideUp"
               >
+                <BookOpen className="w-5 h-5" />
                 استكشف الدورات
                 <div className="absolute inset-0 rounded-lg bg-accent/20 group-hover:scale-110 transition-transform duration-300 opacity-0 group-hover:opacity-10" />
               </Link>
@@ -280,10 +292,11 @@ export default function MainContent() {
                   <div className="space-y-4">
                     {[
                       {
-                        icon: Users,
-                        title: "مجتمع تعليمي متكامل",
-                        description: "بيئة تفاعلية تجمع المتعلمين والخبراء",
-                        gradient: "from-blue-500/20 to-purple-500/20",
+                        icon: Trophy,
+                        title: "شهادات معتمدة دولياً",
+                        description:
+                          "من TOEFL و IELTS إلى شهادات الأمن السيبراني",
+                        gradient: "from-yellow-500/20 to-orange-500/20",
                         delay: "0",
                       },
                       {
@@ -295,10 +308,10 @@ export default function MainContent() {
                         delay: "150",
                       },
                       {
-                        icon: Trophy,
-                        title: "شهادات معتمدة",
-                        description: "توثيق رسمي لمهاراتك ومستوى إنجازك",
-                        gradient: "from-yellow-500/20 to-orange-500/20",
+                        icon: Users,
+                        title: "مجتمع تعليمي متكامل",
+                        description: "بيئة تفاعلية تجمع المتعلمين والخبراء",
+                        gradient: "from-blue-500/20 to-purple-500/20",
                         delay: "300",
                       },
                     ].map((item, index) => (

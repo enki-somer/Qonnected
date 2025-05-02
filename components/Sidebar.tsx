@@ -17,7 +17,7 @@ import {
 const navigationItems = [
   { name: "الرئيسية", href: "/", icon: HomeIcon },
   { name: "الدورات", href: "/courses", icon: BookOpenIcon },
-  { name: "المشاريع", href: "/projects", icon: FolderIcon },
+  { name: "الشهادات", href: "/certifications", icon: FolderIcon },
   { name: "المجموعات", href: "/teams", icon: UsersIcon },
 ];
 
@@ -61,25 +61,38 @@ export default function Sidebar() {
         `}
       >
         <div className="flex items-center gap-2">
-          <div className="relative w-12 h-12 flex-shrink-0">
-            <Image
-              src="/white_back.svg"
-              alt="QonnectED Logo"
-              width={48}
-              height={48}
-              className="object-contain w-full h-full"
-              style={{ filter: "brightness(1)" }}
-            />
-          </div>
-          <div className="flex items-center flex-row-reverse">
-            <span className="text-2xl font-bold" style={{ color: "#FFD700" }}>
-              Q
-            </span>
-            <span className="text-2xl font-bold text-white">onnect</span>
-            <span className="text-2xl font-bold" style={{ color: "#FFD700" }}>
-              ED
-            </span>
-          </div>
+          <Link
+            href="/"
+            className="flex items-center gap-2 group transition-transform duration-300 hover:scale-105"
+          >
+            <div className="relative w-12 h-12 flex-shrink-0">
+              <Image
+                src="/white_back.svg"
+                alt="QonnectED Logo"
+                width={48}
+                height={48}
+                className="object-contain w-full h-full"
+                style={{ filter: "brightness(1)" }}
+              />
+            </div>
+            <div className="flex items-center flex-row-reverse">
+              <span
+                className="text-2xl font-bold group-hover:text-accent transition-colors"
+                style={{ color: "#FFD700" }}
+              >
+                Q
+              </span>
+              <span className="text-2xl font-bold text-white group-hover:text-white/90 transition-colors">
+                onnect
+              </span>
+              <span
+                className="text-2xl font-bold group-hover:text-accent transition-colors"
+                style={{ color: "#FFD700" }}
+              >
+                ED
+              </span>
+            </div>
+          </Link>
         </div>
 
         <nav className="flex-1">
