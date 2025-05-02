@@ -61,12 +61,14 @@ export default function Sidebar() {
         `}
       >
         <div className="flex items-center gap-2">
-          <div className="relative w-10 h-10">
+          <div className="relative w-12 h-12 flex-shrink-0">
             <Image
               src="/white_back.svg"
               alt="QonnectED Logo"
-              fill
-              className="object-contain"
+              width={48}
+              height={48}
+              className="object-contain w-full h-full"
+              style={{ filter: "brightness(1)" }}
             />
           </div>
           <div className="flex items-center flex-row-reverse">

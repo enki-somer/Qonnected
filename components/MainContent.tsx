@@ -197,122 +197,181 @@ export default function MainContent() {
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-dark to-primary p-6 sm:p-8 md:p-12">
         <div className="absolute inset-0 bg-grid-white/5" />
-        <div className="relative">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 text-accent mb-6 bg-accent/10 px-3 py-1 rounded-full">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-medium">
-              منصة التعلم الشاملة باللغة العربية
-            </span>
+        <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+          {/* Main Content - Right Side */}
+          <div className="flex-1">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 text-accent mb-6 bg-accent/10 px-3 py-1 rounded-full animate-float">
+              <Sparkles className="w-4 h-4 animate-pulse" />
+              <span className="text-sm font-medium">
+                منصة التعلم الشاملة باللغة العربية
+              </span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+              <span className="inline-block animate-slideFromRight">
+                تعلم مهارات المستقبل
+              </span>
+              <span className="text-accent block mt-2 animate-slideFromLeft">
+                بأسلوب تفاعلي وممتع
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p className="text-text-muted text-base sm:text-lg md:text-xl max-w-2xl mb-8 animate-fadeIn">
+              منصة تعليمية متكاملة تقدم دورات في البرمجة، التصميم، إدارة
+              الأعمال، اللغات، والتسويق الرقمي مع مشاريع عملية ومجتمع نشط
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <button className="group w-full sm:w-auto bg-accent hover:bg-accent-hover text-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 animate-slideUp">
+                <Play className="w-5 h-5 group-hover:animate-pulse" />
+                ابدأ التعلم مجاناً
+                <div className="absolute inset-0 rounded-lg bg-white/20 group-hover:scale-110 transition-transform duration-300 opacity-0 group-hover:opacity-10" />
+              </button>
+              <Link
+                href="/courses"
+                className="group w-full sm:w-auto bg-primary-dark hover:bg-primary/80 text-text px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 border border-white/10 animate-slideUp"
+              >
+                استكشف الدورات
+                <div className="absolute inset-0 rounded-lg bg-accent/20 group-hover:scale-110 transition-transform duration-300 opacity-0 group-hover:opacity-10" />
+              </Link>
+            </div>
           </div>
 
-          {/* Main Heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            تعلم مهارات المستقبل
-            <span className="text-accent block mt-2">بأسلوب تفاعلي وممتع</span>
-          </h1>
+          {/* Vision Section - Left Side */}
+          <div className="lg:w-[500px] relative perspective-1000">
+            <div className="relative transform-gpu transition-all duration-500 hover:rotate-y-12 hover:scale-105">
+              {/* Main Vision Card */}
+              <div className="relative bg-gradient-to-br from-primary-dark/80 to-primary/40 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
+                {/* Animated Gradient Border */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-conic from-accent via-primary-light to-accent opacity-20 animate-spin-slow" />
 
-          {/* Description */}
-          <p className="text-text-muted text-base sm:text-lg md:text-xl max-w-2xl mb-8">
-            منصة تعليمية متكاملة تقدم دورات في البرمجة، التصميم، إدارة الأعمال،
-            اللغات، والتسويق الرقمي مع مشاريع عملية ومجتمع نشط
-          </p>
+                {/* Floating Elements Background */}
+                <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                  <div className="absolute top-10 right-10 w-20 h-20 bg-accent/30 rounded-full blur-xl animate-float" />
+                  <div className="absolute bottom-10 left-10 w-20 h-20 bg-primary-light/30 rounded-full blur-xl animate-float-delay" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse" />
+                </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <button className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors">
-              <Play className="w-5 h-5" />
-              ابدأ التعلم مجاناً
-            </button>
-            <Link
-              href="/courses"
-              className="w-full sm:w-auto bg-primary-dark hover:bg-primary/80 text-text px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors border border-white/10"
-            >
-              استكشف الدورات
-            </Link>
-          </div>
-
-          {/* Features Section */}
-          <div className="bg-primary-dark/50 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
-            {/* Mobile Carousel - Only visible below sm breakpoint */}
-            <div className="block sm:hidden">
-              <div className="relative h-[200px]">
-                {features.map((feature, index) => (
-                  <div
-                    key={index}
-                    className={`absolute inset-0 transition-all duration-500 transform
-                      ${
-                        index === activeFeatureIndex
-                          ? "opacity-100 translate-x-0"
-                          : "opacity-0 translate-x-full"
-                      }`}
-                  >
-                    <div className="group relative overflow-hidden rounded-xl bg-primary/20 p-6 backdrop-blur-sm h-full">
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-10`}
-                      />
-                      <div className="relative">
-                        <div className="bg-accent/10 w-12 h-12 rounded-xl flex items-center justify-center mb-3">
-                          <feature.icon className="w-6 h-6 text-accent" />
-                        </div>
-                        <h3 className="text-base font-semibold mb-1 text-white">
-                          {feature.title}
-                        </h3>
-                        <p className="text-sm text-text-muted">
-                          {feature.description}
-                        </p>
+                {/* Vision Content */}
+                <div className="relative space-y-8">
+                  {/* Vision Header */}
+                  <div className="flex items-center gap-4 animate-fadeIn">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-accent rounded-xl blur-md animate-pulse" />
+                      <div className="relative bg-accent/20 p-3 rounded-xl border border-accent/30">
+                        <Target className="w-6 h-6 text-accent" />
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-center mt-4 gap-2">
-                {features.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveFeatureIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 
-                      ${
-                        index === activeFeatureIndex
-                          ? "bg-accent w-4"
-                          : "bg-accent/30"
-                      }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Desktop/Tablet Grid - Visible from sm breakpoint and up */}
-            <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="group relative overflow-hidden rounded-xl bg-primary/20 p-6 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
-                  />
-                  <div className="relative">
-                    <div className="bg-accent/10 w-12 h-12 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <feature.icon className="w-6 h-6 text-accent" />
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">
+                        رؤيتنا للتعليم
+                      </h3>
+                      <p className="text-text-muted">
+                        نبني مستقبل التعلم الرقمي
+                      </p>
                     </div>
-                    <h3 className="text-base font-semibold mb-1 text-white group-hover:text-accent transition-colors duration-300">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm text-text-muted group-hover:text-text transition-colors duration-300">
-                      {feature.description}
-                    </p>
+                  </div>
+
+                  {/* Interactive Vision Cards */}
+                  <div className="space-y-4">
+                    {[
+                      {
+                        icon: Users,
+                        title: "مجتمع تعليمي متكامل",
+                        description: "بيئة تفاعلية تجمع المتعلمين والخبراء",
+                        gradient: "from-blue-500/20 to-purple-500/20",
+                        delay: "0",
+                      },
+                      {
+                        icon: Code2,
+                        title: "تعلم عملي وتطبيقي",
+                        description:
+                          "تطبيق مباشر للمعرفة من خلال مشاريع واقعية",
+                        gradient: "from-green-500/20 to-emerald-500/20",
+                        delay: "150",
+                      },
+                      {
+                        icon: Trophy,
+                        title: "شهادات معتمدة",
+                        description: "توثيق رسمي لمهاراتك ومستوى إنجازك",
+                        gradient: "from-yellow-500/20 to-orange-500/20",
+                        delay: "300",
+                      },
+                    ].map((item, index) => (
+                      <div
+                        key={index}
+                        className="group relative overflow-hidden rounded-xl bg-white/5 p-4 transition-all duration-300 hover:bg-white/10 animate-slideFromLeft"
+                        style={{ animationDelay: `${item.delay}ms` }}
+                      >
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                        />
+                        <div className="relative flex items-start gap-4">
+                          <div className="bg-white/10 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
+                            <item.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="text-white font-medium mb-1 group-hover:text-accent transition-colors duration-300">
+                              {item.title}
+                            </h4>
+                            <p className="text-text-muted text-sm group-hover:text-white/70 transition-colors duration-300">
+                              {item.description}
+                            </p>
+                          </div>
+                          <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-full group-hover:translate-x-0">
+                            <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+                              <Play className="w-4 h-4 text-accent" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Animated Stats */}
+                  <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 animate-slideUp">
+                    {[
+                      { value: "+1000", label: "متعلم نشط" },
+                      { value: "+50", label: "دورة تدريبية" },
+                      { value: "+20", label: "خبير ومدرب" },
+                    ].map((stat, index) => (
+                      <div
+                        key={index}
+                        className="group text-center transform transition-transform duration-300 hover:scale-110"
+                      >
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-accent blur-md opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                          <div className="relative text-2xl font-bold text-accent">
+                            {stat.value}
+                          </div>
+                        </div>
+                        <div className="text-xs text-text-muted group-hover:text-white transition-colors duration-300">
+                          {stat.label}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* 3D Effect Layers */}
+              <div className="absolute inset-0 rounded-2xl bg-white/5 transform -translate-z-10 translate-y-2 blur-xl" />
+              <div className="absolute inset-0 rounded-2xl bg-accent/5 transform -translate-z-20 translate-y-4 blur-2xl" />
             </div>
+
+            {/* Floating Decorative Elements */}
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-accent/30 rounded-full blur-3xl animate-float opacity-50" />
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-primary-light/30 rounded-full blur-3xl animate-float-delay opacity-50" />
           </div>
         </div>
 
-        {/* Decorative Elements - Adjusted for better mobile display */}
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 sm:w-96 h-48 sm:h-96 bg-accent/20 rounded-full blur-3xl opacity-60 sm:opacity-100" />
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-48 sm:w-96 h-48 sm:h-96 bg-primary-dark rounded-full blur-3xl opacity-60 sm:opacity-100" />
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-primary-dark rounded-full blur-3xl animate-pulse-delay" />
       </div>
 
       {/* Featured Courses Section */}
@@ -377,6 +436,92 @@ export default function MainContent() {
           })}
         </div>
       </section>
+
+      {/* Add these styles to your global CSS or Tailwind config */}
+      <style jsx global>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        @keyframes spin-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes slideFromRight {
+          from {
+            transform: translateX(50px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slideFromLeft {
+          from {
+            transform: translateX(-50px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slideUp {
+          from {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        .animate-float-delay {
+          animation: float 3s ease-in-out infinite 1.5s;
+        }
+        .animate-spin-slow {
+          animation: spin-slow 15s linear infinite;
+        }
+        .animate-slideFromRight {
+          animation: slideFromRight 0.5s ease-out forwards;
+        }
+        .animate-slideFromLeft {
+          animation: slideFromLeft 0.5s ease-out forwards;
+        }
+        .animate-slideUp {
+          animation: slideUp 0.5s ease-out forwards;
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease-out forwards;
+        }
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .rotate-y-12 {
+          transform: rotateY(12deg);
+        }
+      `}</style>
     </div>
   );
 }

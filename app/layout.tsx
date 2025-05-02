@@ -13,12 +13,9 @@ export const metadata = {
   title: "QonnectED",
   description: "منصة تعليمية عربية للمطورين",
   icons: {
-    icon: [
-      {
-        url: "/white_back.svg",
-        type: "image/svg+xml",
-      },
-    ],
+    icon: "/white_back.svg",
+    shortcut: "/white_back.svg",
+    apple: "/white_back.svg",
   },
 };
 
