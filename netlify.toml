@@ -11,6 +11,18 @@
   package = "@netlify/plugin-nextjs"
 
 [[redirects]]
+  from = "/.netlify/identity"
+  to = "/.netlify/identity"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/.netlify/identity/*"
+  to = "/.netlify/identity/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200 
