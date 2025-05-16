@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../context/AuthContext";
 import {
   BellIcon,
   GlobeAltIcon,
@@ -33,6 +35,25 @@ const settingsSections = [
 
 export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState("profile");
+  const { user, authReady } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (authReady && !user) {
+      router.push("/");
+    }
+  }, [authReady, user, router]);
+
+  if (!authReady || !user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-lg text-text-muted">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-8">
@@ -78,10 +99,35 @@ export default function SettingsPage() {
           </div>
 
           <div className="space-y-6">
-            {/* Placeholder for settings content */}
-            <div className="bg-primary/50 rounded-lg p-4 text-text-muted text-center">
-              محتوى الإعدادات قيد التطوير
-            </div>
+            {activeSection === "profile" && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">الملف الشخصي</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      البريد الإلكتروني
+                    </label>
+                    <input
+                      type="email"
+                      value={user.email}
+                      readOnly
+                      className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      الاسم الكامل
+                    </label>
+                    <input
+                      type="text"
+                      defaultValue={user.user_metadata.full_name || ""}
+                      className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Add other section content here */}
           </div>
         </div>
       </div>

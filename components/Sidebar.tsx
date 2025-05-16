@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 import {
   HomeIcon,
   BookOpenIcon,
@@ -12,6 +13,7 @@ import {
   Cog6ToothIcon,
   Bars3Icon,
   XMarkIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -54,6 +56,7 @@ const socialLinks = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, login, logout } = useAuth();
 
   const isCoursesActive = pathname.startsWith("/courses");
 
@@ -61,13 +64,14 @@ export default function Sidebar() {
     <>
       {/* Mobile Menu Button */}
       <button
+        type="button"
+        className="lg:hidden fixed top-4 right-4 z-50 p-2 rounded-md text-white hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="lg:hidden fixed top-4 right-4 z-50 bg-primary-dark p-2 rounded-lg hover:bg-primary/80 transition-colors"
       >
         {isMobileMenuOpen ? (
-          <XMarkIcon className="w-6 h-6 text-accent" />
+          <XMarkIcon className="h-6 w-6" aria-hidden="true" />
         ) : (
-          <Bars3Icon className="w-6 h-6 text-accent" />
+          <Bars3Icon className="h-6 w-6" aria-hidden="true" />
         )}
       </button>
 
@@ -83,8 +87,9 @@ export default function Sidebar() {
       <aside
         className={`
           fixed lg:static inset-y-0 right-0 z-40
-          w-64 bg-primary-dark p-6 flex flex-col gap-6
+          w-64 bg-primary p-6 flex flex-col gap-6
           transform transition-transform duration-300 ease-in-out overflow-y-auto
+          border-l border-primary-light/20
           ${
             isMobileMenuOpen
               ? "translate-x-0"
@@ -109,23 +114,50 @@ export default function Sidebar() {
               />
             </div>
             <div className="flex items-center flex-row-reverse">
-              <span
-                className="text-2xl font-bold group-hover:text-accent transition-colors"
-                style={{ color: "#FFD700" }}
-              >
-                Q
-              </span>
-              <span className="text-2xl font-bold text-white group-hover:text-white/90 transition-colors">
+              <span className="text-2xl font-bold text-accent">Q</span>
+              <span className="text-2xl font-bold text-text group-hover:text-text/90 transition-colors">
                 onnect
               </span>
-              <span
-                className="text-2xl font-bold group-hover:text-accent transition-colors"
-                style={{ color: "#FFD700" }}
-              >
-                ED
-              </span>
+              <span className="text-2xl font-bold text-accent">ED</span>
             </div>
           </Link>
+        </div>
+
+        {/* User Profile Section */}
+        <div className="border-b border-primary-light/20 pb-4">
+          {user ? (
+            <div className="flex flex-col items-center gap-2">
+              <UserCircleIcon className="h-12 w-12 text-accent" />
+              <span className="text-text text-sm">
+                {user.user_metadata.full_name || user.email}
+              </span>
+              <button
+                onClick={logout}
+                className="text-sm text-red-400 hover:text-red-300 transition-colors"
+              >
+                تسجيل الخروج
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              <button
+                onClick={login}
+                className="group relative w-full overflow-hidden rounded-xl transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-dark via-accent to-accent-light opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-gradient"></div>
+                <div className="relative bg-primary-light backdrop-blur-sm border border-accent/20 rounded-xl p-4 transition-all duration-300 group-hover:border-accent/40 group-hover:shadow-glow">
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-accent text-lg font-medium transition-all duration-300 group-hover:text-accent-light">
+                      مرحباً بك
+                    </span>
+                    <span className="text-text-muted text-sm transition-all duration-300 group-hover:text-text">
+                      سجل دخول للمتابعة
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}

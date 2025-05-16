@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Noto_Kufi_Arabic } from "next/font/google";
 import { ThemeProvider } from "../components/theme-provider";
+import { AuthProvider } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 
 const notoKufiArabic = Noto_Kufi_Arabic({
@@ -31,10 +32,12 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 overflow-auto">{children}</main>
-          </div>
+          <AuthProvider>
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <main className="flex-1 overflow-auto">{children}</main>
+            </div>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
