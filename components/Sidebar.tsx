@@ -19,6 +19,7 @@ import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import WhatsAppWidget from "./WhatsAppWidget";
 import CourseSubmenu from "./CourseSubmenu";
+import { useRouter } from "next/navigation";
 
 const navigationItems = [
   { name: "الرئيسية", href: "/", icon: HomeIcon },
@@ -57,6 +58,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, login, logout } = useAuth();
+  const router = useRouter();
 
   const isCoursesActive = pathname.startsWith("/courses");
 
@@ -126,17 +128,41 @@ export default function Sidebar() {
         {/* User Profile Section */}
         <div className="border-b border-primary-light/20 pb-4">
           {user ? (
-            <div className="flex flex-col items-center gap-2">
-              <UserCircleIcon className="h-12 w-12 text-accent" />
-              <span className="text-text text-sm">
-                {user.user_metadata.full_name || user.email}
-              </span>
-              <button
-                onClick={logout}
-                className="text-sm text-red-400 hover:text-red-300 transition-colors"
-              >
-                تسجيل الخروج
-              </button>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-accent/10 to-accent/5 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="relative p-4 rounded-xl border border-primary-light/10 hover:border-accent/20 transition-all duration-300">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="relative">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-accent via-accent-light to-accent flex items-center justify-center text-primary-dark text-2xl font-bold">
+                      {user.user_metadata?.full_name?.[0]?.toUpperCase() ||
+                        user.email[0].toUpperCase()}
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-accent rounded-full flex items-center justify-center">
+                      <span className="text-primary-dark text-xs">✓</span>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-medium text-text">
+                      {user.user_metadata?.full_name || "مستخدم QonnectED"}
+                    </div>
+                    <div className="text-sm text-text-muted">{user.email}</div>
+                  </div>
+                  <div className="w-full flex gap-2 mt-2">
+                    <button
+                      onClick={() => router.push("/settings")}
+                      className="flex-1 py-1.5 px-3 text-sm bg-primary-light rounded-lg hover:bg-primary-light/80 transition-colors text-text-muted hover:text-text"
+                    >
+                      الإعدادات
+                    </button>
+                    <button
+                      onClick={logout}
+                      className="flex-1 py-1.5 px-3 text-sm border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500/10 transition-colors"
+                    >
+                      تسجيل الخروج
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center">
