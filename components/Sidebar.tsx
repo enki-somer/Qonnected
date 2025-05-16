@@ -13,17 +13,49 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
+import WhatsAppWidget from "./WhatsAppWidget";
+import CourseSubmenu from "./CourseSubmenu";
 
 const navigationItems = [
   { name: "الرئيسية", href: "/", icon: HomeIcon },
-  { name: "الدورات", href: "/courses", icon: BookOpenIcon },
   { name: "الشهادات", href: "/certifications", icon: FolderIcon },
   { name: "المجموعات", href: "/teams", icon: UsersIcon },
+];
+
+const socialLinks = [
+  {
+    name: "Facebook",
+    icon: FaFacebook,
+    url: "https://facebook.com/qonnected",
+    ariaLabel: "تابعنا على فيسبوك",
+  },
+  {
+    name: "Instagram",
+    icon: FaInstagram,
+    url: "https://instagram.com/qonnected",
+    ariaLabel: "تابعنا على انستغرام",
+  },
+  {
+    name: "LinkedIn",
+    icon: FaLinkedin,
+    url: "https://linkedin.com/company/qonnected",
+    ariaLabel: "تابعنا على لينكد إن",
+  },
+  {
+    name: "Email",
+    icon: MdOutlineEmail,
+    url: "mailto:info@qonnected.com",
+    ariaLabel: "راسلنا عبر البريد الإلكتروني",
+  },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isCoursesActive = pathname.startsWith("/courses");
 
   return (
     <>
@@ -52,7 +84,7 @@ export default function Sidebar() {
         className={`
           fixed lg:static inset-y-0 right-0 z-40
           w-64 bg-primary-dark p-6 flex flex-col gap-6
-          transform transition-transform duration-300 ease-in-out
+          transform transition-transform duration-300 ease-in-out overflow-y-auto
           ${
             isMobileMenuOpen
               ? "translate-x-0"
@@ -60,6 +92,7 @@ export default function Sidebar() {
           }
         `}
       >
+        {/* Logo */}
         <div className="flex items-center gap-2">
           <Link
             href="/"
@@ -95,8 +128,10 @@ export default function Sidebar() {
           </Link>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1">
           <ul className="space-y-2">
+            {/* Home Link */}
             {navigationItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -116,10 +151,43 @@ export default function Sidebar() {
                 </li>
               );
             })}
+
+            {/* Courses Menu */}
+            <li className="space-y-1">
+              <CourseSubmenu
+                isActive={isCoursesActive}
+                onClose={() => setIsMobileMenuOpen(false)}
+                isMobile={true}
+              />
+            </li>
           </ul>
         </nav>
 
-        <div className="mt-auto">
+        {/* Footer */}
+        <div className="mt-auto space-y-6">
+          {/* Social Links */}
+          <div className="mt-6 px-4">
+            <h3 className="text-sm font-medium text-text-muted mb-3 text-right">
+              تواصل معنا
+            </h3>
+            <div className="grid grid-cols-4 gap-2">
+              {socialLinks.map((social) => (
+                <Link
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.ariaLabel}
+                  className="group flex items-center justify-center p-2 rounded-lg bg-primary/20 hover:bg-accent/20 transition-all duration-300"
+                >
+                  <social.icon className="w-5 h-5 text-text-muted group-hover:text-accent transition-colors duration-300" />
+                  <span className="sr-only">{social.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Settings */}
           <Link
             href="/settings"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -130,6 +198,9 @@ export default function Sidebar() {
           </Link>
         </div>
       </aside>
+
+      {/* WhatsApp Widget */}
+      <WhatsAppWidget />
     </>
   );
 }

@@ -11,13 +11,6 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 
-const levels = [
-  { id: "all", label: "جميع المستويات" },
-  { id: "beginner", label: "مبتدئ" },
-  { id: "intermediate", label: "متوسط" },
-  { id: "advanced", label: "متقدم" },
-];
-
 const courses = [
   {
     id: 1,
@@ -71,40 +64,29 @@ const item = {
 
 export default function CoursesPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [showCategories, setShowCategories] = useState(true);
 
-  // Filter courses based on the current view
+  // Filter categories based on search query
+  const filteredCategories = categories.filter(
+    (category) =>
+      category.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      category.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Filter courses based on search query only when in courses view
   const filteredCourses = courses.filter((course) => {
-    // When showing categories, only show featured courses
-    if (showCategories) {
-      return false; // Don't show any courses when showing categories
-    }
-
-    // When searching, apply all filters
-    const matchesSearch = searchQuery
-      ? course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
-    const matchesLevel =
-      selectedLevel === "all" || course.level === selectedLevel;
-    const matchesCategory =
-      selectedCategory === "all" || course.category === selectedCategory;
-
-    return matchesSearch && matchesLevel && matchesCategory;
+    return (
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      setShowCategories(false);
-    }
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   const handleClear = () => {
-    setShowCategories(true);
-    setSelectedLevel("all");
-    setSelectedCategory("all");
+    setSearchQuery("");
   };
 
   return (
@@ -118,16 +100,12 @@ export default function CoursesPage() {
 
       <CourseSearch
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedLevel={selectedLevel}
-        onLevelChange={setSelectedLevel}
-        selectedCategory={selectedCategory}
-        onCategoryChange={(category) => {
-          setSelectedCategory(category);
-          setShowCategories(false);
-        }}
-        onSearch={handleSearch}
+        onSearchChange={handleSearch}
         onClear={handleClear}
+        showFilters={!showCategories}
+        placeholder={
+          showCategories ? "ابحث عن التصنيفات..." : "ابحث عن الدورات..."
+        }
       />
 
       {showCategories ? (
@@ -137,11 +115,20 @@ export default function CoursesPage() {
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
         >
-          {categories.map((category) => (
-            <motion.div key={category.id} variants={item}>
-              <CategoryCard category={category} />
-            </motion.div>
-          ))}
+          {filteredCategories.length > 0 ? (
+            filteredCategories.map((category) => (
+              <motion.div key={category.id} variants={item}>
+                <CategoryCard
+                  category={category}
+                  onClick={() => setShowCategories(false)}
+                />
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8 text-text-muted">
+              لم يتم العثور على تصنيفات تطابق بحثك
+            </div>
+          )}
         </motion.div>
       ) : (
         <motion.div
@@ -190,7 +177,9 @@ export default function CoursesPage() {
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm bg-primary/50 text-text-muted px-3 py-1 rounded-full">
-                      {levels.find((l) => l.id === course.level)?.label}
+                      {course.level === "beginner" && "مبتدئ"}
+                      {course.level === "intermediate" && "متوسط"}
+                      {course.level === "advanced" && "متقدم"}
                     </span>
                     <span className="text-sm text-text-muted">
                       المدرب: {course.instructor}
@@ -200,16 +189,8 @@ export default function CoursesPage() {
               </motion.div>
             ))
           ) : (
-            <div className="col-span-full text-center py-8">
-              <p className="text-text-muted text-lg">
-                لم يتم العثور على دورات تطابق بحثك
-              </p>
-              <button
-                onClick={handleClear}
-                className="mt-4 text-accent hover:text-accent/80 transition-colors"
-              >
-                العودة إلى التصنيفات
-              </button>
+            <div className="col-span-full text-center py-8 text-text-muted">
+              لم يتم العثور على دورات تطابق بحثك
             </div>
           )}
         </motion.div>
