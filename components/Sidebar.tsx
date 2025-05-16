@@ -19,7 +19,6 @@ import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import WhatsAppWidget from "./WhatsAppWidget";
 import CourseSubmenu from "./CourseSubmenu";
-import { useRouter } from "next/navigation";
 
 const navigationItems = [
   { name: "الرئيسية", href: "/", icon: HomeIcon },
@@ -58,7 +57,6 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, login, logout } = useAuth();
-  const router = useRouter();
 
   const isCoursesActive = pathname.startsWith("/courses");
 
@@ -128,39 +126,66 @@ export default function Sidebar() {
         {/* User Profile Section */}
         <div className="border-b border-primary-light/20 pb-4">
           {user ? (
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-accent/10 to-accent/5 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              <div className="relative p-4 rounded-xl border border-primary-light/10 hover:border-accent/20 transition-all duration-300">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="relative">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-accent via-accent-light to-accent flex items-center justify-center text-primary-dark text-2xl font-bold">
-                      {user.user_metadata?.full_name?.[0]?.toUpperCase() ||
-                        user.email[0].toUpperCase()}
-                    </div>
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-accent rounded-full flex items-center justify-center">
-                      <span className="text-primary-dark text-xs">✓</span>
-                    </div>
+            <div className="relative overflow-hidden rounded-xl bg-primary-light/20 p-4">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-accent/5 rounded-full -mr-10 -mt-10" />
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-accent/5 rounded-full -ml-8 -mb-8" />
+
+              <div className="relative flex flex-col items-center">
+                {/* Welcome Badge */}
+                <div className="bg-primary-light/30 px-3 py-1 rounded-full mb-3">
+                  <span className="text-xs text-accent">مرحباً بعودتك</span>
+                </div>
+
+                {/* User Info */}
+                <div className="text-center mb-4">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-accent/20 to-accent/10 mb-2">
+                    <span className="text-xl text-accent font-semibold">
+                      {(user.user_metadata.full_name || user.email)
+                        .charAt(0)
+                        .toUpperCase()}
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <div className="font-medium text-text">
-                      {user.user_metadata?.full_name || "مستخدم QonnectED"}
-                    </div>
-                    <div className="text-sm text-text-muted">{user.email}</div>
+                  <h3 className="text-text font-medium mb-1">
+                    {user.user_metadata.full_name || user.email}
+                  </h3>
+                  <p className="text-xs text-text-muted">متعلم نشط</p>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="w-full grid grid-cols-2 gap-2 mb-4">
+                  <div className="bg-primary-light/20 rounded-lg p-2 text-center">
+                    <span className="block text-accent text-lg font-semibold">
+                      0
+                    </span>
+                    <span className="text-xs text-text-muted">
+                      الدورات المسجلة
+                    </span>
                   </div>
-                  <div className="w-full flex gap-2 mt-2">
-                    <button
-                      onClick={() => router.push("/settings")}
-                      className="flex-1 py-1.5 px-3 text-sm bg-primary-light rounded-lg hover:bg-primary-light/80 transition-colors text-text-muted hover:text-text"
-                    >
-                      الإعدادات
-                    </button>
-                    <button
-                      onClick={logout}
-                      className="flex-1 py-1.5 px-3 text-sm border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500/10 transition-colors"
-                    >
-                      تسجيل الخروج
-                    </button>
+                  <div className="bg-primary-light/20 rounded-lg p-2 text-center">
+                    <span className="block text-accent text-lg font-semibold">
+                      0%
+                    </span>
+                    <span className="text-xs text-text-muted">
+                      نسبة الإكمال
+                    </span>
                   </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="w-full space-y-2">
+                  <Link
+                    href="/settings"
+                    className="block w-full py-2 px-4 bg-primary-light/30 hover:bg-primary-light/40 rounded-lg text-center text-sm text-text transition-colors"
+                  >
+                    إعدادات الحساب
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="w-full py-2 px-4 border border-red-500/20 hover:bg-red-500/10 rounded-lg text-sm text-red-400 transition-colors"
+                  >
+                    تسجيل الخروج
+                  </button>
                 </div>
               </div>
             </div>
