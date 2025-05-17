@@ -126,68 +126,51 @@ export default function Sidebar() {
         {/* User Profile Section */}
         <div className="border-b border-primary-light/20 pb-4">
           {user ? (
-            <div className="relative overflow-hidden rounded-xl bg-primary-light/20 p-4">
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-accent/5 rounded-full -mr-10 -mt-10" />
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-accent/5 rounded-full -ml-8 -mb-8" />
-
-              <div className="relative flex flex-col items-center">
-                {/* Welcome Badge */}
-                <div className="bg-primary-light/30 px-3 py-1 rounded-full mb-3">
-                  <span className="text-xs text-accent">مرحباً بعودتك</span>
+            <div className="flex items-center justify-between py-3 px-2 border-b border-primary-light/20">
+              <div className="flex items-center gap-2 min-w-0 group">
+                <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center flex-shrink-0 group-hover:bg-primary-light transition-all">
+                  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none">
+                    {/* Outer ring */}
+                    <path
+                      d="M12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4Z"
+                      className="stroke-accent stroke-2"
+                      fill="none"
+                    />
+                    {/* Q shape */}
+                    <path
+                      d="M12 6.5C15.0376 6.5 17.5 8.96243 17.5 12C17.5 15.0376 15.0376 17.5 12 17.5C8.96243 17.5 6.5 15.0376 6.5 12C6.5 8.96243 8.96243 6.5 12 6.5Z"
+                      className="fill-accent"
+                    />
+                    {/* Q tail */}
+                    <circle cx="15.5" cy="15.5" r="2" className="fill-white" />
+                  </svg>
                 </div>
-
-                {/* User Info */}
-                <div className="text-center mb-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-accent/20 to-accent/10 mb-2">
-                    <span className="text-xl text-accent font-semibold">
-                      {(user.user_metadata.full_name || user.email)
-                        .charAt(0)
-                        .toUpperCase()}
-                    </span>
-                  </div>
-                  <h3 className="text-text font-medium mb-1">
-                    {user.user_metadata.full_name || user.email}
-                  </h3>
-                  <p className="text-xs text-text-muted">متعلم نشط</p>
-                </div>
-
-                {/* Quick Stats */}
-                <div className="w-full grid grid-cols-2 gap-2 mb-4">
-                  <div className="bg-primary-light/20 rounded-lg p-2 text-center">
-                    <span className="block text-accent text-lg font-semibold">
-                      0
-                    </span>
-                    <span className="text-xs text-text-muted">
-                      الدورات المسجلة
-                    </span>
-                  </div>
-                  <div className="bg-primary-light/20 rounded-lg p-2 text-center">
-                    <span className="block text-accent text-lg font-semibold">
-                      0%
-                    </span>
-                    <span className="text-xs text-text-muted">
-                      نسبة الإكمال
-                    </span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="w-full space-y-2">
-                  <Link
-                    href="/settings"
-                    className="block w-full py-2 px-4 bg-primary-light/30 hover:bg-primary-light/40 rounded-lg text-center text-sm text-text transition-colors"
-                  >
-                    إعدادات الحساب
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="w-full py-2 px-4 border border-red-500/20 hover:bg-red-500/10 rounded-lg text-sm text-red-400 transition-colors"
-                  >
-                    تسجيل الخروج
-                  </button>
-                </div>
+                <Link
+                  href="/settings"
+                  className="truncate text-text-muted group-hover:text-text transition-colors text-sm"
+                >
+                  {user.user_metadata.full_name || user.email}
+                </Link>
               </div>
+              <button
+                onClick={logout}
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-text-muted hover:text-accent hover:bg-accent/10 transition-all"
+                title="تسجيل الخروج"
+              >
+                <svg
+                  className="w-7 h-7"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+              </button>
             </div>
           ) : (
             <div className="flex flex-col items-center">

@@ -7,6 +7,10 @@ interface User {
   email: string;
   user_metadata: {
     full_name?: string;
+    phone?: string;
+    education?: string;
+    city?: string;
+    country?: string;
   };
   token?: {
     access_token: string;
@@ -32,43 +36,90 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
-    // Initialize Netlify Identity
-    netlifyIdentity.init();
+    let mounted = true;
 
-    // Event listener for when auth state changes
-    netlifyIdentity.on("login", (user) => {
-      setUser(user as User);
-      netlifyIdentity.close();
-    });
+    const initializeAuth = async () => {
+      try {
+        // Initialize Netlify Identity
+        if (!netlifyIdentity.currentUser()) {
+          netlifyIdentity.init();
+        }
 
-    netlifyIdentity.on("logout", () => {
-      setUser(null);
-    });
+        // Event listener for when auth state changes
+        netlifyIdentity.on("login", (user) => {
+          console.log("Login event received", user);
+          if (mounted) {
+            setUser(user as User);
+            netlifyIdentity.close();
+          }
+        });
 
-    netlifyIdentity.on("init", () => {
-      setUser(netlifyIdentity.currentUser() as User | null);
-      setAuthReady(true);
-    });
+        netlifyIdentity.on("logout", () => {
+          console.log("Logout event received");
+          if (mounted) {
+            setUser(null);
+          }
+        });
+
+        netlifyIdentity.on("init", () => {
+          console.log("Init event received", netlifyIdentity.currentUser());
+          if (mounted) {
+            const currentUser = netlifyIdentity.currentUser();
+            setUser(currentUser as User | null);
+            setAuthReady(true);
+          }
+        });
+
+        // Check if user is already logged in
+        const currentUser = netlifyIdentity.currentUser();
+        if (currentUser && mounted) {
+          console.log("User already logged in", currentUser);
+          setUser(currentUser as User);
+          setAuthReady(true);
+        } else {
+          console.log("No user currently logged in");
+          setAuthReady(true);
+        }
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+        if (mounted) {
+          setAuthReady(true); // Set ready even on error to prevent infinite loading
+        }
+      }
+    };
+
+    initializeAuth();
 
     // Cleanup
     return () => {
+      mounted = false;
       netlifyIdentity.off("login");
       netlifyIdentity.off("logout");
+      netlifyIdentity.off("init");
     };
   }, []);
 
   const login = () => {
+    console.log("Opening login modal");
     netlifyIdentity.open("login");
   };
 
   const logout = () => {
+    console.log("Logging out");
     netlifyIdentity.logout();
   };
 
-  const context = { user, login, logout, authReady };
+  const contextValue = {
+    user,
+    login,
+    logout,
+    authReady,
+  };
+
+  console.log("Auth context state:", { user, authReady });
 
   return (
-    <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 
