@@ -23,19 +23,27 @@ type CategoryCardProps = {
   onClick: (id: string) => void;
 };
 
-// Get the logo path based on category ID
+// Get the logo path based on category ID (for course categories only)
 const getCategoryLogo = (id: string): string => {
   switch (id) {
-    case "microsoft":
-      return "/images/Microsoft.PNG";
-    case "adobe":
-      return "/images/Adobe.PNG";
-    case "autodesk":
-      return "/images/Autodesk.PNG";
-    case "apple":
-      return "/images/apple-logo.png";
+    case "programming":
+      return "/images/Code.png"; // Programming icon
+    case "web-development":
+      return "/images/Web.png"; // Web development icon
+    case "design":
+      return "/images/Design.png"; // Design icon
+    case "business":
+      return "/images/Business.png"; // Business icon
+    case "ai":
+      return "/images/AI.png"; // AI icon
+    case "marketing":
+      return "/images/Marketing.png"; // Marketing icon
+    case "languages":
+      return "/images/Languages.png"; // Languages icon
+    case "photography":
+      return "/images/Photography.png"; // Photography icon
     default:
-      return "";
+      return "/images/default-category.png"; // Fallback image
   }
 };
 
@@ -129,9 +137,44 @@ const isCertificationCategory = (
 
 export default function CategoryCard({ category, onClick }: CategoryCardProps) {
   const router = useRouter();
-  const logoPath = isCertificationCategory(category)
-    ? `/certifications/${category.id}.svg`
-    : null;
+
+  // Get the logo path based on category type
+  const getLogoPath = (
+    category: CertificationCategory | CourseCategory
+  ): string => {
+    if (isCertificationCategory(category)) {
+      // Use PNG logos for certification categories
+      switch (category.id) {
+        case "microsoft":
+          return "/images/Microsoft.png";
+        case "adobe":
+          return "/images/Adobe.png";
+        case "autodesk":
+          return "/images/Autodesk.png";
+        case "apple":
+          return "/images/apple-logo.png";
+        case "swift":
+          return "/images/swift.png";
+        case "csb":
+          return "/images/Microsoft.png"; // English for Business uses Microsoft logo
+        case "mos":
+          return "/images/Microsoft.png"; // Microsoft Office Specialist
+        case "acp":
+          return "/images/Adobe.png"; // Adobe Certified Professional
+        case "acu":
+          return "/images/Autodesk.png"; // Autodesk Certified User
+        case "esb":
+          return "/images/Business.png"; // Entrepreneurship certification
+        default:
+          return "/images/default-certification.png";
+      }
+    } else {
+      // For course categories, use the existing getCategoryLogo function
+      return getCategoryLogo(category.id);
+    }
+  };
+
+  const logoPath = getLogoPath(category);
 
   const handleClick = () => {
     if (isCertificationCategory(category)) {
@@ -160,21 +203,22 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
         <div className="relative z-10">
           {/* Header Section */}
           <div className="flex items-start gap-4 mb-6">
-            {logoPath && (
-              <div className="relative w-16 h-16 flex-shrink-0 p-2 bg-white/5 rounded-xl group-hover:bg-white/10 transition-colors duration-300">
-                <Image
-                  src={logoPath}
-                  alt={`${
-                    isCertificationCategory(category)
-                      ? category.name
-                      : category.title
-                  } logo`}
-                  fill
-                  sizes="(max-width: 640px) 48px, 64px"
-                  className="object-contain p-1"
-                />
-              </div>
-            )}
+            <div className="relative w-16 h-16 flex-shrink-0 p-2 bg-white/5 rounded-xl group-hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src={logoPath}
+                alt={`${
+                  isCertificationCategory(category)
+                    ? category.name
+                    : category.title
+                } logo`}
+                fill
+                sizes="(max-width: 640px) 48px, 64px"
+                className="object-contain p-1"
+                onError={(e: any) => {
+                  e.target.src = "/images/default-category.png";
+                }}
+              />
+            </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
                 {isCertificationCategory(category)

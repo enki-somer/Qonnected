@@ -17,7 +17,7 @@ gradient.addColorStop(1, "rgba(255, 215, 0, 0)");
 ctx.fillStyle = gradient;
 ctx.fillRect(0, 0, 400, 400);
 
-// Add certification icon
+// Add category icon
 ctx.strokeStyle = "#FFD700"; // Gold color
 ctx.lineWidth = 4;
 ctx.beginPath();
@@ -28,21 +28,17 @@ ctx.stroke();
 ctx.beginPath();
 ctx.moveTo(160, 220);
 ctx.quadraticCurveTo(200, 260, 240, 220);
-ctx.quadraticCurveTo(220, 280, 180, 300);
-ctx.quadraticCurveTo(200, 280, 220, 300);
-ctx.quadraticCurveTo(180, 260, 160, 220);
-ctx.fillStyle = "#FFD700";
-ctx.fill();
+ctx.stroke();
 
 // Add text
 ctx.fillStyle = "#FFFFFF";
 ctx.font = "bold 24px Arial";
 ctx.textAlign = "center";
-ctx.fillText("شهادة", 200, 340);
+ctx.fillText("فئة", 200, 340);
 
 // Save the image
 const buffer = canvas.toBuffer("image/png");
 fs.writeFileSync(
-  path.join(__dirname, "../public/images/default-certification.png"),
+  path.join(__dirname, "../public/images/default-category.png"),
   buffer
 );

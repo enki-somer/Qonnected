@@ -6,7 +6,7 @@ import { Trophy, Code2, Users, Target, Play } from "lucide-react";
 const features = [
   {
     title: "شهادات معتمدة دولياً",
-    description: "من TOEFL و IELTS إلى شهادات الأمن السيبراني",
+    description: "من Microsoft و Apple إلى شهادات الأمن السيبراني",
     icon: Trophy,
     gradient: "from-yellow-500/20 to-orange-500/20",
     delay: "0",
