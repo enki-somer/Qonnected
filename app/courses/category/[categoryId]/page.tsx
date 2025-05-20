@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { categories } from "@/data/categories";
 import CourseSearch from "@/components/CourseSearch";
@@ -10,6 +10,7 @@ import {
   BookOpenIcon,
   ClockIcon,
   UserGroupIcon,
+  ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
@@ -21,6 +22,7 @@ const levels = [
 ];
 
 export default function CategoryPage() {
+  const router = useRouter();
   const params = useParams();
   const categoryId = params.categoryId as string;
   const category = categories.find((cat) => cat.id === categoryId);
@@ -42,14 +44,17 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="container mx-auto p-6">
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 text-text-muted hover:text-white transition-colors mb-6"
+      >
+        <ArrowRightIcon className="w-5 h-5" />
+        <span>العودة</span>
+      </button>
+
       <div className="mb-8">
-        <Link
-          href="/courses"
-          className="text-text-muted hover:text-accent mb-4 inline-block"
-        >
-          ← العودة إلى التصنيفات
-        </Link>
         <h1 className="text-3xl font-bold mb-2">{category.title}</h1>
         <p className="text-text-muted">{category.description}</p>
       </div>

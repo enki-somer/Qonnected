@@ -5,47 +5,12 @@ import { motion } from "framer-motion";
 import { categories } from "@/data/categories";
 import CategoryCard from "@/components/CategoryCard";
 import CourseSearch from "@/components/CourseSearch";
+import { courses } from "@/data/courses";
 import {
   BookOpenIcon,
   ClockIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-
-const courses = [
-  {
-    id: 1,
-    title: "أساسيات سطر الأوامر",
-    description: "تعلم المهارات الأساسية للتعامل مع سطر الأوامر وأتمتة المهام.",
-    duration: "44 دقيقة",
-    level: "beginner",
-    students: 128,
-    lessons: 11,
-    instructor: "أحمد محمد",
-    category: "programming",
-  },
-  {
-    id: 2,
-    title: "تعلم Node.js",
-    description: "ابدأ رحلتك في تطوير تطبيقات الويب باستخدام Node.js.",
-    duration: "3 ساعات",
-    level: "intermediate",
-    students: 256,
-    lessons: 24,
-    instructor: "سارة أحمد",
-    category: "web-development",
-  },
-  {
-    id: 3,
-    title: "React.js للمبتدئين",
-    description: "تعلم أساسيات React.js وبناء تطبيقات الويب التفاعلية.",
-    duration: "5 ساعات",
-    level: "beginner",
-    students: 512,
-    lessons: 32,
-    instructor: "محمد علي",
-    category: "web-development",
-  },
-];
 
 const container = {
   hidden: { opacity: 0 },

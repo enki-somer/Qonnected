@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Category as CertificationCategory } from "@/types/certifications";
 import { Category as CourseCategory } from "@/data/categories";
+import { useRouter } from "next/navigation";
 
 type CategoryCardProps = {
   category: CertificationCategory | CourseCategory;
@@ -127,9 +128,18 @@ const isCertificationCategory = (
 };
 
 export default function CategoryCard({ category, onClick }: CategoryCardProps) {
+  const router = useRouter();
   const logoPath = isCertificationCategory(category)
-    ? getCategoryLogo(category.id)
-    : "";
+    ? `/certifications/${category.id}.svg`
+    : null;
+
+  const handleClick = () => {
+    if (isCertificationCategory(category)) {
+      onClick(category.id);
+    } else {
+      router.push(`/courses/category/${category.id}`);
+    }
+  };
 
   return (
     <motion.div
@@ -139,7 +149,7 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
         y: -5,
         transition: { duration: 0.2 },
       }}
-      onClick={() => onClick(category.id)}
+      onClick={handleClick}
       className="cursor-pointer group"
     >
       <div className="relative h-full bg-[#1a1f2e] rounded-2xl p-6 border border-primary-light/10 hover:border-accent/30 transition-all duration-300 flex flex-col overflow-hidden">
