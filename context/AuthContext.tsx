@@ -47,7 +47,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Event listener for when auth state changes
         netlifyIdentity.on("login", (user) => {
-          console.log("Login event received", user);
           if (mounted) {
             setUser(user as User);
             netlifyIdentity.close();
@@ -55,14 +54,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         netlifyIdentity.on("logout", () => {
-          console.log("Logout event received");
           if (mounted) {
             setUser(null);
           }
         });
 
         netlifyIdentity.on("init", () => {
-          console.log("Init event received", netlifyIdentity.currentUser());
           if (mounted) {
             const currentUser = netlifyIdentity.currentUser();
             setUser(currentUser as User | null);
@@ -73,11 +70,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Check if user is already logged in
         const currentUser = netlifyIdentity.currentUser();
         if (currentUser && mounted) {
-          console.log("User already logged in", currentUser);
           setUser(currentUser as User);
           setAuthReady(true);
         } else {
-          console.log("No user currently logged in");
           setAuthReady(true);
         }
       } catch (error) {
@@ -100,12 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = () => {
-    console.log("Opening login modal");
     netlifyIdentity.open("login");
   };
 
   const logout = () => {
-    console.log("Logging out");
     netlifyIdentity.logout();
   };
 
@@ -115,8 +108,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     authReady,
   };
-
-  console.log("Auth context state:", { user, authReady });
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

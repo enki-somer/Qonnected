@@ -1,0 +1,9 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="160" height="160" fill="white"/>
+  <!-- This is a placeholder QR code pattern. Replace with your actual Zain Cash payment QR code -->
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M20 20h40v40H20V20zm10 10h20v20H30V30z" fill="black"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M100 20h40v40h-40V20zm10 10h20v20h-20V30z" fill="black"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M20 100h40v40H20v-40zm10 10h20v20H30v-20z" fill="black"/>
+  <rect x="80" y="80" width="60" height="60" fill="black"/>
+  <!-- Add your custom payment information or patterns here -->
+</svg> 

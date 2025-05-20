@@ -1,83 +1,180 @@
-# QonnectEd - منصة التعلم العربية
+# QonnectED - منصة تعليمية عربية للمطورين 🎓
 
-QonnectEd is an Arabic learning platform designed to provide high-quality educational content in programming, web development, and technology.
+<div dir="rtl">
 
-## Features
+## نظرة عامة 🌟
 
-- 📚 Comprehensive course catalog
-- 💻 Hands-on projects
-- 👥 Team collaboration
-- 🎯 Progress tracking
-- 🌐 Arabic-first interface
+QonnectED هي منصة تعليمية عربية متخصصة للمطورين، تهدف إلى تقديم محتوى تعليمي عالي الجودة باللغة العربية. المنصة مصممة لتكون سهلة الاستخدام وتوفر تجربة تعلم سلسة ومتكاملة.
 
-## Tech Stack
+## المميزات الرئيسية ✨
 
-- Next.js 14
+- **واجهة مستخدم عربية**: تصميم كامل يدعم اللغة العربية (RTL)
+- **نظام مصادقة متكامل**: تسجيل دخول وإدارة حسابات المستخدمين
+- **لوحة إعدادات شاملة**: تخصيص كامل لتجربة المستخدم
+- **تصميم متجاوب**: يعمل على جميع الأجهزة
+- **نظام إشعارات**: لمتابعة التحديثات والأنشطة
+- **دعم متعدد اللغات**: العربية والإنجليزية
+
+</div>
+
+## Technical Stack 🛠
+
+### Frontend
+
+- Next.js 13 (App Router)
 - TypeScript
 - Tailwind CSS
-- Framer Motion
-- Heroicons
+- Netlify Identity for Authentication
+- Heroicons & React Icons
 
-## Getting Started
+### Deployment
 
-1. Clone the repository:
+- Netlify
+- Edge Functions Support
+
+## Getting Started 🚀
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Git
+
+### Installation
+
+1. Clone the repository
 
 ```bash
-git clone https://github.com/enki-somer/Qonnected.git
-```
-
-2. Install dependencies:
-
-```bash
+git clone https://github.com/your-username/qonnected.git
 cd qonnected
-npm install
 ```
 
-3. Run the development server:
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables
+
+```bash
+cp .env.example .env.local
+```
+
+4. Run the development server
 
 ```bash
 npm run dev
+# or
+yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Project Structure
+## Project Structure 📁
 
-- `/app` - Next.js app router pages
-- `/components` - Reusable React components
-- `/public` - Static assets
-- `/styles` - Global styles and Tailwind configuration
+```
+qonnected/
+├── app/                    # Next.js 13 app directory
+│   ├── certifications/    # Certifications pages
+│   ├── courses/          # Courses pages
+│   ├── settings/         # User settings
+│   └── teams/           # Teams/groups pages
+├── components/           # Reusable components
+├── context/             # React context (Auth, Theme)
+├── public/             # Static assets
+└── styles/            # Global styles
+```
 
-## Deployment
+## Authentication 🔐
 
-### Deploy to Netlify
+The platform uses Netlify Identity for authentication, providing:
 
-1. Fork this repository
-2. Log in to [Netlify](https://app.netlify.com)
-3. Click "New site from Git"
-4. Choose your forked repository
-5. Configure the build settings:
+- Email/Password authentication
+- Social login (configurable)
+- JWT token management
+- User metadata management
+
+## User Settings ⚙️
+
+The settings page includes:
+
+- Profile management
+- Notification preferences
+- Language & region settings
+- Privacy & security options
+- Billing & subscription (placeholder)
+
+## Development Guidelines 📝
+
+### Code Style
+
+- Use TypeScript for type safety
+- Follow Next.js best practices
+- Use Tailwind CSS for styling
+- Maintain RTL support
+- Keep components modular and reusable
+
+### Git Workflow
+
+1. Create feature branches from `main`
+2. Use meaningful commit messages
+3. Submit PRs for review
+4. Maintain clean git history
+
+## Environment Variables 🔧
+
+```env
+NEXT_PUBLIC_SITE_URL=your-site-url
+NEXT_USE_NETLIFY_EDGE=true
+```
+
+## Deployment 🌐
+
+The project is configured for deployment on Netlify:
+
+1. Connect your repository to Netlify
+2. Configure build settings:
    - Build command: `npm run build`
    - Publish directory: `.next`
-6. Click "Deploy site"
+3. Set up environment variables
+4. Enable Netlify Identity
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/enki-somer/Qonnected)
+## Current Status 📊
 
-## Contributing
+- ✅ Authentication system
+- ✅ User profile management
+- ✅ Settings page
+- ✅ Responsive sidebar
+- ✅ RTL support
+- 🟡 Course management (in progress)
+- 🟡 Payment integration (planned)
+- 🟡 Team features (planned)
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+<div dir="rtl">
 
-## Learn More
+## المساهمة 🤝
 
-To learn more about Next.js, take a look at the following resources:
+نرحب بمساهماتكم في تطوير المنصة. يرجى اتباع إرشادات المساهمة في الملف `CONTRIBUTING.md`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## الترخيص 📄
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+هذا المشروع مرخص تحت رخصة MIT. انظر ملف `LICENSE` للمزيد من التفاصيل.
 
-## Deploy on Vercel
+## الدعم 💬
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+للمساعدة والاستفسارات، يمكنكم:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- فتح issue في GitHub
+- التواصل عبر البريد الإلكتروني: support@qonnected.com
+- زيارة موقعنا: [www.qonnected.com](https://www.qonnected.com)
+
+</div>
+
+---
+
+<div align="center">
+  <p>Built with ❤️ for the Arab developer community</p>
+</div>

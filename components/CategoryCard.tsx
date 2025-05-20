@@ -1,61 +1,232 @@
-import { Category } from "@/data/categories";
-import {
-  CodeBracketIcon,
-  GlobeAltIcon,
-  PaintBrushIcon,
-  BriefcaseIcon,
-  CpuChipIcon,
-  CameraIcon,
-  ShoppingBagIcon,
-  LanguageIcon,
-} from "@heroicons/react/24/outline";
-import Link from "next/link";
+"use client";
 
-const iconMap = {
-  code: CodeBracketIcon,
-  globe: GlobeAltIcon,
-  palette: PaintBrushIcon,
-  briefcase: BriefcaseIcon,
-  chip: CpuChipIcon,
-  camera: CameraIcon,
-  shopping: ShoppingBagIcon,
-  language: LanguageIcon,
+import { motion } from "framer-motion";
+import Image from "next/image";
+import {
+  Award,
+  ChevronRight,
+  Languages,
+  Cpu,
+  Code,
+  Palette,
+  Globe,
+  Briefcase,
+  GraduationCap,
+  BookOpen,
+} from "lucide-react";
+import { Category as CertificationCategory } from "@/types/certifications";
+import { Category as CourseCategory } from "@/data/categories";
+
+type CategoryCardProps = {
+  category: CertificationCategory | CourseCategory;
+  onClick: (id: string) => void;
 };
 
-interface CategoryCardProps {
-  category: Category;
-  onClick?: () => void;
-}
+// Get the logo path based on category ID
+const getCategoryLogo = (id: string): string => {
+  switch (id) {
+    case "microsoft":
+      return "/images/Microsoft.PNG";
+    case "adobe":
+      return "/images/Adobe.PNG";
+    case "autodesk":
+      return "/images/Autodesk.PNG";
+    case "apple":
+      return "/images/apple-logo.png";
+    default:
+      return "";
+  }
+};
+
+const getCategoryIcon = (categoryId: string) => {
+  switch (categoryId) {
+    case "language":
+      return <Languages className="w-4 h-4" />;
+    case "tech":
+      return <Cpu className="w-4 h-4" />;
+    case "microsoft":
+      return <Code className="w-4 h-4" />;
+    case "adobe":
+      return <Palette className="w-4 h-4" />;
+    case "csb":
+      return <Globe className="w-4 h-4" />;
+    case "autodesk":
+      return <Briefcase className="w-4 h-4" />;
+    case "esb":
+      return <Briefcase className="w-4 h-4" />;
+    case "apple":
+      return <Code className="w-4 h-4" />;
+    case "pmi":
+      return <GraduationCap className="w-4 h-4" />;
+    case "programming":
+      return <Code className="w-4 h-4" />;
+    case "web-development":
+      return <Globe className="w-4 h-4" />;
+    case "design":
+      return <Palette className="w-4 h-4" />;
+    case "business":
+      return <Briefcase className="w-4 h-4" />;
+    case "ai":
+      return <Cpu className="w-4 h-4" />;
+    case "marketing":
+      return <Globe className="w-4 h-4" />;
+    case "languages":
+      return <Languages className="w-4 h-4" />;
+    case "photography":
+      return <Palette className="w-4 h-4" />;
+    default:
+      return <Award className="w-4 h-4" />;
+  }
+};
+
+const getCategoryLabel = (categoryId: string) => {
+  switch (categoryId) {
+    case "language":
+      return "لغات";
+    case "tech":
+      return "تقنية";
+    case "microsoft":
+      return "مايكروسوفت";
+    case "adobe":
+      return "تصميم";
+    case "csb":
+      return "لغات";
+    case "autodesk":
+      return "هندسة";
+    case "esb":
+      return "ريادة";
+    case "apple":
+      return "برمجة";
+    case "pmi":
+      return "إدارة";
+    case "programming":
+      return "برمجة";
+    case "web-development":
+      return "تطوير ويب";
+    case "design":
+      return "تصميم";
+    case "business":
+      return "أعمال";
+    case "ai":
+      return "ذكاء اصطناعي";
+    case "marketing":
+      return "تسويق";
+    case "languages":
+      return "لغات";
+    case "photography":
+      return "تصوير";
+    default:
+      return "عام";
+  }
+};
+
+const isCertificationCategory = (
+  category: CertificationCategory | CourseCategory
+): category is CertificationCategory => {
+  return "exams" in category;
+};
 
 export default function CategoryCard({ category, onClick }: CategoryCardProps) {
-  const Icon = iconMap[category.icon as keyof typeof iconMap] || GlobeAltIcon; // Fallback to GlobeAltIcon if icon not found
+  const logoPath = isCertificationCategory(category)
+    ? getCategoryLogo(category.id)
+    : "";
 
   return (
-    <Link
-      href={`/courses/category/${category.id}`}
-      onClick={onClick}
-      className="block group bg-primary-dark rounded-xl p-6 hover:ring-2 hover:ring-accent transition-all relative overflow-hidden"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{
+        y: -5,
+        transition: { duration: 0.2 },
+      }}
+      onClick={() => onClick(category.id)}
+      className="cursor-pointer group"
     >
-      <div className="absolute inset-0 bg-primary-dark/5 opacity-0 transition-opacity group-hover:opacity-100" />
+      <div className="relative h-full bg-[#1a1f2e] rounded-2xl p-6 border border-primary-light/10 hover:border-accent/30 transition-all duration-300 flex flex-col overflow-hidden">
+        {/* Background Gradient Effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-dark/50 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <div className="relative">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm">
-          <Icon className="h-6 w-6 text-white" />
-        </div>
+        {/* Content */}
+        <div className="relative z-10">
+          {/* Header Section */}
+          <div className="flex items-start gap-4 mb-6">
+            {logoPath && (
+              <div className="relative w-16 h-16 flex-shrink-0 p-2 bg-white/5 rounded-xl group-hover:bg-white/10 transition-colors duration-300">
+                <Image
+                  src={logoPath}
+                  alt={`${
+                    isCertificationCategory(category)
+                      ? category.name
+                      : category.title
+                  } logo`}
+                  fill
+                  sizes="(max-width: 640px) 48px, 64px"
+                  className="object-contain p-1"
+                />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
+                {isCertificationCategory(category)
+                  ? category.name
+                  : category.title}
+              </h3>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full">
+                {getCategoryIcon(category.id)}
+                <span className="text-sm font-medium text-accent">
+                  {getCategoryLabel(category.id)}
+                </span>
+              </div>
+            </div>
+          </div>
 
-        <h3 className="mb-2 text-xl font-semibold text-white group-hover:text-accent transition-colors">
-          {category.title}
-        </h3>
+          {/* Content Section */}
+          <div className="space-y-3 mb-6">
+            {isCertificationCategory(category) ? (
+              <>
+                {category.exams.slice(0, 2).map((exam) => (
+                  <div
+                    key={exam.id}
+                    className="flex items-center gap-3 p-3 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors duration-300"
+                  >
+                    <Award className="w-5 h-5 text-accent" />
+                    <span className="text-sm text-text-muted group-hover:text-text transition-colors duration-300 truncate">
+                      {exam.name}
+                    </span>
+                  </div>
+                ))}
+                {category.exams.length > 2 && (
+                  <div className="text-sm text-accent/80 group-hover:text-accent transition-colors duration-300">
+                    +{category.exams.length - 2} شهادات أخرى
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                  <BookOpen className="w-5 h-5 text-accent" />
+                  <span className="text-sm text-text-muted">
+                    {category.courseCount} دورة متاحة
+                  </span>
+                </div>
+                <p className="text-sm text-text-muted line-clamp-2">
+                  {category.description}
+                </p>
+              </>
+            )}
+          </div>
 
-        <p className="mb-4 text-sm text-white/80">{category.description}</p>
-
-        <div className="flex items-center justify-between text-sm text-white/60">
-          <span>{category.courseCount} دورة</span>
-          <span className="group-hover:translate-x-1 transition-transform">
-            ←
-          </span>
+          {/* Action Button */}
+          <button className="w-full bg-white/5 hover:bg-white/10 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group-hover:bg-accent/20">
+            <span className="text-sm">
+              {isCertificationCategory(category)
+                ? "عرض الشهادات"
+                : "عرض الدورات"}
+            </span>
+            <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+          </button>
         </div>
       </div>
-    </Link>
+    </motion.div>
   );
 }

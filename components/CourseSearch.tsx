@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { Search, Filter, X } from "lucide-react";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 interface CourseSearchProps {
   searchQuery: string;
@@ -58,66 +61,43 @@ export default function CourseSearch({
   };
 
   return (
-    <div className="mb-8 space-y-4">
-      <div className="flex flex-col md:flex-row gap-4">
-        {/* Search Input Group */}
-        <div className="relative flex-grow">
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none" />
-          <input
-            type="search"
-            value={localSearch}
-            onChange={(e) => handleSearch(e.target.value)}
-            placeholder={placeholder}
-            className="w-full bg-primary-dark pl-12 pr-10 py-3 rounded-lg border border-white/10 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors placeholder:text-text-muted"
-            dir="rtl"
-          />
-          {localSearch && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-white transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Filter Button */}
-        {showFilters && (
+    <div className="mb-6 space-y-3 sm:space-y-4">
+      {/* Search Bar */}
+      <div className="relative">
+        <MagnifyingGlassIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
+        <input
+          type="text"
+          value={localSearch}
+          onChange={(e) => handleSearch(e.target.value)}
+          placeholder={placeholder}
+          className="w-full bg-primary-dark pl-10 pr-12 py-2.5 rounded-xl text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
+        />
+        {localSearch && (
           <button
-            type="button"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="flex items-center gap-2 bg-primary-dark px-6 py-3 rounded-lg border border-white/10 hover:border-accent transition-colors group"
+            onClick={handleClear}
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 hover:bg-white/5 rounded-full transition-colors"
           >
-            <Filter className="w-5 h-5 group-hover:text-accent transition-colors" />
-            <span className="group-hover:text-accent transition-colors">
-              المستوى
-            </span>
+            <XMarkIcon className="w-4 h-4 text-text-muted" />
           </button>
         )}
       </div>
 
-      {/* Filter Options */}
-      {showFilters && isFilterOpen && (
-        <div
-          className="bg-primary-dark rounded-lg border border-white/10 p-4 animate-in fade-in slide-in-from-top-4 duration-300"
-          dir="rtl"
-        >
-          <div className="flex flex-wrap gap-2">
-            {levels.map((level) => (
-              <button
-                key={level.id}
-                onClick={() => onLevelChange?.(level.id)}
-                className={`px-4 py-2 rounded-full text-sm ${
-                  selectedLevel === level.id
-                    ? "bg-accent text-white"
-                    : "bg-white/5 hover:bg-white/10"
-                } transition-all duration-300 hover:scale-105 active:scale-95`}
-              >
-                {level.label}
-              </button>
-            ))}
-          </div>
+      {/* Filters */}
+      {showFilters && (
+        <div className="flex flex-wrap gap-2">
+          {levels.map((level) => (
+            <button
+              key={level.id}
+              onClick={() => onLevelChange?.(level.id)}
+              className={`px-3 py-1.5 rounded-full text-xs sm:text-sm transition-colors ${
+                selectedLevel === level.id
+                  ? "bg-accent text-primary"
+                  : "bg-primary-dark text-text-muted hover:bg-white/5"
+              }`}
+            >
+              {level.label}
+            </button>
+          ))}
         </div>
       )}
     </div>

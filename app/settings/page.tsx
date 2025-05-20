@@ -21,30 +21,30 @@ const settingsSections = [
     icon: UserIcon,
     description: "تحديث معلوماتك الشخصية وبيانات الاتصال",
   },
-  {
-    id: "billing",
-    title: "الفواتير والمدفوعات",
-    icon: CreditCardIcon,
-    description: "إدارة طرق الدفع والاشتراكات",
-  },
+  // {
+  //   id: "billing",
+  //   title: "الفواتير والمدفوعات",
+  //   icon: CreditCardIcon,
+  //   description: "إدارة طرق الدفع والاشتراكات",
+  // },
   {
     id: "notifications",
     title: "الإشعارات",
     icon: BellIcon,
     description: "تخصيص إعدادات الإشعارات والتنبيهات",
   },
-  {
-    id: "language",
-    title: "اللغة والمنطقة",
-    icon: GlobeAltIcon,
-    description: "تعديل تفضيلات اللغة والمنطقة الزمنية",
-  },
-  {
-    id: "privacy",
-    title: "الخصوصية والأمان",
-    icon: ShieldCheckIcon,
-    description: "إدارة إعدادات الأمان وخصوصية الحساب",
-  },
+  // {
+  //   id: "language",
+  //   title: "اللغة والمنطقة",
+  //   icon: GlobeAltIcon,
+  //   description: "تعديل تفضيلات اللغة والمنطقة الزمنية",
+  // },
+  // {
+  //   id: "privacy",
+  //   title: "الخصوصية والأمان",
+  //   icon: ShieldCheckIcon,
+  //   description: "إدارة إعدادات الأمان وخصوصية الحساب",
+  // },
 ];
 
 const languageOptions = [
@@ -65,18 +65,14 @@ export default function SettingsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Settings page auth state:", { user, authReady, isLoading });
-
     let timeoutId: NodeJS.Timeout;
 
     if (authReady) {
       if (!user) {
-        console.log("No user found, redirecting to home");
         router.replace("/");
       } else {
         // Add a small delay to ensure state is properly synced
         timeoutId = setTimeout(() => {
-          console.log("User found, showing settings page");
           setIsLoading(false);
         }, 100);
       }
@@ -91,7 +87,6 @@ export default function SettingsPage() {
 
   // Show loading state while checking auth
   if (isLoading || !authReady) {
-    console.log("Showing loading state:", { isLoading, authReady });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -107,7 +102,6 @@ export default function SettingsPage() {
 
   // If we're not loading and have no user, we shouldn't render anything
   if (!user) {
-    console.log("No user found after loading");
     return null;
   }
 
@@ -188,62 +182,17 @@ export default function SettingsPage() {
           </div>
         );
 
-      case "billing":
-        return (
-          <div className="space-y-8">
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">الاشتراك الحالي</h3>
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="text-text-muted">الباقة المجانية</p>
-                  <p className="text-sm text-text-muted">تجربة محدودة للمنصة</p>
-                </div>
-                <button className="bg-accent hover:bg-accent-dark text-primary px-4 py-2 rounded-lg transition-colors">
-                  ترقية الحساب
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">طرق الدفع</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-gray-700 rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <CreditCardIcon className="w-8 h-8 text-text-muted" />
-                    <div>
-                      <p className="font-medium">إضافة بطاقة جديدة</p>
-                      <p className="text-sm text-text-muted">
-                        Visa, Mastercard, أو American Express
-                      </p>
-                    </div>
-                  </div>
-                  <button className="text-accent hover:text-accent-light transition-colors">
-                    إضافة
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">سجل المدفوعات</h3>
-              <div className="text-center text-text-muted py-8">
-                لا توجد مدفوعات سابقة
-              </div>
-            </div>
-          </div>
-        );
-
       case "notifications":
         return (
           <div className="space-y-6">
             <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">تفضيلات الإشعارات</h3>
+              <h3 className="text-xl font-semibold mb-4">إعدادات الإشعارات</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">إشعارات البريد الإلكتروني</p>
                     <p className="text-sm text-text-muted">
-                      تلقي إشعارات عبر البريد الإلكتروني
+                      استلام التحديثات عبر البريد الإلكتروني
                     </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -252,14 +201,14 @@ export default function SettingsPage() {
                       className="sr-only peer"
                       defaultChecked
                     />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                   </label>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">إشعارات الدورات</p>
+                    <p className="font-medium">إشعارات الموقع</p>
                     <p className="text-sm text-text-muted">
-                      تحديثات حول الدورات المسجلة
+                      استلام التنبيهات داخل المنصة
                     </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -268,19 +217,7 @@ export default function SettingsPage() {
                       className="sr-only peer"
                       defaultChecked
                     />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
-                  </label>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">إشعارات التسويق</p>
-                    <p className="text-sm text-text-muted">
-                      عروض وتحديثات حول المنتجات الجديدة
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                   </label>
                 </div>
               </div>
@@ -288,112 +225,11 @@ export default function SettingsPage() {
           </div>
         );
 
-      case "language":
-        return (
-          <div className="space-y-6">
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">تفضيلات اللغة</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    اللغة المفضلة
-                  </label>
-                  <select className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent">
-                    {languageOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    المنطقة الزمنية
-                  </label>
-                  <select className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent">
-                    {timezoneOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "privacy":
-        return (
-          <div className="space-y-6">
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">إعدادات الخصوصية</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">عرض الملف الشخصي</p>
-                    <p className="text-sm text-text-muted">
-                      السماح للآخرين برؤية ملفك الشخصي
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      defaultChecked
-                    />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
-                  </label>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">عرض التقدم في التعلم</p>
-                    <p className="text-sm text-text-muted">
-                      السماح للآخرين برؤية تقدمك في الدورات
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4">الأمان</h3>
-              <div className="space-y-4">
-                <button className="w-full flex items-center justify-between p-4 border border-gray-700 rounded-lg hover:border-accent transition-colors">
-                  <div>
-                    <p className="font-medium">تغيير كلمة المرور</p>
-                    <p className="text-sm text-text-muted">
-                      تحديث كلمة المرور الخاصة بك
-                    </p>
-                  </div>
-                  <ShieldCheckIcon className="w-6 h-6 text-text-muted" />
-                </button>
-                <button className="w-full flex items-center justify-between p-4 border border-gray-700 rounded-lg hover:border-accent transition-colors">
-                  <div>
-                    <p className="font-medium">المصادقة الثنائية</p>
-                    <p className="text-sm text-text-muted">
-                      تفعيل المصادقة الثنائية لحماية حسابك
-                    </p>
-                  </div>
-                  <ShieldCheckIcon className="w-6 h-6 text-text-muted" />
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-primary rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4 text-red-500">
-                خيارات متقدمة
-              </h3>
-              <button className="text-red-500 hover:text-red-400 transition-colors">
-                حذف الحساب
-              </button>
-            </div>
-          </div>
-        );
+      // case "billing":
+      // case "language":
+      // case "privacy":
+      default:
+        return null;
     }
   };
 
