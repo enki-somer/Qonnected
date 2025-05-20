@@ -16,19 +16,19 @@ import { Certification } from "@/types/certifications";
 const getCertificationLogo = (id: string): string => {
   switch (id) {
     case "mos-word":
-      return "/images/Microsoft 360.PNG";
+      return "/images/microsoft-360.png";
     case "mos-excel":
-      return "/images/Microsoft 360.PNG";
+      return "/images/microsoft-360.png";
     case "adobe-photoshop":
-      return "/images/Photoshop.PNG";
+      return "/images/photoshop.png";
     case "adobe-illustrator":
-      return "/images/Adobe.PNG";
+      return "/images/adobe.png";
     case "autocad":
-      return "/images/Autocad.PNG";
+      return "/images/autocad.png";
     case "swift-level1":
       return "/images/swift.png";
     default:
-      return "";
+      return "/images/default-certification.png"; // Provide a default image
   }
 };
 

@@ -7,6 +7,11 @@ const nextConfig = {
       },
     },
   },
+  images: {
+    remotePatterns: [],
+    unoptimized: false,
+    domains: [],
+  },
 };
 
 export default nextConfig;
