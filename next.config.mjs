@@ -8,10 +8,11 @@ const nextConfig = {
     },
   },
   images: {
+    unoptimized: true,
     remotePatterns: [],
-    unoptimized: false,
     domains: [],
   },
+  output: "standalone",
 };
 
 export default nextConfig;

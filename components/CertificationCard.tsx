@@ -16,19 +16,19 @@ import { Certification } from "@/types/certifications";
 const getCertificationLogo = (id: string): string => {
   switch (id) {
     case "mos-word":
-      return "/images/microsoft-360.png";
+      return "/images/Microsoft.png";
     case "mos-excel":
-      return "/images/microsoft-360.png";
+      return "/images/Microsoft.png";
     case "adobe-photoshop":
-      return "/images/photoshop.png";
+      return "/images/Photoshop.png";
     case "adobe-illustrator":
-      return "/images/adobe.png";
+      return "/images/Adobe.png";
     case "autocad":
-      return "/images/autocad.png";
+      return "/images/Autocad.png";
     case "swift-level1":
       return "/images/swift.png";
     default:
-      return "/images/default-certification.png"; // Provide a default image
+      return "/images/default-certification.png";
   }
 };
 
@@ -55,6 +55,11 @@ export default function CertificationCard({
   const discountedPrice = formatPrice(
     (parseInt(certification.price.replace(/\D/g, "")) * 0.8).toString()
   );
+
+  // Add error handling for images
+  const handleImageError = (e: any) => {
+    e.currentTarget.src = "/images/default-certification.png";
+  };
 
   return (
     <motion.div
@@ -96,6 +101,8 @@ export default function CertificationCard({
                   fill
                   sizes="56px"
                   className="object-contain p-1"
+                  onError={handleImageError}
+                  priority
                 />
               </div>
             )}
@@ -153,6 +160,8 @@ export default function CertificationCard({
                   fill
                   sizes="80px"
                   className="object-contain p-1"
+                  onError={handleImageError}
+                  priority
                 />
               </div>
             )}
