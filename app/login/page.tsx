@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import netlifyIdentity from "netlify-identity-widget";
-import { handleAuthentication } from "@/utils/auth";
+import netlifyIdentity, { User } from "netlify-identity-widget";
+import { handleAuthentication, ExtendedUser } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -15,7 +15,7 @@ export default function LoginPage() {
     // Check if user is already logged in
     const user = netlifyIdentity.currentUser();
     if (user) {
-      const userRole = handleAuthentication(user);
+      const userRole = handleAuthentication(user as ExtendedUser);
       if (userRole === "admin") {
         router.push("/admin");
       } else {
@@ -25,8 +25,8 @@ export default function LoginPage() {
     }
 
     // Handle login
-    netlifyIdentity.on("login", (user) => {
-      const userRole = handleAuthentication(user);
+    netlifyIdentity.on("login", (user: User) => {
+      const userRole = handleAuthentication(user as ExtendedUser);
       if (userRole === "admin") {
         router.push("/admin");
       } else {
