@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ChevronRight } from "lucide-react";
 import { Certification } from "@/types/certifications";
 import { certificationCategories } from "@/data/certifications";
+import { useAuth } from "@/hooks/useAuth";
 import CategoryCard from "@/components/CategoryCard";
 import CertificationCard from "@/components/CertificationCard";
 import CertificationModal from "@/components/CertificationModal";
@@ -11,6 +12,7 @@ import PaymentFlow from "@/components/PaymentFlow";
 import PreTestModal from "@/components/PreTestModal";
 
 export default function CertificationsPage() {
+  const { isAuthenticated, login } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCertification, setSelectedCertification] =
@@ -20,14 +22,46 @@ export default function CertificationsPage() {
   const [showPayment, setShowPayment] = useState(false);
 
   const handleBookClick = (exam: Certification) => {
+    if (!isAuthenticated) {
+      // Store the exam for after login
+      sessionStorage.setItem("pendingBooking", JSON.stringify(exam));
+      login();
+      return;
+    }
     setSelectedCertification(exam);
     setShowPayment(true);
   };
 
   const handlePreTestClick = (exam: Certification) => {
+    if (!isAuthenticated) {
+      // Store the exam for after login
+      sessionStorage.setItem("pendingPreTest", JSON.stringify(exam));
+      login();
+      return;
+    }
     setSelectedCertification(exam);
     setIsPreTestModalOpen(true);
   };
+
+  // Check for pending actions after login
+  useEffect(() => {
+    if (isAuthenticated) {
+      const pendingBooking = sessionStorage.getItem("pendingBooking");
+      const pendingPreTest = sessionStorage.getItem("pendingPreTest");
+
+      if (pendingBooking) {
+        const exam = JSON.parse(pendingBooking);
+        setSelectedCertification(exam);
+        setShowPayment(true);
+        sessionStorage.removeItem("pendingBooking");
+      } else if (pendingPreTest) {
+        const exam = JSON.parse(pendingPreTest);
+        setSelectedCertification(exam);
+        setIsPreTestModalOpen(true);
+        sessionStorage.removeItem("pendingPreTest");
+      }
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -146,7 +180,7 @@ export default function CertificationsPage() {
       )}
 
       {/* Payment Flow Modal */}
-      {selectedCertification && (
+      {selectedCertification && isAuthenticated && (
         <PaymentFlow
           isOpen={showPayment}
           onClose={() => {
