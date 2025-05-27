@@ -12,7 +12,6 @@ const nextConfig = {
     remotePatterns: [],
     domains: [],
   },
-  output: "standalone",
 };
 
 export default nextConfig;
