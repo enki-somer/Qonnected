@@ -156,7 +156,7 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
         case "swift":
           return "/images/swift.png";
         case "csb":
-          return "/images/Microsoft.png"; // English for Business uses Microsoft logo
+          return "/images/csb-logo.png"; // English for Business uses Microsoft logo
         case "mos":
           return "/images/Microsoft.png"; // Microsoft Office Specialist
         case "acp":
@@ -164,7 +164,10 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
         case "acu":
           return "/images/Autodesk.png"; // Autodesk Certified User
         case "esb":
-          return "/images/Business.png"; // Entrepreneurship certification
+          return "/images/ESB_logo-1.png"; // Entrepreneurship certification
+        case "pmi":
+          return "/images/pmi.png"; // PMI certification
+
         default:
           return "/images/default-certification.png";
       }
@@ -195,90 +198,51 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
       onClick={handleClick}
       className="cursor-pointer group"
     >
-      <div className="relative h-full bg-[#1a1f2e] rounded-2xl p-6 border border-primary-light/10 hover:border-accent/30 transition-all duration-300 flex flex-col overflow-hidden">
+      <div className="relative h-full bg-[#1a1f2e] rounded-2xl border border-primary-light/10 hover:border-accent/30 transition-all duration-300 flex flex-col overflow-hidden">
         {/* Background Gradient Effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-dark/50 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Content */}
-        <div className="relative z-10">
-          {/* Header Section */}
-          <div className="flex items-start gap-4 mb-6">
-            <div className="relative w-16 h-16 flex-shrink-0 p-2 bg-white/5 rounded-xl group-hover:bg-white/10 transition-colors duration-300">
+        <div className="relative z-10 flex flex-col h-full">
+          {/* Logo Section - Full Width */}
+          <div className="relative w-full bg-gradient-to-br from-white/5 to-white/[0.02] pt-12 pb-8 px-8 flex items-center justify-center">
+            <div className="relative w-full max-w-[180px] aspect-[3/2]">
               <Image
                 src={logoPath}
-                alt={`${
-                  isCertificationCategory(category)
-                    ? category.name
-                    : category.title
-                } logo`}
+                alt={`${isCertificationCategory(category) ? category.name : category.title} logo`}
                 fill
-                sizes="(max-width: 640px) 48px, 64px"
-                className="object-contain p-1"
+                className="object-contain"
+                sizes="180px"
+                priority
                 onError={(e: any) => {
                   e.target.src = "/images/default-category.png";
                 }}
               />
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
+          </div>
+
+          {/* Flex container for name and button */}
+          <div className="px-6 pt-6 pb-6 flex-1 flex flex-col justify-between">
+            {/* Category Name and Icon */}
+            <div className="flex items-center justify-center gap-3">
+              <Award className="w-5 h-5 text-accent" />
+              <h3 className="text-lg font-bold text-white text-center">
                 {isCertificationCategory(category)
                   ? category.name
                   : category.title}
               </h3>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full">
-                {getCategoryIcon(category.id)}
-                <span className="text-sm font-medium text-accent">
-                  {getCategoryLabel(category.id)}
-                </span>
-              </div>
             </div>
-          </div>
 
-          {/* Content Section */}
-          <div className="space-y-3 mb-6">
-            {isCertificationCategory(category) ? (
-              <>
-                {category.exams.slice(0, 2).map((exam) => (
-                  <div
-                    key={exam.id}
-                    className="flex items-center gap-3 p-3 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors duration-300"
-                  >
-                    <Award className="w-5 h-5 text-accent" />
-                    <span className="text-sm text-text-muted group-hover:text-text transition-colors duration-300 truncate">
-                      {exam.name}
-                    </span>
-                  </div>
-                ))}
-                {category.exams.length > 2 && (
-                  <div className="text-sm text-accent/80 group-hover:text-accent transition-colors duration-300">
-                    +{category.exams.length - 2} شهادات أخرى
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                  <BookOpen className="w-5 h-5 text-accent" />
-                  <span className="text-sm text-text-muted">
-                    {category.courseCount} دورة متاحة
-                  </span>
-                </div>
-                <p className="text-sm text-text-muted line-clamp-2">
-                  {category.description}
-                </p>
-              </>
-            )}
+            {/* Action Button */}
+            <button className="w-full mt-6 bg-white/5 hover:bg-white/10 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group-hover:bg-accent/20">
+              <span className="text-sm">
+                {isCertificationCategory(category)
+                  ? "عرض الشهادات"
+                  : "عرض الدورات"}
+              </span>
+              <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
           </div>
-
-          {/* Action Button */}
-          <button className="w-full bg-white/5 hover:bg-white/10 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group-hover:bg-accent/20">
-            <span className="text-sm">
-              {isCertificationCategory(category)
-                ? "عرض الشهادات"
-                : "عرض الدورات"}
-            </span>
-            <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
         </div>
       </div>
     </motion.div>

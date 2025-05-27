@@ -3,20 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  CreditCard,
-  Users,
-  Award,
-  Menu,
-  X,
-} from "lucide-react";
+import { LayoutDashboard, CreditCard, Users, Menu, X } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Payments", href: "/admin/payments", icon: CreditCard },
-  { name: "Users", href: "/admin/users", icon: Users },
-  { name: "Certifications", href: "/admin/certifications", icon: Award },
+  { name: "لوحة التحكم", href: "/admin", icon: LayoutDashboard },
+  { name: "المدفوعات", href: "/admin/payments", icon: CreditCard },
+  { name: "المستخدمين", href: "/admin/users", icon: Users },
 ];
 
 export default function AdminLayout({
@@ -28,11 +20,11 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#1a1f2e]">
+    <div className="flex min-h-screen bg-[#1a1f2e]">
       {/* Mobile sidebar */}
       <div className="lg:hidden">
         <button
-          className="fixed top-4 left-4 z-50 p-2 bg-[#ffffff0d] rounded-lg"
+          className="fixed top-4 left-4 z-50 p-2.5 bg-[#ffffff0d] rounded-lg hover:bg-[#ffffff1a] transition-colors"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           {sidebarOpen ? (
@@ -44,26 +36,34 @@ export default function AdminLayout({
 
         {sidebarOpen && (
           <div
-            className="fixed inset-0 z-40 bg-black/70"
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           >
             <div
-              className="fixed inset-y-0 right-0 w-64 bg-[#1a1f2e] p-6"
+              className="fixed inset-y-0 right-0 w-72 bg-[#1a1f2e] p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              <nav className="space-y-2">
+              <div className="flex h-16 items-center justify-start border-b border-[#ffffff1a] pb-4">
+                <h1 className="text-xl font-bold text-white">لوحة التحكم</h1>
+              </div>
+              <nav className="mt-6 space-y-2">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors ${
                       pathname === item.href
-                        ? "bg-[#ffd700] text-black"
+                        ? "bg-[#ffd700] text-black font-medium"
                         : "text-white hover:bg-[#ffffff0d]"
                     }`}
+                    onClick={() => setSidebarOpen(false)}
                   >
-                    <item.icon className="w-5 h-5" />
-                    {item.name}
+                    <span className="text-base">{item.name}</span>
+                    <item.icon
+                      className={`w-5 h-5 ${
+                        pathname === item.href ? "text-black" : "text-[#8b95a5]"
+                      }`}
+                    />
                   </Link>
                 ))}
               </nav>
@@ -73,9 +73,9 @@ export default function AdminLayout({
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:right-0 lg:z-40 lg:w-72 lg:flex lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#1a1f2e] px-6 pb-4">
-          <div className="flex h-16 shrink-0 items-center">
+      <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 lg:right-0 lg:z-40 lg:border-l lg:border-[#ffffff1a] bg-[#1a1f2e]">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6">
+          <div className="flex h-16 shrink-0 items-center justify-start border-b border-[#ffffff1a]">
             <h1 className="text-xl font-bold text-white">لوحة التحكم</h1>
           </div>
           <nav className="flex flex-1 flex-col">
@@ -84,14 +84,20 @@ export default function AdminLayout({
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`group flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors ${
                       pathname === item.href
-                        ? "bg-[#ffd700] text-black"
+                        ? "bg-[#ffd700] text-black font-medium"
                         : "text-white hover:bg-[#ffffff0d]"
                     }`}
                   >
-                    <item.icon className="w-5 h-5" />
-                    {item.name}
+                    <span className="text-base">{item.name}</span>
+                    <item.icon
+                      className={`w-5 h-5 transition-colors ${
+                        pathname === item.href
+                          ? "text-black"
+                          : "text-[#8b95a5] group-hover:text-white"
+                      }`}
+                    />
                   </Link>
                 </li>
               ))}
@@ -101,9 +107,11 @@ export default function AdminLayout({
       </div>
 
       {/* Main content */}
-      <div className="lg:pr-72">
-        <main className="py-10">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+      <div className="flex-1 lg:pr-10">
+        <main className="h-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+            {children}
+          </div>
         </main>
       </div>
     </div>

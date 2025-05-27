@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import netlifyIdentity from "netlify-identity-widget";
+import { handleAuthentication } from "@/utils/auth";
+import type { ExtendedUser } from "@/utils/auth";
 import {
   CheckCircle,
   AlertCircle,
@@ -61,9 +64,9 @@ type PaymentStatus =
   | "selecting"
   | "qr_code"
   | "uploading"
+  | "submitting"
   | "pending"
-  | "approved"
-  | "rejected";
+  | "error";
 
 export default function PaymentFlow({
   isOpen,
@@ -80,6 +83,17 @@ export default function PaymentFlow({
   const [paymentId] = useState(
     `PAY-${Math.random().toString(36).substr(2, 9)}`
   );
+
+  // Add authentication check
+  useEffect(() => {
+    const user = netlifyIdentity.currentUser();
+    if (user) {
+      handleAuthentication(user as ExtendedUser);
+    } else {
+      // Redirect to login if not authenticated
+      window.location.href = "/login";
+    }
+  }, []);
 
   const handleMethodSelect = (methodId: string) => {
     setSelectedMethod(methodId);
@@ -104,17 +118,47 @@ export default function PaymentFlow({
   };
 
   const handlePaymentSubmit = async () => {
-    if (!paymentProof) return;
+    if (!paymentProof || !certification) return;
 
-    // Here you would typically upload the file and create a payment request
-    // For now, we'll just simulate the pending state
-    setPaymentStatus("pending");
+    try {
+      setPaymentStatus("submitting");
 
-    // Simulate API call to create payment request
-    // const formData = new FormData();
-    // formData.append('proof', paymentProof);
-    // formData.append('paymentId', paymentId);
-    // await fetch('/api/payment-requests', { method: 'POST', body: formData });
+      const formData = new FormData();
+      formData.append("proof", paymentProof);
+      formData.append("paymentId", paymentId);
+      formData.append("certificationName", certification.name);
+      // Convert price string to number by removing currency symbol and parsing
+      const numericAmount = Number(
+        certification.price.replace(/[^0-9.-]+/g, "")
+      );
+      formData.append("amount", numericAmount.toString());
+
+      console.log("Submitting payment with data:", {
+        paymentId,
+        certificationName: certification.name,
+        amount: numericAmount,
+        hasProof: !!paymentProof,
+      });
+
+      const response = await fetch("/api/payments", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit payment");
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setPaymentStatus("pending");
+      } else {
+        throw new Error(data.error || "Failed to submit payment");
+      }
+    } catch (error) {
+      console.error("Error submitting payment:", error);
+      setPaymentStatus("error");
+    }
   };
 
   const selectedPaymentMethod = PAYMENT_METHODS.find(

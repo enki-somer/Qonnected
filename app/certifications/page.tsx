@@ -8,6 +8,7 @@ import CategoryCard from "@/components/CategoryCard";
 import CertificationCard from "@/components/CertificationCard";
 import CertificationModal from "@/components/CertificationModal";
 import PaymentFlow from "@/components/PaymentFlow";
+import PreTestModal from "@/components/PreTestModal";
 
 export default function CertificationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,11 +16,17 @@ export default function CertificationsPage() {
   const [selectedCertification, setSelectedCertification] =
     useState<Certification | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPreTestModalOpen, setIsPreTestModalOpen] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
 
   const handleBookClick = (exam: Certification) => {
     setSelectedCertification(exam);
     setShowPayment(true);
+  };
+
+  const handlePreTestClick = (exam: Certification) => {
+    setSelectedCertification(exam);
+    setIsPreTestModalOpen(true);
   };
 
   return (
@@ -59,24 +66,24 @@ export default function CertificationsPage() {
         </div>
       ) : (
         <>
-          {/* Back Button */}
-          <button
-            onClick={() => setSelectedCategory(null)}
-            className="mb-6 flex items-center gap-2 text-[#8b95a5] hover:text-white transition-colors"
-          >
-            <ChevronRight className="w-5 h-5" />
-            <span>العودة إلى الفئات</span>
-          </button>
-
-          {/* Selected Category Title */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-white">
-              {
-                certificationCategories.find(
-                  (cat) => cat.id === selectedCategory
-                )?.name
-              }
-            </h2>
+          {/* Enhanced Back Navigation */}
+          <div className="sticky top-0 z-20 -mx-4 px-4 py-3 mb-6 bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-primary-light/10">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className="flex items-center gap-2 text-white hover:text-accent transition-colors group"
+              >
+                <ChevronRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+                <span className="font-medium">العودة إلى الفئات</span>
+              </button>
+              <h2 className="text-lg font-bold text-white">
+                {
+                  certificationCategories.find(
+                    (cat) => cat.id === selectedCategory
+                  )?.name
+                }
+              </h2>
+            </div>
           </div>
 
           {/* Certifications Grid */}
@@ -99,6 +106,7 @@ export default function CertificationsPage() {
                     setIsModalOpen(true);
                   }}
                   onBookClick={() => handleBookClick(exam)}
+                  onPreTestClick={() => handlePreTestClick(exam)}
                 />
               ))}
           </div>
@@ -115,6 +123,22 @@ export default function CertificationsPage() {
           }}
           onBook={() => {
             setIsModalOpen(false);
+            handleBookClick(selectedCertification);
+          }}
+          certification={selectedCertification}
+        />
+      )}
+
+      {/* Pre-test Modal */}
+      {selectedCertification && (
+        <PreTestModal
+          isOpen={isPreTestModalOpen}
+          onClose={() => {
+            setIsPreTestModalOpen(false);
+            setSelectedCertification(null);
+          }}
+          onBook={() => {
+            setIsPreTestModalOpen(false);
             handleBookClick(selectedCertification);
           }}
           certification={selectedCertification}
