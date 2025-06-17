@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search, ChevronRight } from "lucide-react";
 import { Certification } from "@/types/certifications";
 import { certificationCategories } from "@/data/certifications";
@@ -13,6 +14,7 @@ import PreTestModal from "@/components/PreTestModal";
 
 export default function CertificationsPage() {
   const { isAuthenticated, login } = useAuth();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCertification, setSelectedCertification] =
@@ -42,6 +44,32 @@ export default function CertificationsPage() {
     setSelectedCertification(exam);
     setIsPreTestModalOpen(true);
   };
+
+  // Handle URL parameters for direct certification access
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    const certParam = searchParams.get("cert");
+
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+
+      // If a specific certification is requested, find and show it
+      if (certParam) {
+        const category = certificationCategories.find(
+          (cat) => cat.id === categoryParam
+        );
+        if (category) {
+          const certification = category.exams.find(
+            (exam) => exam.id === certParam
+          );
+          if (certification) {
+            setSelectedCertification(certification);
+            setIsModalOpen(true);
+          }
+        }
+      }
+    }
+  }, [searchParams]);
 
   // Check for pending actions after login
   useEffect(() => {
