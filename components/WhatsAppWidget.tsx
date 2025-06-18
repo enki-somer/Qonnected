@@ -13,7 +13,7 @@ export default function WhatsAppWidget() {
 
     // Format the message for WhatsApp URL
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/+9647805628606?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/+9647871100101?text=${encodedMessage}`;
     window.open(whatsappUrl, "_blank");
     setMessage("");
   };
