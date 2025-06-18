@@ -29,25 +29,25 @@ const socialLinks = [
   {
     name: "Facebook",
     icon: FaFacebook,
-    url: "https://facebook.com/qonnected",
+    url: "https://www.facebook.com/profile.php?id=61576599287384",
     ariaLabel: "تابعنا على فيسبوك",
   },
   {
     name: "Instagram",
     icon: FaInstagram,
-    url: "https://instagram.com/qonnected",
+    url: "https://instagram.com/qonnected.academy",
     ariaLabel: "تابعنا على انستغرام",
   },
   {
     name: "LinkedIn",
     icon: FaLinkedin,
-    url: "https://linkedin.com/company/qonnected",
+    url: "https://linkedin.com/company/qonnected-academy",
     ariaLabel: "تابعنا على لينكد إن",
   },
   {
     name: "Email",
     icon: MdOutlineEmail,
-    url: "mailto:info@qonnected.com",
+    url: "mailto:info@qonnectedacademy.com",
     ariaLabel: "راسلنا عبر البريد الإلكتروني",
   },
 ];
