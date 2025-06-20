@@ -31,22 +31,25 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const proof = formData.get('proof') as File;
     const paymentId = formData.get('paymentId') as string;
-    const certificationName = formData.get('certificationName') as string;
+    const itemName = formData.get('itemName') as string;
+    const itemType = formData.get('itemType') as string;
     const amount = Number(formData.get('amount'));
 
     console.log('Payment submission - Form data:', {
       paymentId,
-      certificationName,
+      itemName,
+      itemType,
       amount,
       hasProof: !!proof,
       rawAmount: formData.get('amount')
     });
 
-    if (!proof || !paymentId || !certificationName) {
+    if (!proof || !paymentId || !itemName || !itemType) {
       console.error('Payment submission - Missing fields:', {
         hasProof: !!proof,
         paymentId,
-        certificationName
+        itemName,
+        itemType
       });
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -84,7 +87,8 @@ export async function POST(request: Request) {
       userName,
       userEmail,
       amount,
-      certificationName,
+      itemName,
+      itemType,
       status: 'pending',
       createdAt: new Date().toISOString(),
       proofImage,

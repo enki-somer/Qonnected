@@ -4,15 +4,10 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { categories } from "@/data/categories";
+import CourseCard from "@/components/CourseCard";
 import CourseSearch from "@/components/CourseSearch";
 import { getCoursesByCategory } from "@/data/courses";
-import {
-  BookOpenIcon,
-  ClockIcon,
-  UserGroupIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/outline";
-import Link from "next/link";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const levels = [
   { id: "all", label: "جميع المستويات" },
@@ -70,46 +65,18 @@ export default function CategoryPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
-          <Link
+          <motion.div
             key={course.id}
-            href={`/courses/${course.id}`}
-            className="group bg-primary-dark rounded-xl p-6 hover:ring-2 hover:ring-accent transition-all cursor-pointer relative overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-            <div className="relative">
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
-                  {course.title}
-                </h3>
-                <p className="text-text-muted">{course.description}</p>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm text-text-muted mb-4">
-                <div className="flex items-center gap-1">
-                  <ClockIcon className="w-4 h-4" />
-                  <span>{course.duration}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <BookOpenIcon className="w-4 h-4" />
-                  <span>{course.lessons} درس</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <UserGroupIcon className="w-4 h-4" />
-                  <span>{course.students} طالب</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm bg-primary/50 text-text-muted px-3 py-1 rounded-full">
-                  {levels.find((l) => l.id === course.level)?.label}
-                </span>
-                <span className="text-sm text-text-muted">
-                  المدرب: {course.instructor}
-                </span>
-              </div>
-            </div>
-          </Link>
+            <CourseCard
+              course={course}
+              // onDetailsClick={() => router.push(`/courses/${course.id}`)}
+              //onRegisterClick={() => router.push(`/courses/${course.id}`)}
+            />
+          </motion.div>
         ))}
       </div>
     </div>

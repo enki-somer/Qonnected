@@ -1,8 +1,5 @@
 export interface ExamDetails {
   format: string;
-  totalQuestions: number;
-  passingScore: string;
-  timeLimit: string;
 }
 
 export interface Certification {

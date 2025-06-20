@@ -40,9 +40,6 @@ interface CertificationModalProps {
     learningOutcomes: string[];
     examDetails: {
       format: string;
-      totalQuestions: number;
-      passingScore: string;
-      timeLimit: string;
     };
     benefits: string[];
   };
@@ -186,39 +183,11 @@ export default function CertificationModal({
                   <h3 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">
                     تفاصيل الاختبار
                   </h3>
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="bg-[#ffffff0d] p-3 sm:p-4 rounded-xl">
-                      <p className="text-[#8b95a5] text-xs sm:text-sm mb-1">
-                        نوع الاختبار
-                      </p>
-                      <p className="text-white text-sm sm:text-base">
-                        {certification.examDetails.format}
-                      </p>
-                    </div>
-                    <div className="bg-[#ffffff0d] p-3 sm:p-4 rounded-xl">
-                      <p className="text-[#8b95a5] text-xs sm:text-sm mb-1">
-                        عدد الأسئلة
-                      </p>
-                      <p className="text-white text-sm sm:text-base">
-                        {certification.examDetails.totalQuestions} سؤال
-                      </p>
-                    </div>
-                    <div className="bg-[#ffffff0d] p-3 sm:p-4 rounded-xl">
-                      <p className="text-[#8b95a5] text-xs sm:text-sm mb-1">
-                        درجة النجاح
-                      </p>
-                      <p className="text-white text-sm sm:text-base">
-                        {certification.examDetails.passingScore}
-                      </p>
-                    </div>
-                    <div className="bg-[#ffffff0d] p-3 sm:p-4 rounded-xl">
-                      <p className="text-[#8b95a5] text-xs sm:text-sm mb-1">
-                        مدة الاختبار
-                      </p>
-                      <p className="text-white text-sm sm:text-base">
-                        {certification.examDetails.timeLimit}
-                      </p>
-                    </div>
+                  <div className="bg-[#ffffff0d] p-4 rounded-xl">
+                    <p className="text-[#8b95a5] text-sm mb-1">نوع الاختبار</p>
+                    <p className="text-white text-base">
+                      {certification.examDetails.format}
+                    </p>
                   </div>
                 </div>
 

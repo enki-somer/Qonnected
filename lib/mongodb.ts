@@ -7,7 +7,8 @@ interface Payment {
   userName: string;
   userEmail: string;
   amount: number;
-  certificationName: string;
+  itemName: string;
+  itemType: 'certification' | 'course';
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
   proofImage: string;

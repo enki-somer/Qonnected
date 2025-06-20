@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, CreditCard, Users, Menu, X } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const navigation = [
   { name: "لوحة التحكم", href: "/admin", icon: LayoutDashboard },
@@ -17,7 +18,21 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAdmin, authReady } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (authReady && !isAdmin) {
+      console.log("Admin layout - Not admin, redirecting to home");
+      router.push("/");
+    }
+  }, [authReady, isAdmin, router]);
+
+  // Show nothing while checking auth
+  if (!authReady || !isAdmin) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen bg-[#1a1f2e]">
@@ -107,11 +122,9 @@ export default function AdminLayout({
       </div>
 
       {/* Main content */}
-      <div className="flex-1 lg:pr-10">
+      <div className="flex-1">
         <main className="h-full">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-            {children}
-          </div>
+          <div className="mx-auto px-4 sm:px-6 lg:px-16 py-6">{children}</div>
         </main>
       </div>
     </div>

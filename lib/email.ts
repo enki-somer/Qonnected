@@ -13,13 +13,14 @@ const logoDataUrl = `data:image/svg+xml;base64,${Buffer.from(`
 </svg>
 `).toString('base64')}`;
 
-interface PaymentEmailData {
-  userName: string;  // This will be the email address for sending
-  recipientName: string;  // This will be the user's actual name
+interface PaymentEmailParams {
+  userName: string;
+  recipientName: string;
   paymentId: string;
   amount: number;
-  certificationName: string;
-  feedback: string;
+  itemName: string;
+  itemType: 'certification' | 'course';
+  feedback?: string;
 }
 
 // Common email template parts
@@ -73,9 +74,30 @@ export async function sendPaymentApprovedEmail({
   recipientName,
   paymentId,
   amount,
-  certificationName,
+  itemName,
+  itemType,
   feedback
-}: PaymentEmailData) {
+}: PaymentEmailParams) {
+  const subject = itemType === 'certification' 
+    ? 'تم قبول طلب الشهادة'
+    : 'تم قبول طلب التسجيل في الدورة';
+
+  const message = `
+    مرحباً ${recipientName}،
+
+    نود إعلامك بأنه تم قبول طلب الدفع الخاص بك.
+
+    تفاصيل الطلب:
+    - رقم الطلب: ${paymentId}
+    - ${itemType === 'certification' ? 'الشهادة' : 'الدورة'}: ${itemName}
+    - المبلغ: ${amount} د.ع
+
+    ${feedback ? `ملاحظات: ${feedback}` : ''}
+
+    شكراً لك،
+    فريق QonnectEd
+  `;
+
   try {
     console.log('Attempting to send approval email:', {
       to: userName,
@@ -92,46 +114,10 @@ export async function sendPaymentApprovedEmail({
         
         <div style="background-color: #f8f9fa; border-right: 4px solid #28a745; padding: 20px; margin: 30px 0; border-radius: 8px;">
           <p style="color: #28a745; font-size: 18px; font-weight: bold; margin: 0;">
-            تهانينا! تم قبول دفعتك للشهادة التالية
+            ${message}
           </p>
         </div>
         
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <table style="width: 100%; border-collapse: collapse; direction: rtl;">
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                <strong style="color: #666666;">رقم الدفع:</strong>
-              </td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                ${paymentId}
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                <strong style="color: #666666;">المبلغ:</strong>
-              </td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                ${amount} IQD
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0;">
-                <strong style="color: #666666;">الشهادة:</strong>
-              </td>
-              <td style="padding: 10px 0;">
-                ${certificationName}
-              </td>
-            </tr>
-          </table>
-        </div>
-
-        <div style="margin: 30px 0;">
-          <h2 style="color: #1a1a1a; font-size: 18px; margin-bottom: 10px;">ملاحظات المراجع:</h2>
-          <p style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 0;">
-            ${feedback}
-          </p>
-        </div>
-
         <div style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; margin: 30px 0;">
           <p style="color: #2e7d32; margin: 0;">
             يمكنك الآن البدء في دورتك التدريبية. نتمنى لك تجربة تعليمية ممتعة ومفيدة.
@@ -148,7 +134,7 @@ export async function sendPaymentApprovedEmail({
     const { data, error } = await resend.emails.send({
       from: 'QonnectEd <onboarding@resend.dev>',
       to: [userName],  // Send to email address
-      subject: 'تم قبول دفعتك | Your Payment was Approved',
+      subject: subject,
       html: emailWrapper(emailContent),
     });
 
@@ -174,9 +160,32 @@ export async function sendPaymentRejectedEmail({
   recipientName,
   paymentId,
   amount,
-  certificationName,
+  itemName,
+  itemType,
   feedback
-}: PaymentEmailData) {
+}: PaymentEmailParams) {
+  const subject = itemType === 'certification'
+    ? 'تم رفض طلب الشهادة'
+    : 'تم رفض طلب التسجيل في الدورة';
+
+  const message = `
+    مرحباً ${recipientName}،
+
+    نأسف لإعلامك بأنه تم رفض طلب الدفع الخاص بك.
+
+    تفاصيل الطلب:
+    - رقم الطلب: ${paymentId}
+    - ${itemType === 'certification' ? 'الشهادة' : 'الدورة'}: ${itemName}
+    - المبلغ: ${amount} د.ع
+
+    ${feedback ? `سبب الرفض: ${feedback}` : ''}
+
+    يرجى التواصل مع الدعم الفني إذا كان لديك أي استفسار.
+
+    شكراً لك،
+    فريق QonnectEd
+  `;
+
   try {
     console.log('Attempting to send rejection email:', {
       to: userName,
@@ -193,47 +202,11 @@ export async function sendPaymentRejectedEmail({
         
         <div style="background-color: #fff3f3; border-right: 4px solid #dc3545; padding: 20px; margin: 30px 0; border-radius: 8px;">
           <p style="color: #dc3545; font-size: 18px; font-weight: bold; margin: 0;">
-            نأسف لإخبارك بأنه تم رفض دفعتك للشهادة التالية
+            ${message}
           </p>
         </div>
         
         <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <table style="width: 100%; border-collapse: collapse; direction: rtl;">
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                <strong style="color: #666666;">رقم الدفع:</strong>
-              </td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                ${paymentId}
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                <strong style="color: #666666;">المبلغ:</strong>
-              </td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
-                ${amount} IQD
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0;">
-                <strong style="color: #666666;">الشهادة:</strong>
-              </td>
-              <td style="padding: 10px 0;">
-                ${certificationName}
-              </td>
-            </tr>
-          </table>
-        </div>
-
-        <div style="margin: 30px 0;">
-          <h2 style="color: #1a1a1a; font-size: 18px; margin-bottom: 10px;">سبب الرفض:</h2>
-          <p style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 0;">
-            ${feedback}
-          </p>
-        </div>
-
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0;">
           <p style="margin: 0 0 15px 0;">
             يرجى مراجعة الملاحظات أعلاه وإعادة تقديم الدفع إذا كنت ترغب في ذلك.
           </p>
@@ -252,7 +225,7 @@ export async function sendPaymentRejectedEmail({
     const { data, error } = await resend.emails.send({
       from: 'QonnectEd <onboarding@resend.dev>',
       to: [userName],  // Send to email address
-      subject: 'تم رفض دفعتك | Your Payment was Rejected',
+      subject: subject,
       html: emailWrapper(emailContent),
     });
 

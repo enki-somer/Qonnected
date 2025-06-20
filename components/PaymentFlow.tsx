@@ -25,9 +25,10 @@ import Image from "next/image";
 interface PaymentFlowProps {
   isOpen: boolean;
   onClose: () => void;
-  certification: {
+  item: {
     name: string;
     price: string;
+    type: "certification" | "course";
   };
 }
 
@@ -71,7 +72,7 @@ type PaymentStatus =
 export default function PaymentFlow({
   isOpen,
   onClose,
-  certification,
+  item,
 }: PaymentFlowProps) {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
@@ -118,7 +119,7 @@ export default function PaymentFlow({
   };
 
   const handlePaymentSubmit = async () => {
-    if (!paymentProof || !certification) return;
+    if (!paymentProof || !item) return;
 
     try {
       setPaymentStatus("submitting");
@@ -126,16 +127,16 @@ export default function PaymentFlow({
       const formData = new FormData();
       formData.append("proof", paymentProof);
       formData.append("paymentId", paymentId);
-      formData.append("certificationName", certification.name);
+      formData.append("itemName", item.name);
+      formData.append("itemType", item.type);
       // Convert price string to number by removing currency symbol and parsing
-      const numericAmount = Number(
-        certification.price.replace(/[^0-9.-]+/g, "")
-      );
+      const numericAmount = Number(item.price.replace(/[^0-9.-]+/g, ""));
       formData.append("amount", numericAmount.toString());
 
       console.log("Submitting payment with data:", {
         paymentId,
-        certificationName: certification.name,
+        itemName: item.name,
+        itemType: item.type,
         amount: numericAmount,
         hasProof: !!paymentProof,
       });
@@ -392,12 +393,10 @@ export default function PaymentFlow({
                     {paymentStatus === "uploading" && "تحميل إثبات الدفع"}
                     {paymentStatus === "pending" && "في انتظار الموافقة"}
                   </Dialog.Title>
-                  <p className="mt-2 text-sm text-[#8b95a5]">
-                    {certification.name}
-                  </p>
+                  <p className="mt-2 text-sm text-[#8b95a5]">{item.name}</p>
                   <div className="mt-2 flex items-center justify-between">
                     <span className="text-[#ffd700] text-lg font-bold">
-                      {certification.price}
+                      {item.price}
                     </span>
                     <div className="flex items-center gap-2 bg-[#ffffff0d] px-3 py-1 rounded-full">
                       <span className="text-white text-sm">رقم الطلب:</span>

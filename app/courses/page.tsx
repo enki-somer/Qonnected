@@ -4,13 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { categories } from "@/data/categories";
 import CategoryCard from "@/components/CategoryCard";
+import CourseCard from "@/components/CourseCard";
 import CourseSearch from "@/components/CourseSearch";
 import { courses } from "@/data/courses";
-import {
-  BookOpenIcon,
-  ClockIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 const container = {
   hidden: { opacity: 0 },
@@ -28,6 +25,7 @@ const item = {
 };
 
 export default function CoursesPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [showCategories, setShowCategories] = useState(true);
 
@@ -104,53 +102,12 @@ export default function CoursesPage() {
         >
           {filteredCourses.length > 0 ? (
             filteredCourses.map((course) => (
-              <motion.div
-                key={course.id}
-                variants={item}
-                className="group bg-primary-dark rounded-xl p-6 hover:ring-2 hover:ring-accent transition-all cursor-pointer relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                <div className="relative">
-                  <div className="mb-4">
-                    <span className="inline-block text-sm bg-accent/10 text-accent px-3 py-1 rounded-full mb-3">
-                      {
-                        categories.find((cat) => cat.id === course.category)
-                          ?.title
-                      }
-                    </span>
-                    <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
-                      {course.title}
-                    </h3>
-                    <p className="text-text-muted">{course.description}</p>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm text-text-muted mb-4">
-                    <div className="flex items-center gap-1">
-                      <ClockIcon className="w-4 h-4" />
-                      <span>{course.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <BookOpenIcon className="w-4 h-4" />
-                      <span>{course.lessons} درس</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <UserGroupIcon className="w-4 h-4" />
-                      <span>{course.students} طالب</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm bg-primary/50 text-text-muted px-3 py-1 rounded-full">
-                      {course.level === "beginner" && "مبتدئ"}
-                      {course.level === "intermediate" && "متوسط"}
-                      {course.level === "advanced" && "متقدم"}
-                    </span>
-                    <span className="text-sm text-text-muted">
-                      المدرب: {course.instructor}
-                    </span>
-                  </div>
-                </div>
+              <motion.div key={course.id} variants={item}>
+                <CourseCard
+                  course={course}
+                  // onDetailsClick={() => router.push(`/courses/${course.id}`)}
+                  // onRegisterClick={() => router.push(`/courses/${course.id}`)}
+                />
               </motion.div>
             ))
           ) : (

@@ -108,21 +108,23 @@ export async function POST(
     try {
       if (action === 'approve') {
         const emailResult = await sendPaymentApprovedEmail({
-          userName: payment.userEmail, // Email address for sending
-          recipientName: payment.userName, // Actual name for greeting
+          userName: payment.userEmail,
+          recipientName: payment.userName,
           paymentId: payment.id,
           amount: payment.amount,
-          certificationName: payment.certificationName,
+          itemName: payment.itemName,
+          itemType: payment.itemType,
           feedback
         });
         console.log('Approval email result:', emailResult);
       } else {
         const emailResult = await sendPaymentRejectedEmail({
-          userName: payment.userEmail, // Email address for sending
-          recipientName: payment.userName, // Actual name for greeting
+          userName: payment.userEmail,
+          recipientName: payment.userName,
           paymentId: payment.id,
           amount: payment.amount,
-          certificationName: payment.certificationName,
+          itemName: payment.itemName,
+          itemType: payment.itemType,
           feedback
         });
         console.log('Rejection email result:', emailResult);

@@ -24,7 +24,8 @@ interface Payment {
   userName: string;
   userEmail: string;
   amount: number;
-  certificationName: string;
+  itemName: string;
+  itemType: "certification" | "course";
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   proofImage: string;
@@ -49,7 +50,8 @@ const mockPayments: Payment[] = [
     userName: "Ahmed Mohammed",
     userEmail: "ahmed@example.com",
     amount: 99,
-    certificationName: "Advanced Web Development",
+    itemName: "Advanced Web Development",
+    itemType: "certification",
     status: "pending" as const,
     createdAt: "2024-03-20T10:00:00Z",
     proofImage: "/path/to/proof.jpg",
@@ -60,7 +62,8 @@ const mockPayments: Payment[] = [
     userName: "Sara Ahmed",
     userEmail: "sara@example.com",
     amount: 149,
-    certificationName: "UI/UX Design Fundamentals",
+    itemName: "UI/UX Design Fundamentals",
+    itemType: "course",
     status: "approved" as const,
     createdAt: "2024-03-19T15:30:00Z",
     proofImage: "/path/to/proof.jpg",
@@ -153,7 +156,7 @@ export default function PaymentsPage() {
           payment.id, // Payment ID
           payment.userName, // User Name
           payment.userEmail, // User Email
-          payment.certificationName, // Certification Name
+          payment.itemName, // Certification Name
           formatCurrency(payment.amount).toString(), // Amount (formatted)
           payment.status, // Status
           formatDate(payment.createdAt), // Creation Date
@@ -392,7 +395,7 @@ export default function PaymentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a]">
+    <div className="min-h-screen bg-[#1a1a1a] ">
       {/* Fixed Header */}
       <div className="sticky top-0 z-30 bg-[#2a2a2a] border-b border-[#3a3a3a] shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -644,10 +647,12 @@ export default function PaymentsPage() {
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[#8b95a5] text-xs sm:text-sm">الشهادة</p>
-                    <p className="text-white font-medium">
-                      {payment.certificationName}
+                    <p className="text-[#8b95a5] text-xs sm:text-sm">
+                      {payment.itemType === "certification"
+                        ? "الشهادة"
+                        : "الدورة"}
                     </p>
+                    <p className="text-white font-medium">{payment.itemName}</p>
                   </div>
                 </div>
 

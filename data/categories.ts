@@ -73,5 +73,13 @@ export const categories: Category[] = [
     icon: "camera",
     gradient: "from-indigo-500/20 to-purple-500/20",
     courseCount: getCoursesCountByCategory("photography")
+  },
+  {
+    id: "microsoft-mastery",
+    title: "Microsoft Mastery",
+    description: "إتقان تطبيقات Microsoft Office وأدواتها المتقدمة",
+    icon: "window",
+    gradient: "from-blue-500/20 to-cyan-500/20",
+    courseCount: getCoursesCountByCategory("microsoft-mastery")
   }
 ]; 

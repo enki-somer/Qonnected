@@ -5,31 +5,41 @@ export async function middleware(request: NextRequest) {
   // Check if the request is for admin routes (both frontend and API)
   if (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/api/admin')) {
     try {
-      // Get the token from the cookies
-      const token = request.cookies.get('auth_token')
+      // Get all required cookies
+      const token = request.cookies.get('auth_token')?.value
+      const userRole = request.cookies.get('user_role')?.value
+      const userId = request.cookies.get('user_id')?.value
       
-      // If no token, redirect to login for frontend routes or return 401 for API routes
-      if (!token) {
+      console.log('Middleware - Auth check:', {
+        hasToken: !!token,
+        userRole,
+        userId,
+        path: request.nextUrl.pathname
+      })
+
+      // If no token or user ID, redirect to login
+      if (!token || !userId) {
+        console.log('Middleware - No token or user ID')
         if (request.nextUrl.pathname.startsWith('/api/')) {
           return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
         return NextResponse.redirect(new URL('/login', request.url))
       }
 
-      // Get the user role from the token
-      // You should implement proper token verification here
-      // This is just a basic example
-      const userRole = request.cookies.get('user_role')?.value
-
+      // Check if user has admin role
       if (userRole !== 'admin') {
+        console.log('Middleware - Not admin:', { userRole })
         if (request.nextUrl.pathname.startsWith('/api/')) {
           return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 403 })
         }
         return NextResponse.redirect(new URL('/', request.url))
       }
       
+      // User is authenticated and has admin role
+      console.log('Middleware - Admin access granted')
       return NextResponse.next()
     } catch (error) {
+      console.error('Middleware - Error:', error)
       if (request.nextUrl.pathname.startsWith('/api/')) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
       }

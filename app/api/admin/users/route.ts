@@ -1,129 +1,105 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-
-// This would be your database interaction
-const mockDb = {
-  users: [
-    {
-      id: 'user-1',
-      name: 'Ahmed Mohammed',
-      email: 'ahmed@example.com',
-      role: 'user',
-      status: 'active',
-      joinDate: '2024-01-15',
-      lastLogin: '2024-03-20',
-    },
-    {
-      id: 'user-2',
-      name: 'Sara Ahmed',
-      email: 'sara@example.com',
-      role: 'admin',
-      status: 'active',
-      joinDate: '2024-02-01',
-      lastLogin: '2024-03-21',
-    },
-    // Add more mock data
-  ],
-};
+import { getNetlifyUsers, updateNetlifyUser } from '@/lib/netlify';
+import { fetchAuth0Users } from '@/lib/auth0';
+import { GetUsers200ResponseOneOfInner } from 'auth0';
 
 // Helper to check if user is admin
 async function isAdmin(request: Request) {
-  const cookieStore = cookies();
-  const token = cookieStore.get('auth_token');
-  
-  // Here you would verify the token and check admin role
-  // For now, we'll just check if token exists
-  return !!token;
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get('auth_token');
+    
+    // Here you would verify the token and check admin role
+    // For now, we'll just check if token exists
+    return !!token;
+  } catch (error) {
+    console.error('Error checking admin status:', error);
+    return false;
+  }
 }
 
 // GET /api/admin/users
-export async function GET(request: Request) {
-  // Check if user is admin
-  if (!await isAdmin(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+export async function GET() {
+  try {
+    console.log('Fetching Auth0 users...');
+    const auth0Users = await fetchAuth0Users();
+    console.log('Auth0 users count:', auth0Users?.length || 0);
+    
+    // Transform Auth0 users to match our expected format
+    const users = (Array.isArray(auth0Users) ? auth0Users : []).map((user: any) => {
+      const userData = {
+        id: user.user_id || '',
+        name: user.name || user.nickname || user.email?.split('@')[0] || 'Unknown',
+        email: user.email || '',
+        role: 'user', // Default all users to regular users for now
+        status: user.blocked ? 'suspended' : 'active',
+        joinDate: user.created_at || new Date().toISOString(),
+        lastLogin: user.last_login || user.created_at || new Date().toISOString()
+      };
+      console.log('Transformed user:', userData);
+      return userData;
+    });
 
-  // Get query parameters
-  const { searchParams } = new URL(request.url);
-  const role = searchParams.get('role');
-  const status = searchParams.get('status');
-  const search = searchParams.get('search')?.toLowerCase();
-
-  // Filter users based on query parameters
-  let users = mockDb.users;
-  
-  if (role && role !== 'all') {
-    users = users.filter(u => u.role === role);
-  }
-
-  if (status && status !== 'all') {
-    users = users.filter(u => u.status === status);
-  }
-
-  if (search) {
-    users = users.filter(u => 
-      u.name.toLowerCase().includes(search) ||
-      u.email.toLowerCase().includes(search)
+    console.log('Total transformed users:', users.length);
+    return NextResponse.json({ users });
+  } catch (error) {
+    console.error('Error in users route:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 }
     );
   }
-
-  return NextResponse.json({ users });
 }
 
-// POST /api/admin/users/:id/role
+// POST /api/admin/users/:id/role or /api/admin/users/:id/status
 export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  // Check if user is admin
-  if (!await isAdmin(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   try {
+    // Check if user is admin
+    if (!await isAdmin(request)) {
+      console.log('Unauthorized access attempt to users API');
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { action } = await request.json();
     const userId = params.id;
+    const updates: { role?: 'admin' | 'user'; status?: 'active' | 'suspended' } = {};
 
-    // Find user
-    const user = mockDb.users.find(u => u.id === userId);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
-    }
+    console.log('Processing user action:', { userId, action });
 
-    // Update user based on action type
+    // Determine update type based on URL
     if (request.url.endsWith('/role')) {
-      // Handle role changes
       if (!['make-admin', 'remove-admin'].includes(action)) {
+        console.warn('Invalid role action attempted:', action);
         return NextResponse.json(
           { error: 'Invalid action' },
           { status: 400 }
         );
       }
-      user.role = action === 'make-admin' ? 'admin' : 'user';
+      updates.role = action === 'make-admin' ? 'admin' : 'user';
     } else if (request.url.endsWith('/status')) {
-      // Handle status changes
       if (!['activate', 'suspend'].includes(action)) {
+        console.warn('Invalid status action attempted:', action);
         return NextResponse.json(
           { error: 'Invalid action' },
           { status: 400 }
         );
       }
-      user.status = action === 'activate' ? 'active' : 'suspended';
+      updates.status = action === 'activate' ? 'active' : 'suspended';
     }
 
-    // Here you would:
-    // 1. Update the user in your database
-    // 2. Update Netlify Identity user metadata
-    // 3. Send notification email to user
+    // Update user in Netlify
+    const updatedUser = await updateNetlifyUser(userId, updates);
     
-    return NextResponse.json({ user });
+    console.log('Successfully updated user:', { userId, updates });
+    return NextResponse.json({ user: updatedUser });
   } catch (error) {
-    console.error('Error processing user action:', error);
+    console.error('Error in POST /api/admin/users:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }
