@@ -213,9 +213,10 @@ export default function CertificationsPage() {
             setShowPayment(false);
             setSelectedCertification(null);
           }}
-          certification={{
+          item={{
             name: selectedCertification.name,
             price: selectedCertification.price,
+            type: "certification",
           }}
         />
       )}

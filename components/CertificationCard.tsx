@@ -113,23 +113,20 @@ interface CertificationCardProps {
   certification: Certification;
   onDetailsClick: () => void;
   onPreTestClick: () => void;
+  onBookClick: () => void;
 }
 
 export default function CertificationCard({
   certification,
   onDetailsClick,
   onPreTestClick,
+  onBookClick,
 }: CertificationCardProps) {
-  const [isPaymentFlowOpen, setIsPaymentFlowOpen] = useState(false);
   const logoPath = getCertificationLogo(certification.id);
   const originalPrice = formatPrice(certification.price);
   const discountedPrice = formatPrice(
     (parseInt(certification.price.replace(/\D/g, "")) * 0.8).toString()
   );
-
-  const handleBookClick = () => {
-    setIsPaymentFlowOpen(true);
-  };
 
   return (
     <motion.div
@@ -250,9 +247,9 @@ export default function CertificationCard({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    handleBookClick();
+                    onBookClick();
                   }}
-                  className="flex-1 py-3.5 bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent text-primary rounded-xl transition-all duration-300 text-sm font-medium shadow-lg shadow-accent/20"
+                  className="flex-1 py-3.5 bg-accent hover:bg-accent-light text-white rounded-xl transition-all duration-300 text-sm font-medium"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -264,28 +261,17 @@ export default function CertificationCard({
                     e.stopPropagation();
                     onDetailsClick();
                   }}
-                  className="px-4 py-3.5 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl transition-all duration-300 text-sm font-medium flex items-center justify-center group/details"
+                  className="px-4 py-3.5 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl transition-all duration-300"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <ChevronRight className="w-4 h-4 transform group-hover/details:translate-x-1 transition-transform duration-300" />
+                  <ChevronRight className="w-5 h-5" />
                 </motion.button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Payment Flow */}
-      <PaymentFlow
-        isOpen={isPaymentFlowOpen}
-        onClose={() => setIsPaymentFlowOpen(false)}
-        item={{
-          name: certification.name,
-          price: certification.price,
-          type: "certification",
-        }}
-      />
     </motion.div>
   );
 }
