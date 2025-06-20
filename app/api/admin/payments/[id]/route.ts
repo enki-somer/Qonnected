@@ -112,7 +112,8 @@ export async function POST(
           recipientName: payment.userName,
           paymentId: payment.id,
           amount: payment.amount,
-          certificationName: payment.certificationName,
+          itemName: payment.itemName,
+          itemType: payment.itemType,
           feedback
         });
         console.log('Approval email result:', emailResult);
@@ -122,7 +123,8 @@ export async function POST(
           recipientName: payment.userName,
           paymentId: payment.id,
           amount: payment.amount,
-          certificationName: payment.certificationName,
+          itemName: payment.itemName,
+          itemType: payment.itemType,
           feedback
         });
         console.log('Rejection email result:', emailResult);
