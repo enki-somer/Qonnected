@@ -1,6 +1,8 @@
 import { ManagementClient } from 'auth0';
 
-const auth0Domain = 'dev-uwu2afyc68ghsgyz.us.auth0.com';
+if (!process.env.NEXT_PUBLIC_AUTH0_DOMAIN) {
+  throw new Error('NEXT_PUBLIC_AUTH0_DOMAIN is not set');
+}
 
 let managementClient: ManagementClient | null = null;
 
@@ -11,8 +13,8 @@ export const getManagementClient = () => {
     }
     
     managementClient = new ManagementClient({
-      domain: auth0Domain,
-      token: process.env.AUTH0_MANAGEMENT_API_TOKEN
+      domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string,
+      token: process.env.AUTH0_MANAGEMENT_API_TOKEN as string
     });
   }
   return managementClient;
