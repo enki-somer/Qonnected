@@ -249,7 +249,7 @@ export default function CertificationCard({
                     e.stopPropagation();
                     onBookClick();
                   }}
-                  className="flex-1 py-3.5 bg-accent hover:bg-accent-light text-white rounded-xl transition-all duration-300 text-sm font-medium"
+                  className="flex-1 py-3.5 bg-accent hover:bg-accent-light text-black rounded-xl transition-all duration-300 text-sm font-medium"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >

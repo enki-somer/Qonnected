@@ -207,7 +207,7 @@ export const certificationCategories: Category[] = [
   {
     id: "business-office",
     name: "شهادات مايكروسوفت",
-    description: "شهادات معتمدة في مجال إدارة الأعمال والتطبيقات المكتبية",
+    description: "شهادات معتمدة في برامج مايكروسوفت أوفيس والأعمال",
     exams: [
       {
         id: "microsoft-word",
@@ -438,7 +438,7 @@ export const certificationCategories: Category[] = [
   {
     id: "creative-design",
     name: "التصميم الإبداعي",
-    description: "شهادات معتمدة في مجال التصميم الجرافيكي والرقمي",
+    description: "شهادات معتمدة في مجال التصميم الإبداعي والجرافيك",
     exams: [
       {
         id: "photoshop",
@@ -732,7 +732,7 @@ export const certificationCategories: Category[] = [
   {
     id: "it-computer-science",
     name: "تكنولوجيا المعلومات وعلوم الحاسوب",
-    description: "شهادات معتمدة في مجال تكنولوجيا المعلومات والبرمجة",
+    description: "شهادات معتمدة في مجال تكنولوجيا المعلومات وعلوم الحاسوب",
     exams: [
       {
         id: "ic3",

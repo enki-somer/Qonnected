@@ -11,9 +11,10 @@ import { handleAuthentication, ExtendedUser } from "@/utils/auth";
 
 interface CourseCardProps {
   course: Course;
+  onEnroll?: () => void;
 }
 
-export default function CourseCard({ course }: CourseCardProps) {
+export default function CourseCard({ course, onEnroll }: CourseCardProps) {
   const [isPaymentFlowOpen, setIsPaymentFlowOpen] = useState(false);
 
   useEffect(() => {
@@ -21,6 +22,11 @@ export default function CourseCard({ course }: CourseCardProps) {
   }, []);
 
   const handleRegisterClick = () => {
+    if (onEnroll) {
+      onEnroll();
+      return;
+    }
+
     const user = netlifyIdentity.currentUser();
     if (!user) {
       // Initialize login modal with event handlers
