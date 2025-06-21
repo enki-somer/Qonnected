@@ -26,18 +26,21 @@ const userTypes = [
     title: "طالب / خريج",
     description: "أدرس حالياً في الجامعة أو المعهد",
     color: "from-blue-500/20 to-cyan-500/20",
+    available: true,
   },
   {
     id: "graduate",
     title: "تطوير مهارات",
     description: "أبحث عن فرص تطوير مهاراتي",
     color: "from-green-500/20 to-emerald-500/20",
+    available: true,
   },
   {
     id: "trainer",
     title: "اعمل معنا ",
-    description: "مدرب محترف في المجال",
+    description: "قريباً - انضم إلينا كمدرب محترف",
     color: "from-purple-500/20 to-pink-500/20",
+    available: false,
   },
 ];
 
@@ -334,47 +337,50 @@ export default function UserPathwaySection() {
   return (
     <section className="py-20 relative overflow-hidden bg-slate-900/50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-            ما هو وضعك الحالي؟
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            اختر مسارك التعليمي
           </h2>
-          <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto">
-            اختر الوصف الذي يناسبك لنقترح عليك أفضل المسارات التعليمية
+          <p className="text-slate-300 text-lg max-w-2xl mx-auto">
+            حدد نوع المستخدم للحصول على توصيات مخصصة لمسارك التعليمي
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {userTypes.map((type, index) => {
-            return (
-              <motion.button
-                key={type.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => handleUserTypeSelect(type.id)}
-                className="group relative overflow-hidden rounded-2xl p-8 bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 hover:border-accent/40 transition-all duration-500 hover:shadow-2xl hover:shadow-accent/10 text-center"
-              >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                />
-
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-accent transition-colors">
-                    {type.title}
-                  </h3>
-
-                  <p className="text-slate-400 leading-relaxed">
-                    {type.description}
-                  </p>
-
-                  <div className="mt-6 flex items-center justify-center text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-sm font-medium">اختر هذا الخيار</span>
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          {userTypes.map((type) => (
+            <button
+              key={type.id}
+              onClick={() => type.available && handleUserTypeSelect(type.id)}
+              className={`relative p-6 rounded-2xl text-right transition-all duration-300 border border-white/10 bg-gradient-to-br ${
+                type.color
+              } hover:border-accent/50 group ${
+                !type.available
+                  ? "cursor-not-allowed opacity-60"
+                  : "cursor-pointer hover:scale-[1.02]"
+              }`}
+            >
+              <div className="mb-4">
+                {type.id === "student" && (
+                  <GraduationCap className="w-8 h-8 text-white/80" />
+                )}
+                {type.id === "graduate" && (
+                  <Star className="w-8 h-8 text-white/80" />
+                )}
+                {type.id === "trainer" && (
+                  <Briefcase className="w-8 h-8 text-white/80" />
+                )}
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">
+                {type.title}
+              </h3>
+              <p className="text-sm text-white/60">{type.description}</p>
+              {!type.available && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl backdrop-blur-sm">
+                  <span className="text-white/80 font-medium">قريباً</span>
                 </div>
-              </motion.button>
-            );
-          })}
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
