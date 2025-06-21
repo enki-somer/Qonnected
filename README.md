@@ -10,6 +10,7 @@ QonnectED هي منصة تعليمية عربية متخصصة للمطورين�
 
 - **واجهة مستخدم عربية**: تصميم كامل يدعم اللغة العربية (RTL)
 - **نظام مصادقة متكامل**: تسجيل دخول وإدارة حسابات المستخدمين
+- **مسارات تعليمية متخصصة**: مسارات مخصصة لكل تخصص مع توصيات للدورات والشهادات
 - **لوحة إعدادات شاملة**: تخصيص كامل لتجربة المستخدم
 - **تصميم متجاوب**: يعمل على جميع الأجهزة
 - **نظام إشعارات**: لمتابعة التحديثات والأنشطة
@@ -83,6 +84,9 @@ qonnected/
 │   ├── settings/         # User settings
 │   └── teams/           # Teams/groups pages
 ├── components/           # Reusable components
+│   ├── UserPathwaySection/  # Educational pathways component
+│   ├── CourseCard/         # Course display components
+│   └── CertificationCard/  # Certification display components
 ├── context/             # React context (Auth, Theme)
 ├── public/             # Static assets
 └── styles/            # Global styles
@@ -142,6 +146,30 @@ The project is configured for deployment on Netlify:
 3. Set up environment variables
 4. Enable Netlify Identity
 
+## Educational Pathways 🎯
+
+The platform offers specialized educational pathways for different majors:
+
+### Available Majors
+
+- علوم الحاسوب (Computer Science)
+- تكنولوجيا المعلومات (Information Technology)
+- تحليل البيانات (Data Analysis)
+- الإدارة (Management)
+- الهندسة المدنية (Civil Engineering)
+- الهندسة المعمارية (Architecture)
+- الهندسة الميكانيكية (Mechanical Engineering)
+- المحاسبة (Accounting)
+- اللغات (Languages)
+
+### Features
+
+- **مسارات مخصصة**: كل تخصص له مسار تعليمي مخصص
+- **توصيات الدورات**: دورات موصى بها لكل تخصص
+- **شهادات معتمدة**: شهادات احترافية مرتبطة بكل مسار
+- **واجهة سهلة**: تصفح سلس للدورات والشهادات
+- **محتوى عربي**: شرح تفصيلي باللغة العربية لكل مسار
+
 ## Current Status 📊
 
 - ✅ Authentication system
@@ -149,6 +177,9 @@ The project is configured for deployment on Netlify:
 - ✅ Settings page
 - ✅ Responsive sidebar
 - ✅ RTL support
+- ✅ Educational pathways
+- ✅ Course categories
+- ✅ Certification paths
 - 🟡 Course management (in progress)
 - 🟡 Payment integration (planned)
 - 🟡 Team features (planned)

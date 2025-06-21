@@ -494,9 +494,9 @@ export const certificationCategories: Category[] = [
           "معترف بها في مجال التصميم",
           "تؤهل للعمل في وكالات الإعلان",
           "مطلوبة للمصممين المحترفين",
-        ],
-      },
-      {
+    ],
+  },
+  {
         id: "indesign",
         name: "Adobe InDesign",
         description: "برنامج النشر المكتبي وتصميم المطبوعات",
@@ -928,9 +928,9 @@ export const certificationCategories: Category[] = [
           "مهارات تقنية أساسية",
           "مطلوبة في سوق العمل",
           "فرص وظيفية متنوعة",
-        ],
-      },
-      {
+    ],
+  },
+  {
         id: "cisco-cyber-ops",
         name: "Cisco Cyber Ops",
         description: "عمليات الأمن السيبراني المتقدمة",

@@ -117,7 +117,7 @@ export async function sendPaymentApprovedEmail({
             ${message}
           </p>
         </div>
-        
+
         <div style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; margin: 30px 0;">
           <p style="color: #2e7d32; margin: 0;">
             يمكنك الآن البدء في دورتك التدريبية. نتمنى لك تجربة تعليمية ممتعة ومفيدة.

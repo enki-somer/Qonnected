@@ -44,58 +44,115 @@ const userTypes = [
 // Majors
 const majors = [
   {
+    id: "computer-science",
+    title: "علوم الحاسوب",
+    description:
+      "تخصص يركز على أساسيات علوم الحاسوب، البرمجة، وتطوير البرمجيات. يشمل المسار دورات في لغات البرمجة المختلفة وشهادات احترافية معتمدة في مجال تطوير البرمجيات.",
+    courseCategory: "programming",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("programming"),
+    certifications: [
+      "python",
+      "java",
+      "software-development",
+      "swift-development",
+      "javascript",
+    ],
+  },
+  {
     id: "information-tech",
     title: "تكنولوجيا المعلومات",
-    courses: getCoursesByCategory("information-tech"),
-    certifications: ["ccna", "ccst", "ic3"],
+    description:
+      "مسار شامل في تكنولوجيا المعلومات يغطي الشبكات، أمن المعلومات، وإدارة الأنظمة. يتضمن شهادات عالمية معترف بها في مجال تقنية المعلومات.",
+    courseCategory: "web-development",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("web-development"),
+    certifications: ["ccna", "ccst", "ic3", "html-css", "html5"],
   },
   {
     id: "data-analysis",
     title: "تحليل البيانات",
-    courses: getCoursesByCategory("data-analysis"),
-    certifications: ["mos-excel", "pmi-beginner"],
-  },
-  {
-    id: "computer-science",
-    title: "علوم الحاسوب",
-    courses: getCoursesByCategory("computer-science"),
-    certifications: ["swift-level1", "java-cert"],
+    description:
+      "تخصص يركز على تحليل البيانات واستخراج المعلومات القيمة منها. يشمل دورات في الإحصاء، تحليل البيانات، وأدوات التحليل المتقدمة.",
+    courseCategory: "microsoft-mastery",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("microsoft-mastery"),
+    certifications: ["mos-excel", "data-analysis", "python"],
   },
   {
     id: "management",
     title: "الإدارة",
-    courses: getCoursesByCategory("management"),
-    certifications: ["pmi-beginner", "esb-certification"],
+    description:
+      "مسار متكامل في الإدارة يغطي إدارة الأعمال، المشاريع، والموارد البشرية. يتضمن شهادات احترافية في الإدارة وبرامج Microsoft Office.",
+    courseCategory: "business",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("business"),
+    certifications: [
+      "pmi-beginner",
+      "esb-certification",
+      "mos-excel",
+      "mos-word",
+      "mos-powerpoint",
+    ],
   },
   {
     id: "civil-engineering",
     title: "الهندسة المدنية",
-    courses: getCoursesByCategory("civil-engineering"),
-    certifications: ["autocad", "revit"],
+    description:
+      "تخصص في الهندسة المدنية يشمل التصميم الإنشائي، إدارة المشاريع، والتصميم بمساعدة الحاسوب. يتضمن شهادات معتمدة في برامج التصميم الهندسي.",
+    courseCategory: "design",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("design"),
+    certifications: ["autocad", "revit", "civil-3d"],
   },
   {
     id: "architecture",
     title: "الهندسة المعمارية",
-    courses: getCoursesByCategory("architecture"),
-    certifications: ["autocad", "revit", "3ds-max"],
+    description:
+      "مسار متخصص في التصميم المعماري والتصور البصري. يشمل دورات في برامج التصميم المعماري والنمذجة ثلاثية الأبعاد.",
+    courseCategory: "design",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("design"),
+    certifications: ["autocad", "revit", "3ds-max", "sketchup"],
   },
   {
     id: "mechanical-engineering",
     title: "الهندسة الميكانيكية",
-    courses: getCoursesByCategory("mechanical-engineering"),
-    certifications: ["autocad", "inventor", "fusion-360"],
+    description:
+      "تخصص في الهندسة الميكانيكية يغطي التصميم الميكانيكي، النمذجة، والتصنيع. يتضمن شهادات احترافية في برامج التصميم الميكانيكي.",
+    courseCategory: "design",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("design"),
+    certifications: ["autocad", "inventor", "fusion-360", "solidworks"],
   },
   {
     id: "accounting",
     title: "المحاسبة",
-    courses: getCoursesByCategory("accounting"),
-    certifications: ["quickbooks", "mos-excel"],
+    description:
+      "مسار شامل في المحاسبة والمالية يغطي المحاسبة العامة، التحليل المالي، وبرامج المحاسبة. يشمل شهادات معتمدة في المحاسبة وبرامج المحاسبة.",
+    courseCategory: "business",
+    certCategory: "development-programming",
+    courses: getCoursesByCategory("business"),
+    certifications: [
+      "quickbooks",
+      "mos-excel",
+      "accounting-principles",
+      "financial-analysis",
+    ],
   },
   {
     id: "languages",
     title: "اللغات",
+    description:
+      "برنامج متكامل لتعلم اللغات يركز على مهارات التواصل والكتابة المهنية. يتضمن شهادات معتمدة في اللغة الإنجليزية للأعمال والكتابة التقنية.",
+    courseCategory: "languages",
+    certCategory: "development-programming",
     courses: getCoursesByCategory("languages"),
-    certifications: ["csb-business"],
+    certifications: [
+      "csb-business",
+      "english-proficiency",
+      "technical-writing",
+    ],
   },
 ];
 
@@ -162,8 +219,7 @@ export default function UserPathwaySection() {
               مسارك في {selectedMajorData.title}
             </h2>
             <p className="text-slate-300 text-lg max-w-2xl mx-auto mb-6">
-              بناءً على اختيارك كـ {selectedUserTypeData.title} في مجال{" "}
-              {selectedMajorData.title}، إليك أفضل الدورات والشهادات المناسبة لك
+              {selectedMajorData.description}
             </p>
             <button
               onClick={resetSelection}
@@ -177,6 +233,7 @@ export default function UserPathwaySection() {
             {/* Courses Section */}
             <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-6">
+                <BookOpen className="w-8 h-8 text-accent" />
                 <div>
                   <h3 className="text-2xl font-bold text-white">
                     الدورات المتاحة
@@ -185,66 +242,38 @@ export default function UserPathwaySection() {
                 </div>
               </div>
 
-              {selectedMajorData.courses.length > 0 ? (
-                <div className="space-y-4 mb-6">
-                  {selectedMajorData.courses
-                    .slice(0, 3)
-                    .map((course: any, idx: number) => (
-                      <Link
-                        key={idx}
-                        href={`/courses/${course.id}`}
-                        className="block bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-all duration-300 hover:shadow-lg hover:shadow-accent/10 group"
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h4 className="text-white font-semibold mb-2 group-hover:text-accent transition-colors">
-                              {course.title}
-                            </h4>
-                            <p className="text-slate-400 text-sm mb-3">
-                              {course.description}
-                            </p>
-                            <div className="flex items-center gap-4 text-xs text-slate-500">
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {course.duration}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <BookOpen className="w-3 h-3" />
-                                {course.lessons} درس
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Users className="w-3 h-3" />
-                                {course.students || 0} طالب
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 ml-4">
-                            <div className="flex items-center gap-1 text-yellow-400">
-                              <Star className="w-4 h-4 fill-current" />
-                              <span className="text-sm">4.8</span>
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors" />
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">📚</div>
-                  <p className="text-slate-400 mb-4">
-                    لا توجد دورات متخصصة حالياً في هذا المجال
-                  </p>
-                </div>
-              )}
+              <div className="space-y-6 mb-8">
+                <p className="text-slate-300">
+                  اكتشف مجموعة متنوعة من الدورات المصممة خصيصاً لمجال{" "}
+                  {selectedMajorData.title}. دوراتنا:
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">
+                      مصممة وفقاً لأحدث المعايير العالمية
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">
+                      تجمع بين النظرية والتطبيق العملي
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">
+                      يقدمها خبراء متخصصون في المجال
+                    </span>
+                  </li>
+                </ul>
+              </div>
 
               <Link
-                href={`/courses${selectedMajorData.courses.length > 0 ? `?category=${selectedMajor}` : ""}`}
-                className="w-full bg-accent hover:bg-accent/90 text-white text-center py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                href={`/courses/category/${selectedMajorData.courseCategory}`}
+                className="w-full bg-accent hover:bg-accent/90 text-black text-center py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
               >
-                {selectedMajorData.courses.length > 0
-                  ? "استكشف جميع الدورات"
-                  : "تصفح جميع الدورات"}
+                استكشف الدورات المتخصصة
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -261,61 +290,38 @@ export default function UserPathwaySection() {
                 </div>
               </div>
 
-              {relevantCertifications.length > 0 ? (
-                <div className="space-y-4 mb-6">
-                  {relevantCertifications
-                    .slice(0, 3)
-                    .map((cert: any, idx: number) => (
-                      <Link
-                        key={idx}
-                        href={`/certifications?category=${cert.categoryId}&cert=${cert.id}`}
-                        className="block bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-all duration-300 hover:shadow-lg hover:shadow-accent/10 group"
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h4 className="text-white font-semibold mb-2 group-hover:text-accent transition-colors">
-                              {cert.name}
-                            </h4>
-                            <p className="text-slate-400 text-sm mb-3">
-                              {cert.description}
-                            </p>
-                            <div className="flex items-center gap-4 text-xs text-slate-500">
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {cert.duration}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Award className="w-3 h-3" />
-                                {cert.level}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 ml-4">
-                            <div className="text-accent font-bold">
-                              {cert.price}
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors" />
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">🏆</div>
-                  <p className="text-slate-400 mb-4">
-                    لا توجد شهادات متخصصة حالياً في هذا المجال
-                  </p>
-                </div>
-              )}
+              <div className="space-y-6 mb-8">
+                <p className="text-slate-300">
+                  احصل على شهادات معتمدة عالمياً في مجال{" "}
+                  {selectedMajorData.title}. شهاداتنا:
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">
+                      معترف بها من كبرى الشركات العالمية
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">
+                      تزيد من فرصك في سوق العمل
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">
+                      تثبت كفاءتك في مجال تخصصك
+                    </span>
+                  </li>
+                </ul>
+              </div>
 
               <Link
-                href="/certifications"
+                href={`/certifications?category=${selectedMajorData.certCategory}`}
                 className="w-full bg-slate-700 hover:bg-slate-600 text-white text-center py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
               >
-                {relevantCertifications.length > 0
-                  ? "استكشف جميع الشهادات"
-                  : "تصفح جميع الشهادات"}
+                استكشف الشهادات المتخصصة
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -416,9 +422,9 @@ export default function UserPathwaySection() {
                     <h4 className="text-white font-semibold text-sm group-hover:text-accent transition-colors">
                       {major.title}
                     </h4>
-                    <p className="text-xs text-slate-400 mt-2">
+                    {/* <p className="text-xs text-slate-400 mt-2">
                       {major.courses.length} دورة متاحة
-                    </p>
+                    </p> */}
                   </motion.button>
                 ))}
               </div>
