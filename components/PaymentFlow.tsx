@@ -85,18 +85,21 @@ export default function PaymentFlow({
     `PAY-${Math.random().toString(36).substr(2, 9)}`
   );
 
-  // Add authentication check
-  useEffect(() => {
-    const user = netlifyIdentity.currentUser();
-    if (user) {
-      handleAuthentication(user as ExtendedUser);
-    } else {
-      // Redirect to login if not authenticated
-      window.location.href = "/login";
-    }
-  }, []);
-
   const handleMethodSelect = (methodId: string) => {
+    const user = netlifyIdentity.currentUser();
+    if (!user) {
+      // Initialize login modal with event handlers
+      netlifyIdentity.on("login", (user) => {
+        handleAuthentication(user as ExtendedUser);
+        setSelectedMethod(methodId);
+        setPaymentStatus("qr_code");
+        netlifyIdentity.close();
+      });
+
+      netlifyIdentity.open("login");
+      return;
+    }
+    handleAuthentication(user as ExtendedUser);
     setSelectedMethod(methodId);
     setPaymentStatus("qr_code");
   };

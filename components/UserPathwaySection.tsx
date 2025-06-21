@@ -5,11 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap,
   BookOpen,
-  Users2,
+  Users,
   Award,
   X,
   Clock,
-  Users,
   Star,
   ArrowRight,
   CheckCircle,
@@ -24,97 +23,79 @@ import { certificationCategories } from "@/data/certifications";
 const userTypes = [
   {
     id: "student",
-    title: "طالب",
+    title: "طالب / خريج",
     description: "أدرس حالياً في الجامعة أو المعهد",
-    icon: GraduationCap,
     color: "from-blue-500/20 to-cyan-500/20",
-    bgColor: "bg-blue-500/10",
-    textColor: "text-blue-400",
   },
   {
     id: "graduate",
-    title: "خريج",
-    description: "تخرجت وأبحث عن فرص تطوير مهاراتي",
-    icon: UserCheck,
+    title: "تطوير مهارات",
+    description: "أبحث عن فرص تطوير مهاراتي",
     color: "from-green-500/20 to-emerald-500/20",
-    bgColor: "bg-green-500/10",
-    textColor: "text-green-400",
   },
   {
     id: "trainer",
-    title: "مدرب / محترف",
-    description: "أعمل في المجال وأريد تطوير خبراتي",
-    icon: Briefcase,
+    title: "اعمل معنا ",
+    description: "مدرب محترف في المجال",
     color: "from-purple-500/20 to-pink-500/20",
-    bgColor: "bg-purple-500/10",
-    textColor: "text-purple-400",
   },
 ];
 
 // Majors
 const majors = [
   {
-    id: "programming",
-    title: "البرمجة وعلوم الحاسوب",
-    icon: "💻",
-    courses: getCoursesByCategory("programming"),
-    certifications: ["swift-level1", "pmi-beginner"],
+    id: "information-tech",
+    title: "تكنولوجيا المعلومات",
+    courses: getCoursesByCategory("information-tech"),
+    certifications: ["ccna", "ccst", "ic3"],
   },
   {
-    id: "web-development",
-    title: "تطوير تطبيقات الويب",
-    icon: "🌐",
-    courses: getCoursesByCategory("web-development"),
-    certifications: ["adobe-photoshop", "adobe-illustrator"],
+    id: "data-analysis",
+    title: "تحليل البيانات",
+    courses: getCoursesByCategory("data-analysis"),
+    certifications: ["mos-excel", "pmi-beginner"],
   },
   {
-    id: "design",
-    title: "التصميم الجرافيكي",
-    icon: "🎨",
-    courses: getCoursesByCategory("design"),
-    certifications: ["adobe-photoshop", "adobe-illustrator"],
+    id: "computer-science",
+    title: "علوم الحاسوب",
+    courses: getCoursesByCategory("computer-science"),
+    certifications: ["swift-level1", "java-cert"],
   },
   {
-    id: "business",
-    title: "إدارة الأعمال",
-    icon: "📊",
-    courses: getCoursesByCategory("business"),
-    certifications: ["mos-excel", "esb-certification", "pmi-beginner"],
+    id: "management",
+    title: "الإدارة",
+    courses: getCoursesByCategory("management"),
+    certifications: ["pmi-beginner", "esb-certification"],
   },
   {
-    id: "marketing",
-    title: "التسويق الرقمي",
-    icon: "📢",
-    courses: getCoursesByCategory("marketing"),
-    certifications: ["mos-word", "mos-excel"],
+    id: "civil-engineering",
+    title: "الهندسة المدنية",
+    courses: getCoursesByCategory("civil-engineering"),
+    certifications: ["autocad", "revit"],
   },
   {
-    id: "ai",
-    title: "الذكاء الاصطناعي",
-    icon: "🤖",
-    courses: getCoursesByCategory("ai"),
-    certifications: ["swift-level1"],
+    id: "architecture",
+    title: "الهندسة المعمارية",
+    courses: getCoursesByCategory("architecture"),
+    certifications: ["autocad", "revit", "3ds-max"],
+  },
+  {
+    id: "mechanical-engineering",
+    title: "الهندسة الميكانيكية",
+    courses: getCoursesByCategory("mechanical-engineering"),
+    certifications: ["autocad", "inventor", "fusion-360"],
+  },
+  {
+    id: "accounting",
+    title: "المحاسبة",
+    courses: getCoursesByCategory("accounting"),
+    certifications: ["quickbooks", "mos-excel"],
   },
   {
     id: "languages",
     title: "اللغات",
-    icon: "🗣️",
     courses: getCoursesByCategory("languages"),
     certifications: ["csb-business"],
-  },
-  {
-    id: "engineering",
-    title: "الهندسة",
-    icon: "⚙️",
-    courses: getCoursesByCategory("business"),
-    certifications: ["autocad"],
-  },
-  {
-    id: "photography",
-    title: "التصوير والإعلام",
-    icon: "📸",
-    courses: getCoursesByCategory("photography"),
-    certifications: ["adobe-photoshop"],
   },
 ];
 
@@ -196,7 +177,6 @@ export default function UserPathwaySection() {
             {/* Courses Section */}
             <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="text-3xl">{selectedMajorData.icon}</div>
                 <div>
                   <h3 className="text-2xl font-bold text-white">
                     الدورات المتاحة
@@ -340,19 +320,6 @@ export default function UserPathwaySection() {
               </Link>
             </div>
           </div>
-
-          <div className="text-center mt-12">
-            <p className="text-slate-400 mb-4">
-              هل تحتاج مساعدة في اختيار المسار المناسب؟
-            </p>
-            <Link
-              href="/consultation"
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-slate-600"
-            >
-              <Users2 className="w-5 h-5" />
-              احجز استشارة مجانية
-            </Link>
-          </div>
         </div>
       </section>
     );
@@ -372,7 +339,6 @@ export default function UserPathwaySection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {userTypes.map((type, index) => {
-            const Icon = type.icon;
             return (
               <motion.button
                 key={type.id}
@@ -387,12 +353,6 @@ export default function UserPathwaySection() {
                 />
 
                 <div className="relative z-10">
-                  <div
-                    className={`w-16 h-16 rounded-2xl ${type.bgColor} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform`}
-                  >
-                    <Icon className={`w-8 h-8 ${type.textColor}`} />
-                  </div>
-
                   <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-accent transition-colors">
                     {type.title}
                   </h3>
@@ -453,7 +413,6 @@ export default function UserPathwaySection() {
                     onClick={() => handleMajorSelect(major.id)}
                     className="p-6 rounded-xl bg-slate-700/50 hover:bg-slate-700 border border-slate-600 hover:border-accent/50 transition-all duration-300 text-center group"
                   >
-                    <div className="text-3xl mb-3">{major.icon}</div>
                     <h4 className="text-white font-semibold text-sm group-hover:text-accent transition-colors">
                       {major.title}
                     </h4>

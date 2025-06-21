@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronRight, CheckCircle } from "lucide-react";
 import PaymentFlow from "./PaymentFlow";
 import { Course } from "@/data/courses";
+import netlifyIdentity from "netlify-identity-widget";
+import { handleAuthentication, ExtendedUser } from "@/utils/auth";
 
 interface CourseCardProps {
   course: Course;
@@ -14,9 +16,32 @@ interface CourseCardProps {
 export default function CourseCard({ course }: CourseCardProps) {
   const [isPaymentFlowOpen, setIsPaymentFlowOpen] = useState(false);
 
+  useEffect(() => {
+    netlifyIdentity.init();
+  }, []);
+
   const handleRegisterClick = () => {
+    const user = netlifyIdentity.currentUser();
+    if (!user) {
+      // Initialize login modal with event handlers
+      netlifyIdentity.on("login", (user) => {
+        handleAuthentication(user as ExtendedUser);
+        setIsPaymentFlowOpen(true);
+        netlifyIdentity.close();
+      });
+
+      netlifyIdentity.open("login");
+      return;
+    }
     setIsPaymentFlowOpen(true);
   };
+
+  // Cleanup event listeners
+  useEffect(() => {
+    return () => {
+      netlifyIdentity.off("login");
+    };
+  }, []);
 
   // Get the points from the first lesson's description
   const points = course.sections[0].lessons[0].description?.split("\n") || [];
