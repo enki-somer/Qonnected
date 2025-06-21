@@ -33,7 +33,7 @@ const getCertificationLogo = (id: string): string => {
 
     // Development & Programming
     case "python":
-      return "/images/python.png";
+      return "/images/python.jpg";
     case "java":
       return "/images/java.png";
     case "software-development":
@@ -51,7 +51,7 @@ const getCertificationLogo = (id: string): string => {
     case "microsoft-word":
       return "/images/word.png";
     case "microsoft-excel":
-      return "/images/excell.png";
+      return "/images/excell.jpg";
     case "microsoft-powerpoint":
       return "/images/pp.png";
     case "microsoft-outlook":
@@ -80,11 +80,11 @@ const getCertificationLogo = (id: string): string => {
     case "networking":
       return "/images/network.png";
     case "cisco-cyber-ops":
-      return "/images/CISCO.png";
+      return "/images/ccna.png";
     case "cisco-professional":
       return "/images/CISCO.png";
     case "ccst":
-      return "/images/ccst.png";
+      return "/images/ccst.jpeg";
 
     // Emerging Tech
     case "it-english":
