@@ -1,13 +1,12 @@
 import { ManagementClient } from 'auth0';
 
-if (!process.env.NEXT_PUBLIC_AUTH0_DOMAIN) {
-  throw new Error('NEXT_PUBLIC_AUTH0_DOMAIN is not set');
-}
-
 let managementClient: ManagementClient | null = null;
 
 export const getManagementClient = () => {
   if (!managementClient) {
+    if (!process.env.NEXT_PUBLIC_AUTH0_DOMAIN) {
+      throw new Error('NEXT_PUBLIC_AUTH0_DOMAIN is not set');
+    }
     if (!process.env.AUTH0_MANAGEMENT_API_TOKEN) {
       throw new Error('AUTH0_MANAGEMENT_API_TOKEN is not set');
     }

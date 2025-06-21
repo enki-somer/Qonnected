@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -27,7 +27,7 @@ import UserPathwaySection from "@/components/UserPathwaySection";
 import CelebrationScene from "@/components/CelebrationScene";
 import { AnimatePresence } from "framer-motion";
 
-export default function PathwayPage() {
+function PathwayContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { isAuthenticated, login } = useAuth();
@@ -338,5 +338,13 @@ export default function PathwayPage() {
         )}
       </div>
     </>
+  );
+}
+
+export default function PathwayPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PathwayContent />
+    </Suspense>
   );
 }
