@@ -35,6 +35,7 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const proof = formData.get('proof') as File;
+    const proofBase64 = formData.get('proofBase64') as string;
     const paymentId = formData.get('paymentId') as string;
     const itemName = formData.get('itemName') as string;
     const rawItemType = formData.get('itemType') as string;
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
       rawAmount: formData.get('amount')
     });
 
-    if (!proof || !paymentId || !itemName || !itemType) {
+    if (!proofBase64 || !paymentId || !itemName || !itemType) {
       console.error('Payment submission - Missing fields:', {
         hasProof: !!proof,
         paymentId,
@@ -83,12 +84,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Convert the proof file to base64
-    const bytes = await proof.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const base64 = buffer.toString('base64');
-    const proofImage = `data:${proof.type};base64,${base64}`;
-
     const collection = await getPaymentsCollection();
 
     const historyEntry: PaymentHistory = {
@@ -106,7 +101,7 @@ export async function POST(request: Request) {
       itemType,
       status: 'pending',
       createdAt: new Date().toISOString(),
-      proofImage,
+      proofImage: proofBase64,
       history: [historyEntry]
     };
 

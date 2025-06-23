@@ -1,7 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { Star, Award, Rocket, CheckCircle, Sparkles } from "lucide-react";
+import {
+  Star,
+  Award,
+  Rocket,
+  CheckCircle,
+  Sparkles,
+  PartyPopper,
+  Clock,
+} from "lucide-react";
 
 interface CelebrationSceneProps {
   majorTitle: string;
@@ -16,16 +24,14 @@ export default function CelebrationScene({
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Mark as loaded immediately to start animations
     setIsLoaded(true);
 
-    // Optimized confetti function for better performance
     const launchConfetti = () => {
       const count = 200;
       const defaults = {
         origin: { y: 0.7 },
         zIndex: 999,
-        disableForReducedMotion: true, // Accessibility consideration
+        disableForReducedMotion: true,
       };
 
       function fire(particleRatio: number, opts: any) {
@@ -62,7 +68,6 @@ export default function CelebrationScene({
       });
     };
 
-    // Delayed animations for smooth loading
     const timer1 = setTimeout(() => {
       launchConfetti();
     }, 300);
@@ -100,7 +105,7 @@ export default function CelebrationScene({
         />
       </div>
 
-      <div className="relative text-center space-y-8 p-8 max-w-2xl mx-auto">
+      <div className="relative z-10 text-center">
         <motion.div
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -108,7 +113,7 @@ export default function CelebrationScene({
           className="flex justify-center mb-12"
         >
           <div className="relative">
-            <Rocket className="w-28 h-28 text-accent" />
+            <PartyPopper className="w-28 h-28 text-accent" />
             <motion.div
               animate={{
                 scale: [1, 1.2, 1],
@@ -121,18 +126,6 @@ export default function CelebrationScene({
               }}
               className="absolute inset-0 bg-accent/20 rounded-full blur-2xl"
             />
-            <motion.div
-              animate={{
-                rotate: 360,
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="absolute -inset-8 border-2 border-dashed border-accent/20 rounded-full"
-            />
           </div>
         </motion.div>
 
@@ -143,7 +136,7 @@ export default function CelebrationScene({
           className="relative"
         >
           <h2 className="text-10xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent-light to-accent mb-4 flex items-center justify-center gap-2 whitespace-nowrap text-center w-full">
-            <span className="block w-full">مبروك!</span>
+            <span className="block w-full">تم تقديم الطلب بنجاح!</span>
             <motion.span
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -162,7 +155,7 @@ export default function CelebrationScene({
           transition={{ delay: 0.6, duration: 0.7 }}
           className="text-2xl text-accent/90 mb-4 font-medium"
         >
-          لقد بدأت رحلتك المهنية في
+          تم تقديم طلب التسجيل في
         </motion.p>
 
         <motion.div
@@ -198,18 +191,18 @@ export default function CelebrationScene({
             >
               {[
                 {
-                  icon: Star,
-                  text: "تعلم من الخبراء",
+                  icon: CheckCircle,
+                  text: "تم استلام الطلب",
                   color: "from-yellow-500/20 to-orange-500/20",
                 },
                 {
-                  icon: Award,
-                  text: "شهادات معتمدة",
+                  icon: Clock,
+                  text: "قيد المراجعة",
                   color: "from-green-500/20 to-emerald-500/20",
                 },
                 {
-                  icon: CheckCircle,
-                  text: "مسار احترافي",
+                  icon: PartyPopper,
+                  text: "سيتم إعلامك قريباً",
                   color: "from-blue-500/20 to-cyan-500/20",
                 },
               ].map((item, index) => (

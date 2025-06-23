@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import netlifyIdentity from "netlify-identity-widget";
 import { handleAuthentication } from "@/utils/auth";
 import type { ExtendedUser } from "@/utils/auth";
+import CelebrationScene from "./CelebrationScene";
 import {
   CheckCircle,
   AlertCircle,
@@ -19,6 +20,7 @@ import {
   Upload,
   Clock,
   Image as ImageIcon,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -69,6 +71,47 @@ type PaymentStatus =
   | "pending"
   | "error";
 
+const compressImage = async (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = document.createElement("img");
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 1024;
+        const MAX_HEIGHT = 1024;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Convert to base64 with reduced quality
+        const base64 = canvas.toDataURL("image/jpeg", 0.7);
+        resolve(base64);
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
+};
+
 export default function PaymentFlow({
   isOpen,
   onClose,
@@ -80,10 +123,13 @@ export default function PaymentFlow({
     useState<PaymentStatus>("selecting");
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [paymentId] = useState(
     `PAY-${Math.random().toString(36).substr(2, 9)}`
   );
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleMethodSelect = (methodId: string) => {
     const user = netlifyIdentity.currentUser();
@@ -112,37 +158,59 @@ export default function PaymentFlow({
     navigator.clipboard.writeText(paymentId);
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setPaymentProof(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+      try {
+        setIsCompressing(true);
+        setPaymentProof(file);
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+
+        // Compress and convert to base64
+        const base64Data = await compressImage(file);
+        setPaymentProof(
+          new File([dataURLtoBlob(base64Data)], file.name, {
+            type: "image/jpeg",
+          })
+        );
+      } catch (error) {
+        console.error("Error processing image:", error);
+      } finally {
+        setIsCompressing(false);
+      }
     }
+  };
+
+  const dataURLtoBlob = (dataURL: string): Blob => {
+    const arr = dataURL.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
   };
 
   const handlePaymentSubmit = async () => {
     if (!paymentProof || !item) return;
 
     try {
+      setIsSubmitting(true);
       setPaymentStatus("submitting");
 
       const formData = new FormData();
       formData.append("proof", paymentProof);
+      formData.append("proofBase64", await compressImage(paymentProof));
       formData.append("paymentId", paymentId);
       formData.append("itemName", item.name);
       formData.append("itemType", item.type);
-      // Convert price string to number by removing currency symbol and parsing
       const numericAmount = Number(item.price.replace(/[^0-9.-]+/g, ""));
       formData.append("amount", numericAmount.toString());
-
-      console.log("Submitting payment with data:", {
-        paymentId,
-        itemName: item.name,
-        itemType: item.type,
-        amount: numericAmount,
-        hasProof: !!paymentProof,
-      });
 
       const response = await fetch("/api/payments", {
         method: "POST",
@@ -156,13 +224,20 @@ export default function PaymentFlow({
       const data = await response.json();
       if (data.success) {
         setPaymentStatus("pending");
+        setShowCelebration(true);
       } else {
         throw new Error(data.error || "Failed to submit payment");
       }
     } catch (error) {
       console.error("Error submitting payment:", error);
       setPaymentStatus("error");
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleCelebrationComplete = () => {
+    setShowCelebration(false);
   };
 
   const selectedPaymentMethod = PAYMENT_METHODS.find(
@@ -264,31 +339,57 @@ export default function PaymentFlow({
                     fill
                     className="object-contain"
                   />
+                  {isCompressing && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <div className="text-center">
+                        <Loader2 className="w-8 h-8 animate-spin text-accent mx-auto mb-2" />
+                        <p className="text-white text-sm">
+                          جاري معالجة الصورة...
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full bg-[#ffffff0d] hover:bg-[#ffffff15] text-white font-medium py-3 rounded-xl transition-all duration-300"
+                  disabled={isCompressing || isSubmitting}
                 >
                   اختر صورة أخرى
                 </button>
                 <button
                   onClick={handlePaymentSubmit}
-                  className="w-full bg-[#ffd700] hover:bg-[#e6c200] text-black font-medium py-3 rounded-xl transition-all duration-300"
+                  disabled={isCompressing || isSubmitting}
+                  className="w-full bg-[#ffd700] hover:bg-[#e6c200] text-black font-medium py-3 rounded-xl transition-all duration-300 relative"
                 >
-                  تأكيد وإرسال
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      جاري إرسال الطلب...
+                    </span>
+                  ) : (
+                    "تأكيد وإرسال"
+                  )}
                 </button>
               </div>
             ) : (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-[#8b95a5] rounded-xl p-8 cursor-pointer hover:border-[#ffd700] transition-colors"
+                className="border-2 border-dashed border-[#ffffff1a] rounded-xl p-8 text-center cursor-pointer hover:border-[#ffffff33] transition-colors"
               >
-                <Upload className="w-12 h-12 text-[#8b95a5] mx-auto mb-4" />
-                <p className="text-white font-medium mb-2">
-                  قم بتحميل إثبات الدفع
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <Upload className="w-12 h-12 text-[#ffffff4d] mx-auto mb-4" />
+                <p className="text-[#8b95a5] mb-2">
+                  اضغط هنا لتحميل صورة إيصال الدفع
                 </p>
-                <p className="text-sm text-[#8b95a5]">
-                  اضغط هنا لاختيار صورة من جهازك
+                <p className="text-sm text-[#ffffff4d]">
+                  يمكنك تحميل صور بصيغة JPG أو PNG
                 </p>
               </div>
             )}
@@ -353,6 +454,15 @@ export default function PaymentFlow({
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <AnimatePresence>
+          {showCelebration && (
+            <CelebrationScene
+              majorTitle={item.name}
+              onComplete={handleCelebrationComplete}
+            />
+          )}
+        </AnimatePresence>
+
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

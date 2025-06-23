@@ -146,15 +146,6 @@ function PathwayContent() {
 
   return (
     <>
-      <AnimatePresence>
-        {showCelebration && (
-          <CelebrationScene
-            majorTitle={selectedMajor.title}
-            onComplete={handleCelebrationComplete}
-          />
-        )}
-      </AnimatePresence>
-
       <div className="min-h-screen bg-gradient-to-b from-primary-dark to-primary">
         {/* Navigation Bar */}
         <div className="container mx-auto px-4 pt-6">
