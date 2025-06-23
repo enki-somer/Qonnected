@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   BookOpen,
   Award,
@@ -102,12 +103,12 @@ function PathwayContent() {
     setSelectedCertification(null);
   };
 
-  const handleCourseAction = (course: any) => {
+  const handleExploreCoursesClick = () => {
     if (!isAuthenticated) {
       login();
       return;
     }
-    router.push(`/courses/${course.id}`);
+    router.push(`/major-courses/${selectedMajor.id}`);
   };
 
   const handleMajorSelect = (majorId: string) => {
@@ -155,7 +156,7 @@ function PathwayContent() {
     <div className="min-h-screen bg-gradient-to-b from-primary-dark to-primary">
       {/* Navigation Bar */}
       <div className="container mx-auto px-4 pt-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between">
           <button
             onClick={() => setShowMajorSelection(true)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-white transition-colors duration-200"
@@ -163,13 +164,19 @@ function PathwayContent() {
             <ChevronRight className="w-5 h-5" />
             <span>تغيير التخصص</span>
           </button>
-          <button
-            onClick={handleReturnToCards}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent transition-colors duration-200"
+          <Link
+            href="/"
+            className="transform hover:scale-105 transition-transform duration-200"
           >
-            <ArrowRight className="w-5 h-5" />
-            <span>العودة إلى الاختيارات الرئيسية</span>
-          </button>
+            <Image
+              src="/images/qonnected-logo.png"
+              alt="Qonnected Logo"
+              width={140}
+              height={40}
+              className="h-10 w-auto"
+              priority
+            />
+          </Link>
         </div>
       </div>
 
@@ -263,7 +270,9 @@ function PathwayContent() {
 
               <button
                 className="w-full bg-[#FFD700]/10 hover:bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/20 hover:border-[#FFD700]/30 rounded-xl py-4 font-medium transition-all duration-300 flex items-center justify-center gap-2 group"
-                disabled
+                onClick={() =>
+                  router.push(`/certifications/${selectedMajor.id}`)
+                }
               >
                 <span>استكشف الشهادات المتاحة</span>
                 <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
@@ -321,10 +330,10 @@ function PathwayContent() {
 
               <button
                 className="w-full bg-[#4CAF50]/10 hover:bg-[#4CAF50]/20 text-[#4CAF50] border border-[#4CAF50]/20 hover:border-[#4CAF50]/30 rounded-xl py-4 font-medium transition-all duration-300 flex items-center justify-center gap-2 group"
-                disabled
+                onClick={handleExploreCoursesClick}
               >
                 <span>استكشف الدورات المتاحة</span>
-                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
             </div>
           </motion.div>

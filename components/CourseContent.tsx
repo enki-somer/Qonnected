@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { Course } from "@/data/courses";
 
 export interface Lesson {
   id: number;
@@ -18,11 +19,10 @@ export interface Section {
 }
 
 interface CourseContentProps {
-  sections: Section[];
-  courseId: number;
+  course: Course;
 }
 
-const CourseContent = ({ sections }: CourseContentProps) => {
+const CourseContent = ({ course }: CourseContentProps) => {
   const [expandedSections, setExpandedSections] = useState<number[]>([1]);
 
   const toggleSection = (sectionId: number) => {
@@ -36,7 +36,7 @@ const CourseContent = ({ sections }: CourseContentProps) => {
   return (
     <div className="space-y-6 text-right" dir="rtl">
       <div className="bg-primary-dark rounded-xl overflow-hidden">
-        {sections.map((section) => (
+        {course.sections.map((section) => (
           <div
             key={section.id}
             className="border-b border-white/10 last:border-0"

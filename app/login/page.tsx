@@ -71,9 +71,7 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold mb-4 text-center text-white">
           تسجيل الدخول
         </h1>
-        <p className="text-[#8b95a5] text-center mb-6">
-          يرجى تسجيل الدخول للمتابعة
-        </p>
+        <p className="text-[#8b95a5] text-center mb-6">يرجى تسجيل الدخول</p>
         <button
           onClick={() => netlifyIdentity.open("login")}
           className="w-full py-3.5 bg-accent hover:bg-accent-light text-black rounded-xl transition-all duration-300 text-sm font-medium"

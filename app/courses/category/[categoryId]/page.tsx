@@ -73,8 +73,7 @@ export default function CategoryPage() {
           >
             <CourseCard
               course={course}
-              // onDetailsClick={() => router.push(`/courses/${course.id}`)}
-              //onRegisterClick={() => router.push(`/courses/${course.id}`)}
+              onEnroll={() => router.push(`/courses/${course.id}`)}
             />
           </motion.div>
         ))}
