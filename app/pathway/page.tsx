@@ -13,6 +13,13 @@ import {
   Star,
   Briefcase,
   ChevronRight,
+  Users,
+  Clock,
+  Lightbulb,
+  Trophy,
+  Sparkles,
+  Target,
+  BarChart,
 } from "lucide-react";
 import { certificationCategories } from "@/data/certifications";
 import CourseCard from "@/components/CourseCard";
@@ -25,7 +32,7 @@ import { useAuth } from "@/hooks/useAuth";
 import netlifyIdentity from "netlify-identity-widget";
 import UserPathwaySection from "@/components/UserPathwaySection";
 import CelebrationScene from "@/components/CelebrationScene";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 function PathwayContent() {
   const searchParams = useSearchParams();
@@ -145,190 +152,244 @@ function PathwayContent() {
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-b from-primary-dark to-primary">
-        {/* Navigation Bar */}
-        <div className="container mx-auto px-4 pt-6">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setShowMajorSelection(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-white transition-colors duration-200"
-            >
-              <ChevronRight className="w-5 h-5" />
-              <span>تغيير التخصص</span>
-            </button>
-            <button
-              onClick={handleReturnToCards}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent transition-colors duration-200"
-            >
-              <ArrowRight className="w-5 h-5" />
-              <span>العودة إلى الاختيارات الرئيسية</span>
-            </button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-primary-dark to-primary">
+      {/* Navigation Bar */}
+      <div className="container mx-auto px-4 pt-6">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setShowMajorSelection(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-white transition-colors duration-200"
+          >
+            <ChevronRight className="w-5 h-5" />
+            <span>تغيير التخصص</span>
+          </button>
+          <button
+            onClick={handleReturnToCards}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent transition-colors duration-200"
+          >
+            <ArrowRight className="w-5 h-5" />
+            <span>العودة إلى الاختيارات الرئيسية</span>
+          </button>
         </div>
+      </div>
 
-        {/* Hero Section */}
-        <div className="bg-slate-900/50 border-b border-white/10 mt-6">
-          <div className="container mx-auto px-4 py-16">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 bg-green-500/15 text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-6 border border-green-500/20">
-                <CheckCircle className="w-4 h-4" />
-                مرحباً بك في مسارك التعليمي
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                مسارك في {selectedMajor.title}
-              </h1>
-              <p className="text-xl text-slate-300 mb-8">
-                {selectedMajor.description}
-              </p>
-              <div className="flex items-center justify-center gap-4">
-                <Link
-                  href={`/courses/category/${selectedMajor.courseCategory}`}
-                  className="bg-accent hover:bg-accent/90 text-black px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2"
-                >
-                  تصفح جميع الدورات
-                  <ArrowLeft className="w-4 h-4" />
-                </Link>
-                <Link
-                  href={`/certifications?category=${selectedMajor.certCategory}`}
-                  className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2"
-                >
-                  تصفح جميع الشهادات
-                  <ArrowLeft className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      {/* Hero Section */}
+      <div className="bg-slate-900/50 border-b border-white/10 mt-6">
         <div className="container mx-auto px-4 py-16">
-          {/* Courses Section */}
-          <div className="mb-16">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <BookOpen className="w-8 h-8 text-accent" />
-                <div>
-                  <h2 className="text-2xl font-bold text-white">
-                    الدورات الموصى بها
-                  </h2>
-                  <p className="text-slate-400">ابدأ تعلم مهارات جديدة</p>
-                </div>
-              </div>
-              <Link
-                href={`/courses/category/${selectedMajor.courseCategory}`}
-                className="text-accent hover:text-accent/80 font-medium flex items-center gap-2"
-              >
-                عرض الكل
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 bg-green-500/15 text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-6 border border-green-500/20">
+              <CheckCircle className="w-4 h-4" />
+              مرحباً بك في مسارك التعليمي
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {selectedMajor.courses.slice(0, 3).map((course: any) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  onEnroll={!isAuthenticated ? login : undefined}
-                />
-              ))}
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              مسارك في {selectedMajor.title}
+            </h1>
+            <p className="text-xl text-slate-300 mb-8">
+              {selectedMajor.description}
+            </p>
+            <div className="inline-flex items-center justify-center gap-2 bg-slate-800/50 px-6 py-3 rounded-xl">
+              <Star className="w-5 h-5 text-accent" />
+              <span className="text-lg text-slate-200">
+                اختر مسارك التعليمي المفضل
+              </span>
+              <Star className="w-5 h-5 text-accent" />
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Certifications Section */}
-          <div>
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <Award className="w-8 h-8 text-accent" />
+      {/* Main Choices Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Certifications Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/20 to-[#FFA500]/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+            <div className="relative bg-slate-800/90 backdrop-blur-sm border border-white/10 rounded-3xl p-8 h-full hover:border-[#FFD700]/30 transition-all duration-300">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-[#FFD700]/10 flex items-center justify-center">
+                  <Award className="w-8 h-8 text-[#FFD700]" />
+                </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2 className="text-2xl font-bold text-white mb-1">
                     الشهادات المعتمدة
                   </h2>
-                  <p className="text-slate-400">عزز سيرتك الذاتية</p>
+                  <p className="text-slate-400">عزز مؤهلاتك المهنية</p>
                 </div>
               </div>
-              <Link
-                href={`/certifications?category=${selectedMajor.certCategory}`}
-                className="text-accent hover:text-accent/80 font-medium flex items-center gap-2"
+
+              <div className="space-y-6 mb-8">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <Trophy className="w-6 h-6 text-[#FFD700] mb-2" />
+                    <h3 className="text-white font-medium mb-1">
+                      شهادات عالمية
+                    </h3>
+                    <p className="text-sm text-slate-400">
+                      معتمدة من كبرى الشركات
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <Target className="w-6 h-6 text-[#FFD700] mb-2" />
+                    <h3 className="text-white font-medium mb-1">
+                      اختبارات تجريبية
+                    </h3>
+                    <p className="text-sm text-slate-400">
+                      تحضير شامل للاختبار
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <BarChart className="w-6 h-6 text-[#FFD700] mb-2" />
+                    <h3 className="text-white font-medium mb-1">
+                      تقييم المستوى
+                    </h3>
+                    <p className="text-sm text-slate-400">
+                      اختبارات تحديد المستوى
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <Sparkles className="w-6 h-6 text-[#FFD700] mb-2" />
+                    <h3 className="text-white font-medium mb-1">دعم مستمر</h3>
+                    <p className="text-sm text-slate-400">
+                      توجيه وإرشاد متواصل
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                className="w-full bg-[#FFD700]/10 hover:bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/20 hover:border-[#FFD700]/30 rounded-xl py-4 font-medium transition-all duration-300 flex items-center justify-center gap-2 group"
+                disabled
               >
-                عرض الكل
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
+                <span>استكشف الشهادات المتاحة</span>
+                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
+          </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relevantCertifications.slice(0, 3).map((cert: any) => (
-                <CertificationCard
-                  key={cert.id}
-                  certification={cert}
-                  onDetailsClick={() => handleCertificationDetails(cert)}
-                  onPreTestClick={() => handlePreTest(cert)}
-                  onBookClick={() => handleBookNow(cert)}
-                />
-              ))}
+          {/* Courses Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#4CAF50]/20 to-[#2196F3]/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+            <div className="relative bg-slate-800/90 backdrop-blur-sm border border-white/10 rounded-3xl p-8 h-full hover:border-[#4CAF50]/30 transition-all duration-300">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-[#4CAF50]/10 flex items-center justify-center">
+                  <BookOpen className="w-8 h-8 text-[#4CAF50]" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-1">
+                    الدورات التدريبية
+                  </h2>
+                  <p className="text-slate-400">تعلم مهارات جديدة</p>
+                </div>
+              </div>
+
+              <div className="space-y-6 mb-8">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <GraduationCap className="w-6 h-6 text-[#4CAF50] mb-2" />
+                    <h3 className="text-white font-medium mb-1">
+                      مدربون محترفون
+                    </h3>
+                    <p className="text-sm text-slate-400">خبراء في مجالاتهم</p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <Lightbulb className="w-6 h-6 text-[#4CAF50] mb-2" />
+                    <h3 className="text-white font-medium mb-1">تطبيق عملي</h3>
+                    <p className="text-sm text-slate-400">مشاريع واقعية</p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <Clock className="w-6 h-6 text-[#4CAF50] mb-2" />
+                    <h3 className="text-white font-medium mb-1">تعلم مرن</h3>
+                    <p className="text-sm text-slate-400">في أي وقت ومكان</p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                    <Users className="w-6 h-6 text-[#4CAF50] mb-2" />
+                    <h3 className="text-white font-medium mb-1">تعلم تفاعلي</h3>
+                    <p className="text-sm text-slate-400">مجتمع نشط للتعلم</p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                className="w-full bg-[#4CAF50]/10 hover:bg-[#4CAF50]/20 text-[#4CAF50] border border-[#4CAF50]/20 hover:border-[#4CAF50]/30 rounded-xl py-4 font-medium transition-all duration-300 flex items-center justify-center gap-2 group"
+                disabled
+              >
+                <span>استكشف الدورات المتاحة</span>
+                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
-          </div>
+          </motion.div>
         </div>
-
-        {/* Modals */}
-        {showCertificationModal && selectedCertification && (
-          <CertificationModal
-            isOpen={showCertificationModal}
-            onClose={() => setShowCertificationModal(false)}
-            onBook={() => {
-              if (!isAuthenticated) {
-                setShowCertificationModal(false);
-                login();
-                return;
-              }
-              setShowCertificationModal(false);
-              handleBookNow(selectedCertification);
-            }}
-            certification={selectedCertification}
-          />
-        )}
-
-        {showPreTestModal && selectedCertification && (
-          <PreTestModal
-            isOpen={showPreTestModal}
-            onClose={() => setShowPreTestModal(false)}
-            onBook={() => {
-              if (!isAuthenticated) {
-                setShowPreTestModal(false);
-                login();
-                return;
-              }
-              setShowPreTestModal(false);
-              handleBookNow(selectedCertification);
-            }}
-            certification={selectedCertification}
-          />
-        )}
-
-        {showPaymentFlow && selectedCertification && (
-          <PaymentFlow
-            isOpen={showPaymentFlow}
-            onClose={handleClosePaymentFlow}
-            item={{
-              name: selectedCertification.name,
-              price: selectedCertification.price,
-              type: "certification",
-            }}
-          />
-        )}
-
-        {/* Majors Selection Modal */}
-        {showMajorSelection && (
-          <div className="fixed inset-0 z-50">
-            <UserPathwaySection
-              onMajorSelect={handleMajorSelect}
-              onClose={() => setShowMajorSelection(false)}
-              onReturnToCards={handleReturnToCards}
-              initialStep="major"
-            />
-          </div>
-        )}
       </div>
-    </>
+
+      {/* Modals */}
+      {showCertificationModal && selectedCertification && (
+        <CertificationModal
+          isOpen={showCertificationModal}
+          onClose={() => setShowCertificationModal(false)}
+          onBook={() => {
+            if (!isAuthenticated) {
+              setShowCertificationModal(false);
+              login();
+              return;
+            }
+            setShowCertificationModal(false);
+            handleBookNow(selectedCertification);
+          }}
+          certification={selectedCertification}
+        />
+      )}
+
+      {showPreTestModal && selectedCertification && (
+        <PreTestModal
+          isOpen={showPreTestModal}
+          onClose={() => setShowPreTestModal(false)}
+          onBook={() => {
+            if (!isAuthenticated) {
+              setShowPreTestModal(false);
+              login();
+              return;
+            }
+            setShowPreTestModal(false);
+            handleBookNow(selectedCertification);
+          }}
+          certification={selectedCertification}
+        />
+      )}
+
+      {showPaymentFlow && selectedCertification && (
+        <PaymentFlow
+          isOpen={showPaymentFlow}
+          onClose={handleClosePaymentFlow}
+          item={{
+            name: selectedCertification.name,
+            price: selectedCertification.price,
+            type: "certification",
+          }}
+        />
+      )}
+
+      {/* Majors Selection Modal */}
+      {showMajorSelection && (
+        <div className="fixed inset-0 z-50">
+          <UserPathwaySection
+            onMajorSelect={handleMajorSelect}
+            onClose={() => setShowMajorSelection(false)}
+            onReturnToCards={handleReturnToCards}
+            initialStep="major"
+          />
+        </div>
+      )}
+    </div>
   );
 }
 
