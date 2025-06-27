@@ -131,11 +131,6 @@ export default function UserPathwaySection({
     setShowCertificationModal(true);
   };
 
-  const handlePreTest = (certification: any) => {
-    setSelectedCertification(certification);
-    setShowPreTestModal(true);
-  };
-
   const handleBookNow = (certification: any) => {
     setSelectedCertification(certification);
     setShowPaymentFlow(true);
@@ -452,7 +447,6 @@ export default function UserPathwaySection({
                   key={cert.id}
                   certification={cert}
                   onDetailsClick={() => handleCertificationDetails(cert)}
-                  onPreTestClick={() => handlePreTest(cert)}
                   onBookClick={() => handleBookNow(cert)}
                 />
               ))}
