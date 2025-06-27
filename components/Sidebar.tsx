@@ -165,7 +165,7 @@ export default function Sidebar() {
                       مرحباً بك
                     </span>
                     <span className="text-text-muted text-sm transition-all duration-300 group-hover:text-text">
-                      سجل دخول للمتابعة
+                      سجل الدخول
                     </span>
                   </div>
                 </div>
