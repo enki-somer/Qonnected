@@ -6,6 +6,7 @@ import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import { usePathname } from "next/navigation";
+import Head from "next/head";
 
 const notoKufiArabic = Noto_Kufi_Arabic({
   subsets: ["arabic"],
@@ -23,6 +24,15 @@ export default function RootLayout({
 
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
+      <Head>
+        <title>QonnectED - منصة التعليم والشهادات المهنية</title>
+        <meta
+          name="description"
+          content="منصة QonnectED للتعليم والحصول على الشهادات المهنية المعتمدة"
+        />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <body
         className={`${notoKufiArabic.className} bg-primary text-text dark`}
         suppressHydrationWarning
@@ -32,9 +42,9 @@ export default function RootLayout({
             {isPathwayRoute ? (
               children
             ) : (
-              <div className="flex min-h-screen">
+              <div className="min-h-screen">
                 <Sidebar />
-                <main className="flex-1 overflow-auto">{children}</main>
+                <main className="mr-0 lg:mr-64 overflow-auto">{children}</main>
               </div>
             )}
           </AuthProvider>

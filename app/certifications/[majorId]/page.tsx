@@ -109,8 +109,8 @@ export default function MajorCertificationsPage() {
               className="transform hover:scale-105 transition-transform duration-200"
             >
               <Image
-                src="/images/qonnected-logo.png"
-                alt="Qonnected Logo"
+                src="/Qlogo.png"
+                alt="QonnectED Logo"
                 width={120}
                 height={35}
                 className="h-8 w-auto"
@@ -147,7 +147,6 @@ export default function MajorCertificationsPage() {
                 key={certification.id}
                 certification={certification}
                 onDetailsClick={() => handleCertificationDetails(certification)}
-                onPreTestClick={() => handlePreTest(certification)}
                 onBookClick={() => handleBookNow(certification)}
               />
             ))}

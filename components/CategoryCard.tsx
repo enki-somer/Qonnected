@@ -225,6 +225,8 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
           return "/images/ESB_logo-1.png";
         case "pmi":
           return "/images/pmi.png";
+        case "toefl":
+          return "/images/toefl_itp.jpg";
         default:
           return "/images/default-certification.png";
       }

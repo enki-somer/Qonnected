@@ -58,8 +58,8 @@ export default function CoursePage() {
               className="transform hover:scale-105 transition-transform duration-200"
             >
               <Image
-                src="/images/qonnected-logo.png"
-                alt="Qonnected Logo"
+                src="/Qlogo.png"
+                alt="QonnectED Logo"
                 width={120}
                 height={35}
                 className="h-8 w-auto"

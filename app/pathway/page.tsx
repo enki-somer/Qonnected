@@ -49,14 +49,24 @@ function PathwayContent() {
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [showMajorSelection, setShowMajorSelection] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [pathNotFound, setPathNotFound] = useState(false);
 
   useEffect(() => {
     const majorId = searchParams.get("major");
-    if (majorId) {
-      const major = majors.find((m) => m.id === majorId);
+
+    // Reset states on each navigation
+    setIsLoading(true);
+    setPathNotFound(false);
+    setSelectedMajor(null);
+    setRelevantCertifications([]);
+
+    if (majorId && majorId.trim() !== "") {
+      const major = majors.find((m) => m.id === majorId.trim());
       if (major) {
         setShowCelebration(true);
         setSelectedMajor(major);
+
         // Get relevant certifications
         const certs: any[] = [];
         major.certifications.forEach((certId) => {
@@ -71,7 +81,16 @@ function PathwayContent() {
           });
         });
         setRelevantCertifications(certs);
+        setIsLoading(false);
+      } else {
+        // Invalid major ID
+        setPathNotFound(true);
+        setIsLoading(false);
       }
+    } else {
+      // No major ID provided
+      setPathNotFound(true);
+      setIsLoading(false);
     }
   }, [searchParams]);
 
@@ -113,13 +132,16 @@ function PathwayContent() {
 
   const handleMajorSelect = (majorId: string) => {
     setShowMajorSelection(false);
-    router.push(`/pathway?major=${majorId}`);
+    // Use replace to avoid navigation issues
+    router.replace(`/pathway?major=${majorId}`);
   };
 
   const handleReturnToCards = () => {
     // Clear any existing state
     setShowMajorSelection(false);
     setSelectedMajor(null);
+    setPathNotFound(false);
+    setIsLoading(false);
     // Use replace instead of push to prevent back button from returning to the pathway page
     router.replace("/");
   };
@@ -128,23 +150,44 @@ function PathwayContent() {
     setShowCelebration(false);
   };
 
-  if (!selectedMajor) {
+  // Show loading state
+  if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-dark to-primary">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">لم يتم العثور على المسار</h1>
-          <div className="space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-lg text-white">جاري تحميل مسارك التعليمي...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show path not found error
+  if (pathNotFound || !selectedMajor) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-dark to-primary">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/10 flex items-center justify-center">
+            <ArrowRight className="w-10 h-10 text-red-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-4">
+            لم يتم العثور على المسار
+          </h1>
+          <p className="text-slate-400 mb-8">
+            يبدو أن المسار المطلوب غير متاح أو تم حذفه
+          </p>
+          <div className="space-y-3">
             <button
               onClick={() => setShowMajorSelection(true)}
-              className="text-accent hover:text-accent/80 block"
+              className="w-full bg-accent hover:bg-accent/90 text-black font-medium py-3 px-6 rounded-xl transition-colors duration-300"
             >
               اختر تخصصك
             </button>
             <button
               onClick={handleReturnToCards}
-              className="text-slate-400 hover:text-slate-300 block"
+              className="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 px-6 rounded-xl transition-colors duration-300"
             >
-              العودة إلى الاختيارات الرئيسية
+              العودة إلى الصفحة الرئيسية
             </button>
           </div>
         </div>
@@ -169,8 +212,8 @@ function PathwayContent() {
             className="transform hover:scale-105 transition-transform duration-200"
           >
             <Image
-              src="/images/qonnected-logo.png"
-              alt="Qonnected Logo"
+              src="/Qlogo.png"
+              alt="QonnectED Logo"
               width={140}
               height={40}
               className="h-10 w-auto"

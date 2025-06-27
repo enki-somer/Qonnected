@@ -1,7 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 // import FeaturedCourses from "@/components/FeaturedCourses";
 import UserPathwaySection from "@/components/UserPathwaySection";
-//import MarqueeComponent from "@/components/MarqueeComponent";
+import MarqueeComponent from "@/components/MarqueeComponent";
 
 export default function Home() {
   return (

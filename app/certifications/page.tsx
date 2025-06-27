@@ -8,7 +8,6 @@ import { useAuth } from "@/hooks/useAuth";
 import CertificationCard from "@/components/CertificationCard";
 import CertificationModal from "@/components/CertificationModal";
 import PaymentFlow from "@/components/PaymentFlow";
-import PreTestModal from "@/components/PreTestModal";
 
 // Arabic to English search mapping
 const arabicToEnglishMap: Record<string, string[]> = {
@@ -147,7 +146,7 @@ export default function CertificationsPage() {
   const [selectedCertification, setSelectedCertification] =
     useState<Certification | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPreTestModalOpen, setIsPreTestModalOpen] = useState(false);
+
   const [showPayment, setShowPayment] = useState(false);
 
   // Handle URL parameters for direct certification access
@@ -187,17 +186,6 @@ export default function CertificationsPage() {
     setShowPayment(true);
   };
 
-  const handlePreTestClick = (exam: Certification) => {
-    if (!isAuthenticated) {
-      // Store the exam for after login
-      sessionStorage.setItem("pendingPreTest", JSON.stringify(exam));
-      login();
-      return;
-    }
-    setSelectedCertification(exam);
-    setIsPreTestModalOpen(true);
-  };
-
   // Check for pending actions after login
   useEffect(() => {
     if (isAuthenticated) {
@@ -209,11 +197,6 @@ export default function CertificationsPage() {
         setSelectedCertification(exam);
         setShowPayment(true);
         sessionStorage.removeItem("pendingBooking");
-      } else if (pendingPreTest) {
-        const exam = JSON.parse(pendingPreTest);
-        setSelectedCertification(exam);
-        setIsPreTestModalOpen(true);
-        sessionStorage.removeItem("pendingPreTest");
       }
     }
   }, [isAuthenticated]);
@@ -364,7 +347,6 @@ export default function CertificationsPage() {
                     setIsModalOpen(true);
                   }}
                   onBookClick={() => handleBookClick(exam)}
-                  onPreTestClick={() => handlePreTestClick(exam)}
                 />
               ))}
             </div>
@@ -409,22 +391,6 @@ export default function CertificationsPage() {
           }}
           onBook={() => {
             setIsModalOpen(false);
-            handleBookClick(selectedCertification);
-          }}
-          certification={selectedCertification}
-        />
-      )}
-
-      {/* Pre-test Modal */}
-      {selectedCertification && (
-        <PreTestModal
-          isOpen={isPreTestModalOpen}
-          onClose={() => {
-            setIsPreTestModalOpen(false);
-            setSelectedCertification(null);
-          }}
-          onBook={() => {
-            setIsPreTestModalOpen(false);
             handleBookClick(selectedCertification);
           }}
           certification={selectedCertification}

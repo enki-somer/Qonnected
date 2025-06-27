@@ -25,21 +25,65 @@
 
 /* Custom scrollbar for Webkit browsers */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a2236;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #FFD700;
-  border-radius: 4px;
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FFE44D;
+  background: rgba(255, 215, 0, 0.5);
+}
+
+/* Sidebar specific scrollbar */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 215, 0, 0.3) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.5);
+}
+
+/* Hide scrollbar during animations to prevent flicker */
+.sidebar-scroll {
+  overflow-y: overlay;
+}
+
+@supports not (overflow-y: overlay) {
+  .sidebar-scroll {
+    overflow-y: auto;
+  }
+}
+
+/* Prevent animation overflow in sidebar */
+.sidebar-scroll * {
+  contain: layout style;
+}
+
+/* Smooth scrollbar transitions */
+.sidebar-scroll {
+  transition: scrollbar-color 0.3s ease;
 }
 
 /* Firefox scrollbar */
@@ -74,4 +118,224 @@
 
 .animate-scroll {
   animation: scroll 25s linear infinite;
+}
+
+/* Signature Animation Keyframes */
+@keyframes signature-reveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes signature-draw {
+  0% {
+    transform: scale(0.8) rotateZ(-2deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) rotateZ(1deg);
+  }
+  100% {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes signature-underline {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+.animate-signature-reveal {
+  animation: signature-reveal 2s ease-out forwards;
+}
+
+.animate-signature-draw {
+  animation: signature-draw 2s ease-out forwards;
+}
+
+.animate-signature-underline {
+  animation: signature-underline 2.5s ease-out forwards;
+}
+
+/* Social Media Animation Keyframes */
+@keyframes social-bounce {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-social-bounce {
+  animation: social-bounce 0.6s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Enhanced Sparkle Effects for Signature */
+@keyframes sparkle-1 {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  20% { opacity: 1; transform: scale(1); }
+  40% { opacity: 0; transform: scale(0); }
+}
+
+@keyframes sparkle-2 {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  30% { opacity: 1; transform: scale(1) rotate(180deg); }
+  60% { opacity: 0; transform: scale(0) rotate(360deg); }
+}
+
+@keyframes sparkle-3 {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  40% { opacity: 1; transform: scale(1); }
+  80% { opacity: 0; transform: scale(0); }
+}
+
+@keyframes sparkle-4 {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+  90% { opacity: 0; transform: scale(0); }
+}
+
+/* Social Media Synchronized Animations */
+@keyframes social-container {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes social-title {
+  0% {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes social-orbit {
+  0% {
+    transform: translateX(60px) scale(0.5) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-5px) scale(1.1) rotate(0deg);
+  }
+  100% {
+    transform: translateX(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes connecting-line {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes float-1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(180deg); }
+}
+
+@keyframes float-2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-180deg); }
+}
+
+/* Animation Classes */
+.animate-sparkle-1 {
+  animation: sparkle-1 3s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-sparkle-2 {
+  animation: sparkle-2 3.5s ease-in-out infinite;
+  animation-delay: 2.2s;
+}
+
+.animate-sparkle-3 {
+  animation: sparkle-3 4s ease-in-out infinite;
+  animation-delay: 2.8s;
+}
+
+.animate-sparkle-4 {
+  animation: sparkle-4 3.2s ease-in-out infinite;
+  animation-delay: 3.2s;
+}
+
+.animate-social-container {
+  animation: social-container 1s ease-out forwards;
+  animation-delay: 2s;
+}
+
+.animate-social-title {
+  animation: social-title 0.8s ease-out forwards;
+  animation-delay: 2.3s;
+}
+
+.animate-social-orbit {
+  animation: social-orbit 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-connecting-line {
+  animation: connecting-line 1.5s ease-out forwards;
+  animation-delay: 3s;
+}
+
+.animate-float-1 {
+  animation: float-1 2s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-2 2.2s ease-in-out infinite;
 }

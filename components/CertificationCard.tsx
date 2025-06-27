@@ -3,12 +3,22 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronRight, CheckCircle, BookOpen } from "lucide-react";
+import { ChevronRight, CheckCircle, Info } from "lucide-react";
 import { Certification } from "@/types/certifications";
 import PaymentFlow from "./PaymentFlow";
 
 // Get the logo path based on certification ID
 const getCertificationLogo = (id: string): string => {
+  // Check for Cisco certifications first
+  if (
+    id.includes("cisco") ||
+    id.includes("ccna") ||
+    id.includes("ccnp") ||
+    id.includes("ccst")
+  ) {
+    return "/images/CISCO.png";
+  }
+
   switch (id) {
     // Engineering & Architecture
     case "autocad":
@@ -64,6 +74,10 @@ const getCertificationLogo = (id: string): string => {
       return "/images/ESB_Logo-1.png";
     case "business-english":
       return "/images/Languages.png";
+    case "toefl-ibt":
+      return "/images/ETS_TOEFL_iBT_310.jpg";
+    case "toefl-itp":
+      return "/images/toefl_itp.jpg";
 
     // IT & Computer Science
     case "ic3":
@@ -112,14 +126,12 @@ const formatPrice = (price: string) => {
 interface CertificationCardProps {
   certification: Certification;
   onDetailsClick: () => void;
-  onPreTestClick: () => void;
   onBookClick: () => void;
 }
 
 export default function CertificationCard({
   certification,
   onDetailsClick,
-  onPreTestClick,
   onBookClick,
 }: CertificationCardProps) {
   const logoPath = getCertificationLogo(certification.id);
@@ -226,48 +238,35 @@ export default function CertificationCard({
                 </div>
               </motion.div>
 
-              {/* Pre-test Button */}
+              {/* Test Information Button */}
               <motion.button
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onPreTestClick();
+                  onDetailsClick();
                 }}
                 className="w-full py-3.5 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl transition-all duration-300 text-sm font-medium flex items-center justify-center gap-2 group/btn"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <BookOpen className="w-4 h-4 group-hover/btn:text-accent transition-colors duration-300" />
-                <span>اختبار تجريبي</span>
+                <Info className="w-4 h-4 group-hover/btn:text-accent transition-colors duration-300" />
+                <span>تفاصيل الاختبار</span>
+                <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
               </motion.button>
 
-              {/* Action Buttons */}
-              <div className="flex gap-2">
-                <motion.button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onBookClick();
-                  }}
-                  className="flex-1 py-3.5 bg-accent hover:bg-accent-light text-black rounded-xl transition-all duration-300 text-sm font-medium"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  احجز الآن
-                </motion.button>
-                <motion.button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onDetailsClick();
-                  }}
-                  className="px-4 py-3.5 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl transition-all duration-300"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </motion.button>
-              </div>
+              {/* Book Now Button */}
+              <motion.button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onBookClick();
+                }}
+                className="w-full py-3.5 bg-accent hover:bg-accent-light text-black rounded-xl transition-all duration-300 text-sm font-medium"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                احجز الآن
+              </motion.button>
             </div>
           </div>
         </div>
