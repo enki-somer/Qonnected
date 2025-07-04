@@ -22,10 +22,11 @@ const getCertificationLogo = (id: string): string => {
   switch (id) {
     // Engineering & Architecture
     case "autocad":
-      return "/images/Autocad.png";
+      return "/images/AC.png";
     case "revit":
+      return "/images/revit.png";
     case "inventor":
-      return "/images/Autodesk.png";
+      return "/images/inventor.png";
     case "fusion360":
       return "/images/Fusion.png";
     case "3dsmax":
@@ -37,15 +38,17 @@ const getCertificationLogo = (id: string): string => {
     case "photoshop":
       return "/images/Photoshop.png";
     case "illustrator":
+      return "/images/Ai.png";
     case "indesign":
+      return "/images/in.png";
     case "dreamweaver":
-      return "/images/Adobe.png";
+      return "/images/dreamweaver.png";
 
     // Development & Programming
     case "python":
-      return "/images/python.jpg";
+      return "/images/python.png";
     case "java":
-      return "/images/java.png";
+      return "/images/java-2.png";
     case "software-development":
       return "/images/Code.png";
     case "swift-development":
@@ -53,7 +56,7 @@ const getCertificationLogo = (id: string): string => {
     case "html-css":
       return "/images/css.png";
     case "html5":
-      return "/images/html5.png";
+      return "/images/HTML5.png";
     case "javascript":
       return "/images/js.png";
 
@@ -61,7 +64,7 @@ const getCertificationLogo = (id: string): string => {
     case "microsoft-word":
       return "/images/word.png";
     case "microsoft-excel":
-      return "/images/excell.jpg";
+      return "/images/EXCEL.png";
     case "microsoft-powerpoint":
       return "/images/pp.png";
     case "microsoft-outlook":
@@ -69,15 +72,15 @@ const getCertificationLogo = (id: string): string => {
     case "quickbooks":
       return "/images/qb.png";
     case "pmi":
-      return "/images/pmi.png";
+      return "/images/PMI.png";
     case "esb":
-      return "/images/ESB_Logo-1.png";
+      return "/images/ESP.png";
     case "business-english":
-      return "/images/Languages.png";
+      return "/images/ESP.png";
     case "toefl-ibt":
-      return "/images/ETS_TOEFL_iBT_310.jpg";
+      return "/images/ibt.png";
     case "toefl-itp":
-      return "/images/toefl_itp.jpg";
+      return "/images/itp.jpg";
 
     // IT & Computer Science
     case "ic3":
@@ -85,14 +88,14 @@ const getCertificationLogo = (id: string): string => {
     case "ic3-spark":
       return "/images/spark.png";
     case "microsoft-fundamentals":
-      return "/images/Microsoft.png";
+      return "/images/Moffice.png";
     case "computational-thinking":
-      return "/images/Code.png";
+      return "/images/Moffice.png";
     case "cybersecurity":
     case "network-security":
-      return "/images/cyper.png";
+      return "/images/CISCO.png";
     case "networking":
-      return "/images/network.png";
+      return "/images/CISCO.png";
     case "cisco-cyber-ops":
       return "/images/ccna.png";
     case "cisco-professional":
@@ -104,7 +107,7 @@ const getCertificationLogo = (id: string): string => {
     case "it-english":
       return "/images/Languages.png";
     case "artificial-intelligence":
-      return "/images/Ai.png";
+      return "/images/artificial-intelligence.png";
     case "cloud-computing":
     case "data-analysis":
       return "/images/online-analytical.png";
@@ -116,6 +119,102 @@ const getCertificationLogo = (id: string): string => {
     default:
       return "/images/default-certification.png";
   }
+};
+
+// Get the provider name based on certification name/id
+const getCertificationProvider = (name: string, id: string): string => {
+  const lowerName = name.toLowerCase();
+  const lowerId = id.toLowerCase();
+
+  if (
+    lowerName.includes("microsoft") ||
+    lowerName.includes("word") ||
+    lowerName.includes("excel") ||
+    lowerName.includes("powerpoint") ||
+    lowerName.includes("outlook") ||
+    lowerId.includes("microsoft")
+  ) {
+    return "Microsoft";
+  }
+
+  if (
+    lowerName.includes("adobe") ||
+    lowerName.includes("photoshop") ||
+    lowerName.includes("illustrator") ||
+    lowerName.includes("indesign") ||
+    lowerName.includes("dreamweaver") ||
+    lowerId.includes("photoshop") ||
+    lowerId.includes("illustrator") ||
+    lowerId.includes("indesign") ||
+    lowerId.includes("dreamweaver")
+  ) {
+    return "Adobe";
+  }
+
+  if (
+    lowerName.includes("cisco") ||
+    lowerName.includes("ccna") ||
+    lowerName.includes("ccnp") ||
+    lowerName.includes("ccst") ||
+    lowerId.includes("cisco") ||
+    lowerId.includes("ccna") ||
+    lowerId.includes("ccnp") ||
+    lowerId.includes("ccst")
+  ) {
+    return "Cisco";
+  }
+
+  if (
+    lowerName.includes("autocad") ||
+    lowerName.includes("revit") ||
+    lowerName.includes("inventor") ||
+    lowerName.includes("fusion") ||
+    lowerName.includes("3ds max") ||
+    lowerName.includes("maya") ||
+    lowerId.includes("autocad") ||
+    lowerId.includes("revit") ||
+    lowerId.includes("inventor") ||
+    lowerId.includes("fusion") ||
+    lowerId.includes("3dsmax") ||
+    lowerId.includes("maya")
+  ) {
+    return "Autodesk";
+  }
+
+  if (
+    lowerName.includes("apple") ||
+    lowerName.includes("swift") ||
+    lowerId.includes("swift")
+  ) {
+    return "Apple";
+  }
+
+  if (
+    lowerName.includes("python") ||
+    lowerName.includes("ic3") ||
+    lowerId.includes("python") ||
+    lowerId.includes("ic3")
+  ) {
+    return "Certiport";
+  }
+
+  if (lowerName.includes("pmi") || lowerId.includes("pmi")) {
+    return "PMI";
+  }
+
+  if (lowerName.includes("esb") || lowerId.includes("esb")) {
+    return "ESB";
+  }
+
+  if (lowerName.includes("quickbooks") || lowerId.includes("quickbooks")) {
+    return "Intuit";
+  }
+
+  if (lowerName.includes("toefl") || lowerId.includes("toefl")) {
+    return "ETS TOEFL";
+  }
+
+  return "Certiport"; // Default provider
 };
 
 const formatPrice = (price: string) => {
@@ -135,6 +234,10 @@ export default function CertificationCard({
   onBookClick,
 }: CertificationCardProps) {
   const logoPath = getCertificationLogo(certification.id);
+  const provider = getCertificationProvider(
+    certification.name,
+    certification.id
+  );
   const originalPrice = formatPrice(certification.price);
   const discountedPrice = formatPrice(
     (parseInt(certification.price.replace(/\D/g, "")) * 0.8).toString()
@@ -194,13 +297,28 @@ export default function CertificationCard({
           <div className="p-6 flex-1 flex flex-col">
             {/* Title */}
             <motion.h3
-              className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/90 text-center mb-6"
+              className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/90 text-center mb-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
               {certification.name}
             </motion.h3>
+
+            {/* Provider Badge */}
+            <motion.div
+              className="flex justify-center mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="inline-flex items-center gap-2 bg-accent/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent/20">
+                <div className="w-2 h-2 rounded-full bg-accent"></div>
+                <span className="text-xs text-accent font-medium">
+                  اختبار معتمد من {provider}
+                </span>
+              </div>
+            </motion.div>
 
             {/* Benefits */}
             <div className="flex-1">

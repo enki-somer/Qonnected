@@ -134,7 +134,7 @@ export default function MajorCertificationsPage() {
               شهادات {selectedMajor.title}
             </h1>
             <p className="text-xl text-slate-300">
-              اكتشف الشهادات المعتمدة المتاحة في مجال تخصصك
+              اكتشف الاختبارات المعتمدة المتاحة في مجال تخصصك
             </p>
           </div>
         </div>

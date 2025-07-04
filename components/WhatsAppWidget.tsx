@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { FaWhatsapp, FaTimes } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 
@@ -19,12 +19,19 @@ export default function WhatsAppWidget() {
   };
 
   // Animation variants
-  const buttonVariants = {
-    initial: { scale: 0, opacity: 0 },
+  const buttonVariants: Variants = {
+    initial: {
+      scale: 0,
+      opacity: 0,
+    },
     animate: {
       scale: 1,
       opacity: 1,
-      transition: { type: "spring", stiffness: 200, damping: 20 },
+      transition: {
+        type: "spring" as const,
+        stiffness: 200,
+        damping: 20,
+      },
     },
     hover: {
       scale: 1.05,
@@ -33,7 +40,7 @@ export default function WhatsAppWidget() {
     tap: { scale: 0.95 },
   };
 
-  const chatVariants = {
+  const chatVariants: Variants = {
     hidden: {
       opacity: 0,
       x: -50,
@@ -44,7 +51,7 @@ export default function WhatsAppWidget() {
       x: 0,
       scale: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30,
         duration: 0.4,

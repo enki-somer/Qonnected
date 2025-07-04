@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import {
   GraduationCap,
   BookOpen,
@@ -14,6 +15,7 @@ import {
   CheckCircle,
   Briefcase,
   UserCheck,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,8 +44,13 @@ const userTypes = [
   },
   {
     id: "trainer",
-    title: "اعمل معنا ",
-    description: "قريباً - انضم إلينا كمدرب محترف",
+    title: (
+      <>
+        إنظم الى <span className="text-2xl font-bold text-accent">Q</span>
+        onnected
+      </>
+    ),
+    //description: "قريباً - انضم إلينا كمدرب محترف",
     color: "from-purple-500/20 to-pink-500/20",
     available: false,
   },
@@ -73,6 +80,7 @@ export default function UserPathwaySection({
   const [showPreTestModal, setShowPreTestModal] = useState(false);
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   // Reset state when component mounts
   useEffect(() => {
@@ -147,6 +155,29 @@ export default function UserPathwaySection({
     ? getRelevantCertifications(selectedMajor)
     : [];
 
+  const ChangeSpecializationButton = () => {
+    if (isMobile) {
+      return (
+        <button
+          onClick={() => setShowResults(false)}
+          className="inline-flex items-center gap-2 bg-accent/10 hover:bg-accent/20 text-accent px-4 py-2 rounded-full text-sm font-medium border border-accent/20 transition-all duration-300 hover:scale-105"
+        >
+          <RefreshCw className="w-4 h-4" />
+          تغيير التخصص
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={() => setShowResults(false)}
+        className="text-accent hover:text-accent/80 text-sm font-medium transition-colors"
+      >
+        تغيير التخصص
+      </button>
+    );
+  };
+
   // If we're showing the major selection directly, render only that
   if (initialStep === "major") {
     return (
@@ -164,24 +195,25 @@ export default function UserPathwaySection({
         >
           {/* Navigation Bar */}
           <div className="flex items-center justify-between mb-8 border-b border-slate-700 pb-6">
-            <div className="flex items-center gap-4">
+            {/* Return to cards button on the left (Arabic perspective) */}
+            {onReturnToCards && (
               <button
-                onClick={onClose}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition-colors duration-200"
+                onClick={onReturnToCards}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-black font-medium transition-colors duration-200"
               >
-                <X className="w-5 h-5" />
-                <span>إغلاق</span>
+                <ArrowRight className="w-5 h-5" />
+                <span>العودة للرئيسية</span>
               </button>
-              {onReturnToCards && (
-                <button
-                  onClick={onReturnToCards}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-black font-medium transition-colors duration-200"
-                >
-                  <ArrowRight className="w-5 h-5" />
-                  <span>العودة إلى الاختيارات الرئيسية</span>
-                </button>
-              )}
-            </div>
+            )}
+
+            {/* Close button on the right (Arabic perspective) */}
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition-colors duration-200"
+            >
+              <X className="w-5 h-5" />
+              <span>إغلاق</span>
+            </button>
           </div>
 
           {/* Content */}
@@ -223,7 +255,7 @@ export default function UserPathwaySection({
             اختر مسارك التعليمي
           </h2>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-            حدد نوع المستخدم للحصول على توصيات مخصصة لمسارك التعليمي
+            حدد اختصاصك للحصول على توصيات مخصصة لمسارك التعليمي
           </p>
         </div>
 
@@ -334,12 +366,7 @@ export default function UserPathwaySection({
               <p className="text-slate-300 text-lg max-w-2xl mx-auto mb-6">
                 {selectedMajorData.description}
               </p>
-              <button
-                onClick={() => setShowResults(false)}
-                className="text-accent hover:text-accent/80 text-sm font-medium transition-colors"
-              >
-                تغيير الاختيار
-              </button>
+              <ChangeSpecializationButton />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
@@ -397,7 +424,7 @@ export default function UserPathwaySection({
                   <Award className="w-8 h-8 text-accent" />
                   <div>
                     <h3 className="text-2xl font-bold text-white">
-                      الشهادات المعتمدة
+                      اختبارات معتمدة
                     </h3>
                     <p className="text-slate-400">عزز سيرتك الذاتية</p>
                   </div>
@@ -434,7 +461,7 @@ export default function UserPathwaySection({
                   href={`/certifications?category=${selectedMajorData.certCategory}`}
                   className="w-full bg-slate-700 hover:bg-slate-600 text-white text-center py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  استكشف الشهادات المتخصصة
+                  استكشف الاختبارات المتخصصة
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

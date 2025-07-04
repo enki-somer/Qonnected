@@ -1,17 +1,22 @@
 "use client";
 
-import { Fragment, useState, useEffect } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import {
   X,
-  CheckCircle,
   Star,
   Target,
   Zap,
   Award,
   FileText,
   Printer,
+  Info,
+  Clock,
+  DollarSign,
+  Monitor,
+  Globe,
+  RefreshCw,
 } from "lucide-react";
 
 // Get the logo path based on certification ID
@@ -31,6 +36,210 @@ const getCertificationLogo = (id: string): string => {
       return "/images/swift.png";
     default:
       return "";
+  }
+};
+
+// Get certification description based on certification name
+const getCertificationDescription = (name: string): string => {
+  if (name.includes("Microsoft Word")) {
+    return "شهادة Microsoft Office Specialist (MOS) تُعد من أقوى الشهادات العالمية في مجال المهارات المكتبية، حيث تثبت قدرتك على استخدام برنامج Microsoft Word بفعالية وكفاءة في تنسيق النصوص، إنشاء المستندات، وإدارة الجداول والقوالب.\nتُمنح هذه الشهادة من شركة Microsoft، وهي معترف بها دوليًا ومطلوبة في سوق العمل، وتُعزز فرص التوظيف وتفتح لك أبوابًا مهنية جديدة.";
+  } else if (name.includes("Microsoft Excel")) {
+    return "شهادة Microsoft Office Specialist (MOS) في Excel تُعد من أهم الشهادات المهنية في مجال تحليل البيانات والجداول الإلكترونية، حيث تثبت إتقانك لاستخدام Excel في إنشاء الجداول المعقدة، تحليل البيانات، وإنشاء التقارير المالية.\nتُمنح هذه الشهادة من شركة Microsoft، وهي معترف بها عالمياً ومطلوبة بشدة في القطاعات المالية والمحاسبية، وتفتح أمامك فرص وظيفية متميزة.";
+  } else if (name.includes("PowerPoint")) {
+    return "شهادة Microsoft Office Specialist (MOS) في PowerPoint تُعد من الشهادات الأساسية في مجال العروض التقديمية المهنية، حيث تثبت قدرتك على إنشاء عروض تقديمية احترافية وجذابة باستخدام التأثيرات والانتقالات المتقدمة.\nتُمنح هذه الشهادة من شركة Microsoft، وهي معترف بها دوليًا ومطلوبة في بيئات العمل المختلفة، وتعزز مهاراتك في التواصل والعرض المهني.";
+  } else if (name.includes("Outlook")) {
+    return "شهادة Microsoft Office Specialist (MOS) في Outlook تُعد من الشهادات المهمة في مجال إدارة الاتصالات والتنظيم المكتبي، حيث تثبت إتقانك لإدارة البريد الإلكتروني، التقويم، والمهام بكفاءة عالية.\nتُمنح هذه الشهادة من شركة Microsoft، وهي معترف بها دوليًا وتساعد في تحسين الإنتاجية والتنظيم في بيئة العمل المهنية.";
+  } else if (name.includes("Photoshop")) {
+    return "شهادة Adobe Certified Expert (ACE) في Photoshop تُعد من أقوى الشهادات في مجال التصميم الجرافيكي وتحرير الصور، حيث تثبت إتقانك لاستخدام أدوات Photoshop المتقدمة في التصميم والتعديل الاحترافي.\nتُمنح هذه الشهادة من شركة Adobe، وهي معترف بها عالمياً في صناعة التصميم والإعلان، وتفتح أمامك فرص عمل متميزة في مجال الإبداع البصري.";
+  } else if (name.includes("Illustrator")) {
+    return "شهادة Adobe Certified Expert (ACE) في Illustrator تُعد من الشهادات الأساسية في مجال التصميم المتجهي والرسوم الرقمية، حيث تثبت قدرتك على إنشاء تصاميم احترافية للشعارات والهويات البصرية.\nتُمنح هذه الشهادة من شركة Adobe، وهي معترف بها دوليًا في وكالات الإعلان وشركات التصميم، وتؤهلك للعمل كمصمم جرافيك محترف.";
+  } else if (name.includes("AutoCAD")) {
+    return "شهادة Autodesk Certified User في AutoCAD تُعد من أهم الشهادات في مجال التصميم الهندسي والرسم التقني، حيث تثبت إتقانك لاستخدام AutoCAD في إنشاء المخططات الهندسية والرسوم التقنية.\nتُمنح هذه الشهادة من شركة Autodesk، وهي معترف بها عالمياً في المجالات الهندسية والمعمارية، وتفتح أمامك فرص عمل في شركات الهندسة والإنشاءات.";
+  } else if (name.includes("IC3")) {
+    return "شهادة IC3 (Internet and Computing Core Certification) تُعد من الشهادات الأساسية في مجال المهارات الرقمية، حيث تثبت إتقانك لاستخدام الحاسوب والإنترنت والتطبيقات المكتبية الأساسية.\nتُمنح هذه الشهادة من Certiport، وهي معترف بها دوليًا وتُعتبر نقطة انطلاق مهمة لتطوير المهارات التقنية وتحسين فرص التوظيف.";
+  } else if (name.includes("Python")) {
+    return "شهادة Python Programming تُعد من أهم الشهادات في مجال البرمجة الحديثة، حيث تثبت إتقانك للغة Python في تطوير التطبيقات، تحليل البيانات، والذكاء الاصطناعي.\nPython هي واحدة من أكثر لغات البرمجة طلباً في سوق العمل، وهذه الشهادة معترف بها دوليًا وتفتح أمامك فرص وظيفية متميزة في مجال التكنولوجيا.";
+  } else if (name.includes("Java")) {
+    return "شهادة Java Programming تُعد من الشهادات الأساسية في مجال البرمجة المتقدمة، حيث تثبت إتقانك للغة Java في تطوير التطبيقات المعقدة والأنظمة الكبيرة.\nJava هي من أكثر لغات البرمجة استخداماً في الشركات الكبرى، وهذه الشهادة معترف بها عالمياً وتؤهلك للعمل في مشاريع تطوير البرمجيات المتقدمة.";
+  } else {
+    return `شهادة ${name} تُعد من الشهادات المعتمدة دولياً في مجال التخصص، حيث تثبت إتقانك للمهارات والمعرفة المطلوبة في هذا المجال.\nهذه الشهادة معترف بها عالمياً وتساعد في تطوير مسارك المهني وتحسين فرص التوظيف في السوق المحلي والدولي.`;
+  }
+};
+
+// Get specific certification type for conditional content
+const getCertificationType = (name: string, id: string): string => {
+  const lowerName = name.toLowerCase();
+  const lowerId = id.toLowerCase();
+
+  if (
+    lowerName.includes("quickbooks") ||
+    lowerId.includes("qb") ||
+    lowerName.includes("كويك بوكس")
+  ) {
+    return "qb";
+  } else if (
+    lowerName.includes("pmi") ||
+    lowerName.includes("project management ready")
+  ) {
+    return "pmi";
+  } else if (
+    lowerName.includes("esb") ||
+    lowerName.includes("entrepreneurship") ||
+    lowerName.includes("small business")
+  ) {
+    return "esb";
+  } else if (lowerName.includes("autocad") || lowerId.includes("autocad")) {
+    return "autocad";
+  } else if (
+    lowerName.includes("3d max") ||
+    lowerName.includes("3ds max") ||
+    lowerId.includes("3dmax")
+  ) {
+    return "3dmax";
+  } else if (lowerName.includes("revit") || lowerId.includes("revit")) {
+    return "revit";
+  } else if (lowerName.includes("swift") || lowerId.includes("swift")) {
+    return "swift";
+  } else if (
+    (lowerName.includes("ic3") && lowerName.includes("gs6")) ||
+    (lowerName.includes("ic3") && lowerName.includes("global standard 6")) ||
+    (lowerId.includes("ic3") && !lowerId.includes("spark"))
+  ) {
+    return "ic3-gs6";
+  } else if (
+    (lowerName.includes("ic3") && lowerName.includes("gs5")) ||
+    (lowerName.includes("ic3") && lowerName.includes("global standard 5")) ||
+    lowerId.includes("ic3-spark")
+  ) {
+    return "ic3-gs5";
+  } else if (
+    lowerName.includes("microsoft certified fundamentals") ||
+    lowerName.includes("microsoft fundamentals") ||
+    (lowerName.includes("microsoft") && lowerName.includes("fundamentals"))
+  ) {
+    return "microsoft-fundamentals";
+  } else if (
+    lowerName.includes("python") ||
+    lowerName.includes("java") ||
+    lowerName.includes("javascript") ||
+    lowerName.includes("programming") ||
+    lowerName.includes("software") ||
+    lowerName.includes("development") ||
+    lowerName.includes("coding") ||
+    lowerName.includes("برمجة") ||
+    lowerName.includes("تطوير") ||
+    lowerId.includes("python") ||
+    lowerId.includes("java") ||
+    lowerId.includes("js")
+  ) {
+    return "programming";
+  }
+  return "default";
+};
+
+// Get specific certification exam information
+const getSpecificCertificationInfo = (type: string) => {
+  switch (type) {
+    case "qb":
+      return {
+        description:
+          "توفر Intuit بالتعاون مع Certiport شهادات معتمدة تساعد المتقدّمين على تطوير مهارات قوية قابلة للتطبيق في سوق العمل، في مجالات المحاسبة وريادة الأعمال والتفكير التصميمي.",
+        retakePrice: "120 ألف دينار",
+        additionalInfo: [],
+      };
+    case "pmi":
+      return {
+        description:
+          "شهادة PMI Project Management Ready هي مدخل مثالي لتعلُّم مفاهيم إدارة المشاريع والتعرف على أدواتها ومجالات استخدامها في مسارات وظيفية متعددة.\nتُقدَّم الشهادة من معهد إدارة المشاريع العالمي (PMI)، وهو الجهة الرائدة عالمياً في هذا المجال، وتُعد هذه الشهادة خيارًا ممتازًا للراغبين في البدء بمسار مهني احترافي في إدارة المشاريع.",
+        retakePrice: "85 ألف دينار",
+        additionalInfo: [],
+      };
+    case "esb":
+      return {
+        description:
+          "شهادة ريادة الأعمال وإدارة المشاريع الصغيرة (Entrepreneurship & Small Business – ESB) تهدف إلى قياس وفهم المفاهيم الأساسية في مجال ريادة الأعمال، وتُعد مثالية للراغبين في بدء مشروعهم الخاص أو العمل في بيئة أعمال ناشئة",
+        retakePrice: "85 ألف دينار",
+        additionalInfo: [
+          "مفاهيم ريادة الأعمال الأساسية",
+          "تقييم الفرص التجارية",
+          "التخطيط لتأسيس وتشغيل المشروع",
+          "التسويق والمبيعات",
+          "التمويل الأولي ورأس المال الاستثماري",
+          "الإدارة المالية للمشاريع الصغيرة",
+        ],
+      };
+    case "autocad":
+      return {
+        description:
+          "شهادة AutoCAD المعتمدة تُثبت مهارتك في استخدام برنامج AutoCAD لإعداد الرسومات الهندسية بدقة واحترافية.\nمناسبة للمهندسين والطلاب والفنيين، وهي شهادة معترف بها دوليًا من شركة Autodesk وتُعزز فرصك في سوق العمل.",
+        retakePrice: "85 ألف دينار",
+        additionalInfo: [],
+      };
+    case "3dmax":
+      return {
+        description: null, // Will use the default description
+        retakePrice: "85 ألف دينار",
+        additionalInfo: [],
+      };
+    case "revit":
+      return {
+        description: null, // Will use the default description
+        retakePrice: "85 ألف دينار",
+        additionalInfo: [],
+      };
+    case "swift":
+      return {
+        description:
+          "شهادة App Development with Swift هي شهادة معتمدة تُظهر كفاءتك في تطوير تطبيقات iOS باستخدام لغة Swift وأدوات مثل Xcode. عند اجتياز الاختبار، يحصل المتقدِّم على شارة رقمية رسمية يمكن استخدامها في السيرة الذاتية أو البريد الإلكتروني أو منصات التوظيف.",
+        retakePrice: "100 ألف دينار",
+        additionalInfo: [],
+      };
+    case "ic3-gs6":
+      return {
+        description:
+          "شهادة IC3 Digital Literacy بنسختها الأحدث Global Standard 6 (GS6) تهدف إلى تأهيلك بأساسيات المهارات الرقمية المطلوبة في التعليم والعمل. وهي الشهادة المثالية لكل من يريد بناء قاعدة تقنية قوية في عالم رقمي متسارع",
+        retakePrice: "95 ألف دينار",
+        additionalInfo: [
+          "أساسيات التكنولوجيا (Technology Basics)",
+          "المواطنة الرقمية (Digital Citizenship)",
+          "إدارة المعلومات (Information Management)",
+          "إنشاء المحتوى (Content Creation)",
+          "التواصل الرقمي (Communication)",
+          "التعاون الإلكتروني (Collaboration)",
+          "الأمن والسلامة الرقمية (Safety and Security)",
+        ],
+      };
+    case "ic3-gs5":
+      return {
+        description:
+          "شهادة IC3 Digital Literacy – Global Standard 5 (GS5) تهدف إلى تزويدك بأساسيات مهارات الحاسوب والتقنية التي يحتاجها أي مستخدم في بيئة العمل أو التعليم. تُعد هذه الشهادة خيارًا مثاليًا لمن يرغب في إثبات كفاءته في التعامل مع الحاسوب، التطبيقات الأساسية، والإنترنت.",
+        retakePrice: "95 ألف دينار",
+        additionalInfo: [
+          "💻 Computing Fundamentals – أساسيات الحاسوب ونظام التشغيل",
+          "📊 Key Applications – برامج الإنتاجية مثل Microsoft Word وExcel وPowerPoint",
+          "🌐 Living Online – استخدام الإنترنت والبريد الإلكتروني بأمان وكفاءة",
+        ],
+      };
+    case "microsoft-fundamentals":
+      return {
+        description:
+          "شهادة Microsoft Certified Fundamentals هي الخطوة الأولى لفهم مفاهيم الحوسبة السحابية (Cloud Computing)، الذكاء الاصطناعي (AI)، وتحليل البيانات (Data Science).\nتم تصميم هذه الشهادة للطلاب والمبتدئين الذين يرغبون في استكشاف مجالات التقنية المتقدمة، وتُعد مدخلًا مثاليًا للبدء في مسار مهني ناجح في تكنولوجيا المعلومات.",
+        retakePrice: "80 ألف دينار",
+        additionalInfo: [
+          "فهم بنية الحوسبة السحابية ومفاهيم Microsoft Azure",
+          "التعرف على الذكاء الاصطناعي وكيفية استخدامه",
+          "فهم أساسيات تحليل البيانات وعلوم البيانات",
+          "بناء أساس قوي للانتقال إلى شهادات احترافية مثل Microsoft Azure Associate أو Expert",
+        ],
+      };
+    case "programming":
+      return {
+        description: null, // Will use the default description
+        retakePrice: "90 ألف دينار",
+        additionalInfo: [],
+      };
+    default:
+      return null;
   }
 };
 
@@ -61,24 +270,11 @@ export default function CertificationModal({
   certification,
 }: CertificationModalProps) {
   const logoPath = getCertificationLogo(certification.id);
-  const [showFloatingButton, setShowFloatingButton] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (target.scrollTop > 200) {
-        setShowFloatingButton(true);
-      } else {
-        setShowFloatingButton(false);
-      }
-    };
-
-    const modalContent = document.querySelector("[data-modal-content]");
-    if (modalContent) {
-      modalContent.addEventListener("scroll", handleScroll);
-      return () => modalContent.removeEventListener("scroll", handleScroll);
-    }
-  }, [isOpen]);
+  const certificationType = getCertificationType(
+    certification.name,
+    certification.id
+  );
+  const specificInfo = getSpecificCertificationInfo(certificationType);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -153,111 +349,10 @@ export default function CertificationModal({
                         </Dialog.Title>
 
                         {/* Test Details below title */}
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-2 py-1 rounded-full border border-white/20">
-                            <Award className="h-3 w-3 text-accent" />
-                            <span className="text-xs text-white/90">
-                              {(() => {
-                                const provider =
-                                  certification.name
-                                    .toLowerCase()
-                                    .includes("microsoft") ||
-                                  certification.name
-                                    .toLowerCase()
-                                    .includes("word") ||
-                                  certification.name
-                                    .toLowerCase()
-                                    .includes("excel") ||
-                                  certification.name
-                                    .toLowerCase()
-                                    .includes("powerpoint") ||
-                                  certification.name
-                                    .toLowerCase()
-                                    .includes("outlook")
-                                    ? "Microsoft"
-                                    : certification.name
-                                          .toLowerCase()
-                                          .includes("adobe") ||
-                                        certification.name
-                                          .toLowerCase()
-                                          .includes("photoshop") ||
-                                        certification.name
-                                          .toLowerCase()
-                                          .includes("illustrator") ||
-                                        certification.name
-                                          .toLowerCase()
-                                          .includes("indesign")
-                                      ? "Adobe"
-                                      : certification.name
-                                            .toLowerCase()
-                                            .includes("cisco") ||
-                                          certification.name
-                                            .toLowerCase()
-                                            .includes("ccna") ||
-                                          certification.name
-                                            .toLowerCase()
-                                            .includes("ccnp") ||
-                                          certification.name
-                                            .toLowerCase()
-                                            .includes("ccst")
-                                        ? "Cisco"
-                                        : certification.name
-                                              .toLowerCase()
-                                              .includes("autocad") ||
-                                            certification.name
-                                              .toLowerCase()
-                                              .includes("revit") ||
-                                            certification.name
-                                              .toLowerCase()
-                                              .includes("inventor") ||
-                                            certification.name
-                                              .toLowerCase()
-                                              .includes("fusion") ||
-                                            certification.name
-                                              .toLowerCase()
-                                              .includes("3ds max") ||
-                                            certification.name
-                                              .toLowerCase()
-                                              .includes("maya")
-                                          ? "Autodesk"
-                                          : certification.name
-                                                .toLowerCase()
-                                                .includes("apple") ||
-                                              certification.name
-                                                .toLowerCase()
-                                                .includes("swift")
-                                            ? "Apple"
-                                            : certification.name
-                                                  .toLowerCase()
-                                                  .includes("pmi")
-                                              ? "PMI"
-                                              : certification.name
-                                                    .toLowerCase()
-                                                    .includes("ic3")
-                                                ? "Certiport"
-                                                : certification.name
-                                                      .toLowerCase()
-                                                      .includes("esb")
-                                                  ? "ESB"
-                                                  : certification.name
-                                                        .toLowerCase()
-                                                        .includes("quickbooks")
-                                                    ? "Intuit"
-                                                    : certification.name
-                                                          .toLowerCase()
-                                                          .includes("toefl")
-                                                      ? "ETS TOEFL"
-                                                      : null;
-
-                                return provider
-                                  ? `اختبار معتمد من ${provider}`
-                                  : "اختبار معتمد";
-                              })()}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-2 py-1 rounded-full border border-white/20">
-                            <Zap className="h-3 w-3 text-accent" />
-                            <span className="text-xs text-white/90">
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                          <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                            <Zap className="h-4 w-4 text-accent" />
+                            <span className="text-sm text-white/90">
                               مستوى {certification.level}
                             </span>
                           </div>
@@ -276,6 +371,134 @@ export default function CertificationModal({
                   className="flex-1 overflow-y-auto px-6 py-4 space-y-6"
                   data-modal-content
                 >
+                  {/* About the Certificate Section */}
+                  <div className="bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-2xl p-6 border border-blue-500/20">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                        <Info className="h-5 w-5 text-blue-400" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">
+                        📋 عن الشهادة
+                      </h3>
+                    </div>
+
+                    <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                      <p className="text-white/90 leading-relaxed text-base whitespace-pre-line">
+                        {specificInfo?.description ||
+                          getCertificationDescription(certification.name)}
+                      </p>
+
+                      {/* Additional Topics/Information */}
+                      {specificInfo?.additionalInfo &&
+                        specificInfo.additionalInfo.length > 0 && (
+                          <div className="mt-6">
+                            <h5 className="text-white font-semibold mb-3">
+                              {certificationType === "esb" &&
+                                "تشمل المواضيع الرئيسية في الشهادة:"}
+                              {certificationType === "ic3-gs6" &&
+                                "🧠 تغطي الشهادة المجالات التالية:"}
+                              {certificationType === "ic3-gs5" &&
+                                "🧠 تغطي الشهادة المجالات التالية:"}
+                              {certificationType === "microsoft-fundamentals" &&
+                                "📚 الشهادة مناسبة لمن يرغب في:"}
+                            </h5>
+                            <div className="space-y-2">
+                              {specificInfo.additionalInfo.map(
+                                (topic, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex items-start gap-3"
+                                  >
+                                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                                    <p className="text-white/80 leading-relaxed">
+                                      {topic}
+                                    </p>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </div>
+
+                  {/* About the Exam Section */}
+                  <div className="bg-gradient-to-r from-orange-500/5 to-red-500/5 rounded-2xl p-6 border border-orange-500/20">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                        <FileText className="h-5 w-5 text-orange-400" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">
+                        📝 عن الاختبار
+                      </h3>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* Exam Details Grid */}
+
+                      {/* Exam Information */}
+                      <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                        <h4 className="text-white font-bold mb-4 flex items-center gap-2">
+                          <Award className="h-5 w-5 text-orange-400" />
+                          🎓 معلومات حول الاختبار:
+                        </h4>
+                        <div className="space-y-3 text-white/80 leading-relaxed">
+                          <div className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0" />
+                            <p>
+                              يتم إرسال الرمز الخاص بالاختبار إلكترونيًا
+                              (Voucher) عبر البريد الإلكتروني، وهي غير قابلة
+                              للاسترداد.
+                            </p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0" />
+                            <p>صالحة لمدة سنة واحدة من تاريخ الشراء.</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0" />
+                            <p>يُرجى السماح بيومين كحد أقصى لمعالجة الطلب.</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <RefreshCw className="h-4 w-4 text-orange-400 mt-1 flex-shrink-0" />
+                            <p>
+                              عند عدم النجاح يعاد الاختبار بقيمة{" "}
+                              {specificInfo?.retakePrice || "65 ألف دينار"}
+                            </p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <Globe className="h-4 w-4 text-orange-400 mt-1 flex-shrink-0" />
+                            <p>يوجد اختبار عربي وإنجليزي</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <Monitor className="h-4 w-4 text-orange-400 mt-1 flex-shrink-0" />
+                            <p>
+                              يتم الاختبار عن طريق الحاسوب وليس عن طريق الموبايل
+                              أو التاب
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Microsoft Fundamentals Additional Exam Info */}
+                        {certificationType === "microsoft-fundamentals" && (
+                          <div className="bg-white/5 rounded-xl p-6 border border-white/10 mt-4">
+                            <div className="space-y-3 text-white/80 leading-relaxed">
+                              <div className="flex items-start gap-3">
+                                <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0" />
+                                <p>
+                                  يتم تأمين الاختبار من قبل المنصة في حال وجود
+                                  أي خلل يعيق الاختبار مثلاً انقطاع الإنترنت أو
+                                  الكهرباء أو أي ظرف آخر حيث تستطيع تكملة
+                                  الاختبار
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Achievements Section */}
                   <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-2xl p-6 border border-accent/20">
                     <div className="flex items-center gap-3 mb-6">
@@ -301,63 +524,6 @@ export default function CertificationModal({
                           </span>
                         </div>
                       ))}
-                    </div>
-                  </div>
-
-                  {/* Prerequisites & Benefits Grid */}
-                  <div className="grid md:grid-cols-2 gap-8">
-                    {/* Prerequisites */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                          <CheckCircle className="h-4 w-4 text-blue-400" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                          المتطلبات المسبقة
-                        </h3>
-                      </div>
-
-                      <div className="space-y-3">
-                        {certification.prerequisites.map(
-                          (prerequisite, index) => (
-                            <div
-                              key={index}
-                              className="flex items-start gap-3 p-3 bg-white/5 rounded-lg border border-white/10 hover:border-blue-400/30 transition-colors duration-300"
-                            >
-                              <CheckCircle className="h-4 w-4 text-blue-400 flex-shrink-0 mt-1" />
-                              <span className="text-white/80 text-sm leading-relaxed">
-                                {prerequisite}
-                              </span>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Benefits */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                          <Award className="h-4 w-4 text-emerald-400" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                          مميزات الشهادة
-                        </h3>
-                      </div>
-
-                      <div className="space-y-3">
-                        {certification.benefits.map((benefit, index) => (
-                          <div
-                            key={index}
-                            className="flex items-start gap-3 p-3 bg-white/5 rounded-lg border border-white/10 hover:border-emerald-400/30 transition-colors duration-300"
-                          >
-                            <Award className="h-4 w-4 text-emerald-400 flex-shrink-0 mt-1" />
-                            <span className="text-white/80 text-sm leading-relaxed">
-                              {benefit}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
                     </div>
                   </div>
 

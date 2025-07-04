@@ -2,9 +2,9 @@
 
 import "./globals.css";
 import { Noto_Kufi_Arabic } from "next/font/google";
-import { ThemeProvider } from "../components/theme-provider";
-import { AuthProvider } from "../context/AuthContext";
-import Sidebar from "../components/Sidebar";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/context/AuthContext";
+import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import Head from "next/head";
 
@@ -13,6 +13,8 @@ const notoKufiArabic = Noto_Kufi_Arabic({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
+
+const navigationRoutes = ["/", "/certifications", "/courses", "/settings"];
 
 export default function RootLayout({
   children,

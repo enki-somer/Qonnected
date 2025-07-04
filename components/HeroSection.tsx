@@ -1,10 +1,26 @@
 "use client";
 
+import { useIsMobile } from "@/hooks/useIsMobile";
+import dynamic from "next/dynamic";
 import { Sparkles, BookOpen } from "lucide-react";
 import Link from "next/link";
 import VisionSection from "./VisionSection";
 
+// Dynamically import MobileHeroSection to avoid SSR issues
+const MobileHeroSection = dynamic(
+  () => import("./mobileView/MobileHeroSection"),
+  {
+    ssr: false,
+  }
+);
+
 export default function HeroSection() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileHeroSection />;
+  }
+
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-dark to-primary p-3 sm:p-6 md:p-8 lg:p-12">
       <div className="absolute inset-0 bg-grid-white/5" />
@@ -48,7 +64,7 @@ export default function HeroSection() {
               href="/certifications"
               className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium transition-colors text-sm sm:text-base"
             >
-              عرض الشهادات
+              عرض الاختبارات
             </Link>
           </div>
         </div>

@@ -137,13 +137,16 @@ function PathwayContent() {
   };
 
   const handleReturnToCards = () => {
-    // Clear any existing state
+    // Set loading state first to prevent flash
+    setIsLoading(true);
+
+    // Clear any existing state immediately
     setShowMajorSelection(false);
     setSelectedMajor(null);
     setPathNotFound(false);
-    setIsLoading(false);
-    // Use replace instead of push to prevent back button from returning to the pathway page
-    router.replace("/");
+
+    // Navigate immediately
+    router.push("/");
   };
 
   const handleCelebrationComplete = () => {
@@ -266,7 +269,7 @@ function PathwayContent() {
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-1">
-                    الشهادات المعتمدة
+                    اختبارات معتمدة
                   </h2>
                   <p className="text-slate-400">عزز مؤهلاتك المهنية</p>
                 </div>
@@ -317,7 +320,7 @@ function PathwayContent() {
                   router.push(`/certifications/${selectedMajor.id}`)
                 }
               >
-                <span>استكشف الشهادات المتاحة</span>
+                <span>استكشف الاختبارات المتاحة</span>
                 <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
