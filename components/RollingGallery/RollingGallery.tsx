@@ -9,7 +9,9 @@ import {
   PanInfo,
   ResolvedValues,
 } from "framer-motion";
-
+{
+  /* images */
+}
 const CERTIFICATION_IMAGES = [
   "/images/Moffice.png",
   "/images/Adobe.png",
