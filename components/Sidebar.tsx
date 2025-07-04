@@ -80,7 +80,7 @@ export default function Sidebar() {
   }, [pathname]);
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full p-3 sm:p-4 gap-2 sm:gap-3 overflow-y-auto sidebar-scroll">
+    <div className="flex flex-col h-[calc(100vh-2rem)] p-3 sm:p-4 gap-2 sm:gap-3 overflow-y-auto sidebar-scroll">
       {/* Logo */}
       <div className="flex items-center gap-2">
         <Link
@@ -243,9 +243,9 @@ export default function Sidebar() {
       </div>
 
       {/* Footer with Social Links */}
-      <div className="mt-auto pt-3 border-t border-primary-light/20 animate-social-container opacity-0">
+      <div className="mt-auto pt-3 border-t border-primary-light/20">
         <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-medium text-text-muted px-3 animate-social-title opacity-0">
+          <h3 className="text-sm font-medium text-text-muted px-3">
             تواصل معنا
           </h3>
           <div className="flex items-center justify-between px-3 relative">
@@ -256,8 +256,8 @@ export default function Sidebar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.ariaLabel}
-                  className="group relative p-2 rounded-lg hover:bg-accent/10 transition-all duration-300 transform hover:scale-125 animate-social-orbit block z-10 bg-primary opacity-0"
-                  style={{ animationDelay: `${2.5 + index * 0.2}s` }}
+                  className="group relative p-2 rounded-lg hover:bg-accent/10 transition-all duration-300 transform hover:scale-125 block z-10 bg-primary"
+                  style={{ animationDelay: `${0.2 + index * 0.1}s` }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {/* Glowing ring effect */}

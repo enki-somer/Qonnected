@@ -54,17 +54,17 @@ export default function HeroSection() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-4">
             <Link
-              href="/courses"
+              href="/certifications"
               className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-primary px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               <BookOpen className="w-4 h-4" />
-              <span>استكشف الدورات</span>
+              استكشف الاختبارات
             </Link>
             <Link
-              href="/certifications"
+              href="/courses"
               className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium transition-colors text-sm sm:text-base"
             >
-              عرض الاختبارات
+              <span>عرض الدورات</span>
             </Link>
           </div>
         </div>

@@ -16,9 +16,9 @@ const CERTIFICATION_IMAGES = [
   "/images/CISCO.png",
   "/images/ic3.png",
   "/images/PMI.png",
+  "/images/Fusion.png",
   "/images/apple-logo.png",
   "/images/AC.png",
-  "/images/Fusion.png",
 ];
 
 interface RollingGalleryProps {

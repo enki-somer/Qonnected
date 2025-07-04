@@ -124,7 +124,7 @@ export const courses: Course[] = [
     description: "تعلم أساسيات برمجة Python من الصفر. دورة شاملة تغطي المفاهيم الأساسية والتطبيقات العملية.",
     level: "beginner",
     category: "programming",
-    image: "/images/Python.jpg",
+    image: "/images/python.png",
     sections: [
       {
         id: 1,
@@ -214,7 +214,7 @@ export const courses: Course[] = [
     description: "تعلم أساسيات إدارة المشاريع وتطبيق المنهجيات الحديثة في إدارة الأعمال.",
     level: "intermediate",
     category: "business",
-    image: "/images/pmi.png",
+    image: "/images/PMI.png",
     sections: [
       {
         id: 1,

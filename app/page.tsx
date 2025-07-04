@@ -11,8 +11,8 @@ export default function Home() {
 
         {/* Certification Partners Gallery */}
         <div className="mt-8">
-          <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6 text-white">
-            شركاؤنا في التعليم والشهادات
+          <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6 bg-gradient-to-r from-white via-accent to-white bg-clip-text text-transparent animate-pulse">
+            الشهادات المعتمدة
           </h2>
           <RollingGallery />
         </div>
