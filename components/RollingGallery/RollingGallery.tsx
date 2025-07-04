@@ -128,7 +128,7 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
             "linear-gradient(to right, rgba(6,0,16,1) 0%, rgba(6,0,16,0.8) 40%, rgba(6,0,16,0) 100%)",
         }}
       />
-      {/* Right shadow overlay */}
+      {/* Right shadow overlay S*/}
       <div
         className="absolute top-0 right-0 h-full w-[120px] z-10"
         style={{
