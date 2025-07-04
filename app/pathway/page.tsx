@@ -212,16 +212,29 @@ function PathwayContent() {
           </button>
           <Link
             href="/"
-            className="transform hover:scale-105 transition-transform duration-200"
+            className="flex items-center gap-1 sm:gap-2 group transition-transform duration-300 hover:scale-105"
+            onClick={() => router.push("/")}
           >
-            <Image
-              src="/Qlogo.png"
-              alt="QonnectED Logo"
-              width={140}
-              height={40}
-              className="h-10 w-auto"
-              priority
-            />
+            <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex-shrink-0">
+              <Image
+                src="/Qlogo.png"
+                alt="QonnectED Logo"
+                width={48}
+                height={48}
+                className="object-contain w-full h-full"
+              />
+            </div>
+            <div className="flex items-center flex-row-reverse">
+              <span className="text-lg sm:text-2xl font-bold text-accent">
+                Q
+              </span>
+              <span className="text-lg sm:text-2xl font-bold text-text group-hover:text-text/90 transition-colors">
+                onnect
+              </span>
+              <span className="text-lg sm:text-2xl font-bold text-accent">
+                ED
+              </span>
+            </div>
           </Link>
         </div>
       </div>
