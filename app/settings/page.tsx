@@ -106,7 +106,7 @@ export default function SettingsPage() {
   }
 
   const renderSectionContent = () => {
-    const { email, user_metadata } = user;
+    const { email, fullName, phone, city, country, education } = user;
 
     switch (activeSection) {
       case "profile":
@@ -119,7 +119,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user_metadata.full_name || ""}
+                  defaultValue={fullName || ""}
                   className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent"
                 />
               </div>
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="tel"
-                  defaultValue={user_metadata.phone || ""}
+                  defaultValue={phone || ""}
                   className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent"
                   dir="ltr"
                 />
@@ -151,7 +151,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user_metadata.education || ""}
+                  defaultValue={education || ""}
                   className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent"
                 />
               </div>
@@ -161,7 +161,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user_metadata.city || ""}
+                  defaultValue={city || ""}
                   className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent"
                 />
               </div>
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                 <label className="block text-sm font-medium mb-2">الدولة</label>
                 <input
                   type="text"
-                  defaultValue={user_metadata.country || ""}
+                  defaultValue={country || ""}
                   className="w-full bg-primary rounded-lg px-4 py-2 text-text border border-gray-700 focus:border-accent focus:ring-1 focus:ring-accent"
                 />
               </div>

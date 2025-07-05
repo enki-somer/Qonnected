@@ -7,6 +7,7 @@ import { categories } from "@/data/categories";
 import CourseCard from "@/components/CourseCard";
 import { courses, getCoursesByCategory } from "@/data/courses";
 import { useRouter } from "next/navigation";
+import BackButton from "@/components/BackButton";
 
 // Arabic to English search mapping
 const arabicToEnglishMap: Record<string, string[]> = {
@@ -198,6 +199,7 @@ export default function CoursesPage() {
 
   return (
     <div className="container mx-auto p-6">
+      <BackButton />
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">استكشف الدورات</h1>

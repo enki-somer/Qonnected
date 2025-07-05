@@ -1,50 +1,57 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { getNetlifyUsers, updateNetlifyUser } from '@/lib/netlify';
-import { fetchAuth0Users } from '@/lib/auth0';
-import { GetUsers200ResponseOneOfInner } from 'auth0';
-
-// Helper to check if user is admin
-async function isAdmin(request: Request) {
-  try {
-    const cookieStore = cookies();
-    const token = cookieStore.get('auth_token');
-    
-    // Here you would verify the token and check admin role
-    // For now, we'll just check if token exists
-    return !!token;
-  } catch (error) {
-    console.error('Error checking admin status:', error);
-    return false;
-  }
-}
+import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser, getAllUsers, updateUser, isAdmin } from '@/lib/auth';
 
 // GET /api/admin/users
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    console.log('Fetching Auth0 users...');
-    const auth0Users = await fetchAuth0Users();
-    console.log('Auth0 users count:', auth0Users?.length || 0);
-    
-    // Transform Auth0 users to match our expected format
-    const users = (Array.isArray(auth0Users) ? auth0Users : []).map((user: any) => {
-      const userData = {
-        id: user.user_id || '',
-        name: user.name || user.nickname || user.email?.split('@')[0] || 'Unknown',
-        email: user.email || '',
-        role: 'user', // Default all users to regular users for now
-        status: user.blocked ? 'suspended' : 'active',
-        joinDate: user.created_at || new Date().toISOString(),
-        lastLogin: user.last_login || user.created_at || new Date().toISOString()
-      };
-      console.log('Transformed user:', userData);
-      return userData;
-    });
+    // Check if user is admin
+    const currentUser = await getCurrentUser(request);
+    if (!currentUser || !isAdmin(currentUser)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    console.log('Total transformed users:', users.length);
-    return NextResponse.json({ users });
+    // Get query parameters
+    const { searchParams } = new URL(request.url);
+    const role = searchParams.get('role');
+    const status = searchParams.get('status');
+    const search = searchParams.get('search');
+
+    // Build filters
+    const filters: any = {};
+    if (role && role !== 'all') {
+      filters.role = role as 'user' | 'admin';
+    }
+    if (status && status !== 'all') {
+      filters.status = status as 'active' | 'suspended';
+    }
+    if (search) {
+      filters.search = search;
+    }
+
+    // Fetch users
+    const users = await getAllUsers(filters);
+    
+    // Transform users to match the expected format
+    const transformedUsers = users.map(user => ({
+      id: user.id,
+      name: user.fullName,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      joinDate: user.createdAt,
+      lastLogin: user.lastLogin || user.createdAt,
+      phone: user.phone,
+      education: user.education,
+      city: user.city,
+      country: user.country,
+      profileComplete: user.profileComplete,
+      emailVerified: user.emailVerified,
+    }));
+
+    console.log(`Fetched ${transformedUsers.length} users from MongoDB`);
+    return NextResponse.json({ users: transformedUsers });
   } catch (error) {
-    console.error('Error in users route:', error);
+    console.error('Error fetching users:', error);
     return NextResponse.json(
       { error: 'Failed to fetch users' },
       { status: 500 }
@@ -52,54 +59,63 @@ export async function GET() {
   }
 }
 
-// POST /api/admin/users/:id/role or /api/admin/users/:id/status
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+// POST /api/admin/users - For bulk operations (if needed)
+export async function POST(request: NextRequest) {
   try {
     // Check if user is admin
-    if (!await isAdmin(request)) {
-      console.log('Unauthorized access attempt to users API');
+    const currentUser = await getCurrentUser(request);
+    if (!currentUser || !isAdmin(currentUser)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action } = await request.json();
-    const userId = params.id;
-    const updates: { role?: 'admin' | 'user'; status?: 'active' | 'suspended' } = {};
+    const body = await request.json();
+    const { action, userIds } = body;
 
-    console.log('Processing user action:', { userId, action });
-
-    // Determine update type based on URL
-    if (request.url.endsWith('/role')) {
-      if (!['make-admin', 'remove-admin'].includes(action)) {
-        console.warn('Invalid role action attempted:', action);
-        return NextResponse.json(
-          { error: 'Invalid action' },
-          { status: 400 }
-        );
-      }
-      updates.role = action === 'make-admin' ? 'admin' : 'user';
-    } else if (request.url.endsWith('/status')) {
-      if (!['activate', 'suspend'].includes(action)) {
-        console.warn('Invalid status action attempted:', action);
-        return NextResponse.json(
-          { error: 'Invalid action' },
-          { status: 400 }
-        );
-      }
-      updates.status = action === 'activate' ? 'active' : 'suspended';
+    if (!action || !Array.isArray(userIds)) {
+      return NextResponse.json(
+        { error: 'Invalid request data' },
+        { status: 400 }
+      );
     }
 
-    // Update user in Netlify
-    const updatedUser = await updateNetlifyUser(userId, updates);
-    
-    console.log('Successfully updated user:', { userId, updates });
-    return NextResponse.json({ user: updatedUser });
+    console.log('Processing bulk user action:', { action, userIds });
+
+    // Handle bulk actions
+    const results = [];
+    for (const userId of userIds) {
+      try {
+        let updates: Partial<any> = {};
+        
+        switch (action) {
+          case 'activate':
+            updates.status = 'active';
+            break;
+          case 'suspend':
+            updates.status = 'suspended';
+            break;
+          case 'make-admin':
+            updates.role = 'admin';
+            break;
+          case 'remove-admin':
+            updates.role = 'user';
+            break;
+          default:
+            throw new Error(`Unknown action: ${action}`);
+        }
+
+        const updatedUser = await updateUser(userId, updates);
+        results.push({ userId, success: true, user: updatedUser });
+      } catch (error) {
+        console.error(`Error updating user ${userId}:`, error);
+        results.push({ userId, success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+      }
+    }
+
+    return NextResponse.json({ results });
   } catch (error) {
-    console.error('Error in POST /api/admin/users:', error);
+    console.error('Error in bulk user update:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

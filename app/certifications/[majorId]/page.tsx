@@ -7,7 +7,7 @@ import { majors } from "@/data/majors";
 import CertificationCard from "@/components/CertificationCard";
 import CertificationModal from "@/components/CertificationModal";
 import PaymentFlow from "@/components/PaymentFlow";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import { ArrowRight, Award } from "lucide-react";
 import PreTestModal from "@/components/PreTestModal";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import Image from "next/image";
 export default function MajorCertificationsPage() {
   const params = useParams();
   const router = useRouter();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, openAuthModal } = useAuth();
   const [selectedMajor, setSelectedMajor] = useState<any>(null);
   const [certifications, setCertifications] = useState<any[]>([]);
   const [selectedCertification, setSelectedCertification] = useState<any>(null);
@@ -54,7 +54,7 @@ export default function MajorCertificationsPage() {
 
   const handlePreTest = (certification: any) => {
     if (!isAuthenticated) {
-      login();
+      openAuthModal("login");
       return;
     }
     setSelectedCertification(certification);
@@ -63,7 +63,7 @@ export default function MajorCertificationsPage() {
 
   const handleBookNow = (certification: any) => {
     if (!isAuthenticated) {
-      login();
+      openAuthModal("login");
       return;
     }
     setSelectedCertification(certification);

@@ -4,9 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import netlifyIdentity from "netlify-identity-widget";
-import { handleAuthentication } from "@/utils/auth";
-import type { ExtendedUser } from "@/utils/auth";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import CelebrationScene from "./CelebrationScene";
 import {
   CheckCircle,
@@ -117,6 +116,8 @@ export default function PaymentFlow({
   onClose,
   item,
 }: PaymentFlowProps) {
+  const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentStatus, setPaymentStatus] =
@@ -132,20 +133,14 @@ export default function PaymentFlow({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleMethodSelect = (methodId: string) => {
-    const user = netlifyIdentity.currentUser();
-    if (!user) {
-      // Initialize login modal with event handlers
-      netlifyIdentity.on("login", (user) => {
-        handleAuthentication(user as ExtendedUser);
-        setSelectedMethod(methodId);
-        setPaymentStatus("qr_code");
-        netlifyIdentity.close();
-      });
-
-      netlifyIdentity.open("login");
+    if (!isAuthenticated) {
+      // Redirect to login page instead of opening Netlify Identity modal
+      router.push(
+        "/login?redirect=" + encodeURIComponent(window.location.pathname)
+      );
       return;
     }
-    handleAuthentication(user as ExtendedUser);
+
     setSelectedMethod(methodId);
     setPaymentStatus("qr_code");
   };

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import netlifyIdentity from "netlify-identity-widget";
+import { useAuth } from "@/context/AuthContext";
 import {
   CheckCircle,
   XCircle,
@@ -32,14 +32,6 @@ interface Payment {
   updatedAt?: string;
   reviewedBy?: string;
   feedback?: string;
-}
-
-// Add TypeScript interface for Netlify user
-interface NetlifyUser {
-  token: {
-    access_token: string;
-  };
-  email: string;
 }
 
 // Initial mock data
@@ -96,7 +88,8 @@ const formatDate = (dateString: string): string => {
 
 export default function PaymentsPage() {
   const router = useRouter();
-  const [initialized, setInitialized] = useState(false);
+  const { user, isAdmin, isAuthenticated, authReady, openAuthModal } =
+    useAuth();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -110,27 +103,24 @@ export default function PaymentsPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Initialize Netlify Identity and check auth
+  // Check authentication
   useEffect(() => {
-    if (!initialized) {
-      netlifyIdentity.init();
-      const user = netlifyIdentity.currentUser();
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-      setInitialized(true);
-    }
-  }, [initialized, router]);
+    if (!authReady) return;
 
-  // Initialize data and fetch payments
-  useEffect(() => {
-    if (initialized) {
-      fetchPayments();
-      // Show pending payments by default
-      setStatusFilter("pending");
+    if (!isAuthenticated) {
+      openAuthModal("login");
+      return;
     }
-  }, [initialized]);
+
+    if (!isAdmin) {
+      router.push("/");
+      return;
+    }
+
+    // Initialize data when auth is confirmed
+    fetchPayments();
+    setStatusFilter("pending");
+  }, [authReady, isAuthenticated, isAdmin, router, openAuthModal]);
 
   // Update local payments when main payments state changes
   useEffect(() => {
@@ -265,15 +255,6 @@ export default function PaymentsPage() {
     }
   };
 
-  // Get admin info from Netlify Identity
-  const getAdminInfo = () => {
-    const user = netlifyIdentity.currentUser();
-    return {
-      name: user?.user_metadata?.full_name || user?.email || "Unknown Admin",
-      email: user?.email || "admin@system.com",
-    };
-  };
-
   const handleStatusChange = async (
     paymentId: string,
     action: "approve" | "reject"
@@ -364,7 +345,7 @@ export default function PaymentsPage() {
     }
   };
 
-  if (!initialized || loading) {
+  if (!authReady || loading) {
     return (
       <div className="min-h-screen bg-gray-100 p-6">
         <div className="max-w-7xl mx-auto">

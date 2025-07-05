@@ -71,10 +71,7 @@ export default function CategoryPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <CourseCard
-              course={course}
-              onEnroll={() => router.push(`/courses/${course.id}`)}
-            />
+            <CourseCard course={course} />
           </motion.div>
         ))}
       </div>

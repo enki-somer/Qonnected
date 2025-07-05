@@ -107,7 +107,7 @@ const getCertificationLogo = (id: string): string => {
     case "it-english":
       return "/images/Languages.png";
     case "artificial-intelligence":
-      return "/images/artificial-intelligence.png";
+      return "/images/openAi.webp";
     case "cloud-computing":
     case "data-analysis":
       return "/images/online-analytical.png";

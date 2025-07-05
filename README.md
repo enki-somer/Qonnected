@@ -1,477 +1,524 @@
-# QonnectED - منصة تعليمية عربية للمطورين 🎓
-
-<div dir="rtl">
-
-## نظرة عامة 🌟
-
-QonnectED هي منصة تعليمية عربية متخصصة للمطورين، تهدف إلى تقديم محتوى تعليمي عالي الجودة باللغة العربية. المنصة مصممة لتكون سهلة الاستخدام وتوفر تجربة تعلم سلسة ومتكاملة.
-
-## المميزات الرئيسية ✨
-
-- **واجهة مستخدم عربية**: تصميم كامل يدعم اللغة العربية (RTL)
-- **نظام مصادقة متكامل**: تسجيل دخول وإدارة حسابات المستخدمين
-- **مسارات تعليمية متخصصة**: مسارات مخصصة لكل تخصص مع توصيات للدورات والشهادات
-- **لوحة إعدادات شاملة**: تخصيص كامل لتجربة المستخدم
-- **تصميم متجاوب**: يعمل على جميع الأجهزة
-- **نظام إشعارات**: لمتابعة التحديثات والأنشطة
-- **دعم متعدد اللغات**: العربية والإنجليزية
-
-</div>
-
-## Technical Stack 🛠
-
-### Frontend
-
-- Next.js 13 (App Router)
-- TypeScript
-- Tailwind CSS
-- Netlify Identity for Authentication
-- Heroicons & React Icons
-
-### Deployment
-
-- Netlify
-- Edge Functions Support
-
-## Getting Started 🚀
-
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
-- Git
-
-### Installation
-
-1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/qonnected.git
-cd qonnected
-```
-
-2. Install dependencies
-
-```bash
-npm install
-# or
-yarn install
-```
-
-3. Set up environment variables
-
-```bash
-cp .env.example .env.local
-```
-
-4. Run the development server
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## Project Structure 📁
-
-```
-qonnected/
-├── app/                    # Next.js 13 app directory
-│   ├── certifications/    # Certifications pages
-│   ├── courses/          # Courses pages
-│   ├── settings/         # User settings
-│   └── teams/           # Teams/groups pages
-├── components/           # Reusable components
-│   ├── UserPathwaySection/  # Educational pathways component
-│   ├── CourseCard/         # Course display components
-│   └── CertificationCard/  # Certification display components
-├── context/             # React context (Auth, Theme)
-├── public/             # Static assets
-└── styles/            # Global styles
-```
-
-## Authentication 🔐
-
-The platform uses Netlify Identity for authentication, providing:
-
-- Email/Password authentication
-- Social login (configurable)
-- JWT token management
-- User metadata management
-
-## User Settings ⚙️
-
-The settings page includes:
-
-- Profile management
-- Notification preferences
-- Language & region settings
-- Privacy & security options
-- Billing & subscription (placeholder)
-
-## Development Guidelines 📝
-
-### Code Style
-
-- Use TypeScript for type safety
-- Follow Next.js best practices
-- Use Tailwind CSS for styling
-- Maintain RTL support
-- Keep components modular and reusable
-
-### Git Workflow
-
-1. Create feature branches from `main`
-2. Use meaningful commit messages
-3. Submit PRs for review
-4. Maintain clean git history
-
-## Environment Variables 🔧
-
-```env
-NEXT_PUBLIC_SITE_URL=your-site-url
-NEXT_USE_NETLIFY_EDGE=true
-```
-
-## Deployment 🌐
-
-The project is configured for deployment on Netlify:
-
-1. Connect your repository to Netlify
-2. Configure build settings:
-   - Build command: `npm run build`
-   - Publish directory: `.next`
-3. Set up environment variables
-4. Enable Netlify Identity
-
-## Educational Pathways 🎯
-
-The platform offers specialized educational pathways for different majors:
-
-### Available Majors
-
-- علوم الحاسوب (Computer Science)
-- تكنولوجيا المعلومات (Information Technology)
-- تحليل البيانات (Data Analysis)
-- الإدارة (Management)
-- الهندسة المدنية (Civil Engineering)
-- الهندسة المعمارية (Architecture)
-- الهندسة الميكانيكية (Mechanical Engineering)
-- المحاسبة (Accounting)
-- اللغات (Languages)
-
-### Features
-
-- **مسارات مخصصة**: كل تخصص له مسار تعليمي مخصص
-- **توصيات الدورات**: دورات موصى بها لكل تخصص
-- **شهادات معتمدة**: شهادات احترافية مرتبطة بكل مسار
-- **واجهة سهلة**: تصفح سلس للدورات والشهادات
-- **محتوى عربي**: شرح تفصيلي باللغة العربية لكل مسار
-
-## Current Status 📊
-
-- ✅ Authentication system
-- ✅ User profile management
-- ✅ Settings page
-- ✅ Responsive sidebar
-- ✅ RTL support
-- ✅ Educational pathways
-- ✅ Course categories
-- ✅ Certification paths
-- 🟡 Course management (in progress)
-- 🟡 Payment integration (planned)
-- 🟡 Team features (planned)
-- 📱 Mobile experience optimization (planned)
-
-## Mobile Experience Strategy 📱
-
-### Current Mobile Implementation Analysis
-
-**Strengths:**
-
-- ✅ Responsive grid system with Tailwind breakpoints
-- ✅ Mobile sidebar with overlay pattern
-- ✅ Fixed mobile menu button
-- ✅ Arabic RTL support maintained
-- ✅ Touch-friendly interactions
-
-**Areas for Improvement:**
-
-- ❌ Same layout structure scaled down
-- ❌ Complex certification flow not optimized for mobile
-- ❌ No mobile-specific navigation patterns
-- ❌ Limited use of mobile-native UX patterns
-
-### Recommended Approach: Hybrid Mobile-First Strategy
-
-#### 1. Architecture Strategy
-
-**Adaptive Component System (Recommended)**
-
-```
-components/
-├── mobile/
-│   ├── MobileHeroSection.tsx
-│   ├── MobileCertificationFlow.tsx
-│   ├── MobileNavigation.tsx
-│   └── MobileUserPathway.tsx
-├── desktop/
-│   ├── DesktopHeroSection.tsx
-│   └── DesktopCertificationFlow.tsx
-└── shared/
-    ├── CertificationCard.tsx
-    └── PaymentFlow.tsx
-```
-
-#### 2. Mobile UX Patterns to Implement
-
-**A. Navigation Redesign**
-
-- **Bottom Tab Navigation** (replacing sidebar)
-- **Floating Action Button** for primary actions
-- **Swipe gestures** for navigation
-- **Pull-to-refresh** functionality
-
-**B. Content Presentation**
-
-- **Card-based layouts** optimized for touch
-- **Vertical scrolling** instead of horizontal layouts
-- **Collapsible sections** for information density
-- **Progressive disclosure** for complex forms
-
-**C. Touch-First Interactions**
-
-- **Swipe-to-dismiss** modals
-- **Haptic feedback** for interactions
-- **Touch targets** minimum 44px
-- **Gesture-based shortcuts**
-
-#### 3. Implementation Strategy
-
-**Phase 1: Detection & Routing**
-
-```typescript
-// hooks/useDeviceType.ts
-export const useDeviceType = () => {
-  const [deviceType, setDeviceType] = useState<"mobile" | "tablet" | "desktop">(
-    "desktop"
-  );
-
-  useEffect(() => {
-    const checkDevice = () => {
-      const width = window.innerWidth;
-      if (width < 768) setDeviceType("mobile");
-      else if (width < 1024) setDeviceType("tablet");
-      else setDeviceType("desktop");
-    };
-
-    checkDevice();
-    window.addEventListener("resize", checkDevice);
-    return () => window.removeEventListener("resize", checkDevice);
-  }, []);
-
-  return deviceType;
-};
-```
-
-**Phase 2: Mobile-First Components**
-
-```typescript
-// components/adaptive/AdaptiveHeroSection.tsx
-export default function AdaptiveHeroSection() {
-  const deviceType = useDeviceType();
-
-  if (deviceType === 'mobile') {
-    return <MobileHeroSection />;
+# QonnectEd - Educational Platform
+
+QonnectEd is a comprehensive Arabic-first educational platform built with Next.js 14, featuring professional certifications, courses, and learning pathways.
+
+## 🚀 Recent Migration: Netlify Identity → MongoDB Authentication
+
+This platform has been successfully migrated from Netlify Identity to MongoDB authentication due to Netlify Identity deprecation. This README documents the complete migration process and setup instructions.
+
+## 📋 Table of Contents
+
+- [Migration Overview](#migration-overview)
+- [Technology Stack](#technology-stack)
+- [Database Setup](#database-setup)
+- [Environment Variables](#environment-variables)
+- [Authentication System](#authentication-system)
+- [Admin Panel Setup](#admin-panel-setup)
+- [API Endpoints](#api-endpoints)
+- [Migration Changes](#migration-changes)
+- [Installation & Setup](#installation--setup)
+- [User Roles Management](#user-roles-management)
+- [Troubleshooting](#troubleshooting)
+
+## 🔄 Migration Overview
+
+### What Was Migrated
+
+- **From**: Netlify Identity authentication system
+- **To**: MongoDB with custom JWT authentication
+- **Reason**: Netlify Identity deprecation affecting admin dashboard functionality
+
+### Migration Benefits
+
+- ✅ Full control over user authentication
+- ✅ Custom user roles and permissions
+- ✅ Scalable MongoDB database
+- ✅ Secure JWT token-based authentication
+- ✅ Enhanced admin panel functionality
+- ✅ Better user management capabilities
+
+## 🛠 Technology Stack
+
+- **Frontend**: Next.js 14, React, TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: MongoDB
+- **Authentication**: Custom JWT + bcryptjs
+- **UI Components**: Headless UI, Framer Motion
+- **Icons**: Lucide React
+- **Deployment**: Netlify
+
+## 🗄️ Database Setup
+
+### MongoDB Collection: `users`
+
+The user collection structure:
+
+```javascript
+{
+  _id: ObjectId,
+  email: string,
+  password: string, // bcrypt hashed
+  fullName: string,
+  phone?: string,
+  role: "user" | "admin",
+  status: "active" | "inactive" | "pending",
+  profileComplete: boolean,
+  emailVerified: boolean,
+  createdAt: Date,
+  updatedAt: Date,
+  lastLogin?: Date,
+  preferences?: {
+    language: string,
+    notifications: boolean
   }
-
-  return <DesktopHeroSection />;
 }
 ```
 
-**Phase 3: Mobile Navigation System**
+### Required Indexes
 
-```typescript
-// components/mobile/MobileBottomNav.tsx
-const MobileBottomNav = () => {
-  const tabs = [
-    { id: 'home', icon: HomeIcon, label: 'الرئيسية', href: '/' },
-    { id: 'certs', icon: AwardIcon, label: 'الاختبارات', href: '/certifications' },
-    { id: 'profile', icon: UserIcon, label: 'الملف الشخصي', href: '/profile' },
-    { id: 'settings', icon: CogIcon, label: 'الإعدادات', href: '/settings' }
-  ];
-
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-primary border-t border-primary-light/20 z-50">
-      <div className="flex justify-around items-center py-2">
-        {tabs.map(tab => (
-          <MobileNavItem key={tab.id} {...tab} />
-        ))}
-      </div>
-    </nav>
-  );
-};
+```javascript
+// Create these indexes in MongoDB
+db.users.createIndex({ email: 1 }, { unique: true });
+db.users.createIndex({ role: 1 });
+db.users.createIndex({ status: 1 });
 ```
 
-#### 4. Mobile-Specific Features
+## 🔐 Environment Variables
 
-**A. Certification Flow Optimization**
+Create a `.env.local` file in the project root:
 
-- **Step-by-step wizard** instead of complex forms
-- **Swipe navigation** between steps
-- **Progress indicators** always visible
-- **One-handed operation** support
+```env
+# MongoDB Connection
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/qonnected?retryWrites=true&w=majority
 
-**B. Content Optimization**
+# JWT Secret (generate a secure random string)
+JWT_SECRET=your-super-secure-jwt-secret-key-here
 
-- **Lazy loading** for images and components
-- **Infinite scroll** for certification lists
-- **Search filters** in slide-out panels
-- **Quick actions** with floating buttons
+# Next.js
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret
 
-**C. Performance Enhancements**
+# Optional: Email service configuration
+EMAIL_SERVICE_API_KEY=your-email-service-key
+```
 
-- **Reduced bundle size** for mobile
-- **Optimized images** with WebP support
-- **Preloading** critical resources
-- **Service worker** for offline functionality
-
-#### 5. Mobile UX Enhancements
-
-**A. Certification Discovery**
-
-- Horizontal scrolling category cards
-- Swipe-to-explore certifications
-- Quick preview with bottom sheet
-- Bookmark functionality
-
-**B. User Pathway Experience**
-
-- Full-screen pathway selector
-- Animated transitions between steps
-- Voice-over support for accessibility
-- Quick pathway switching
-
-**C. Payment Flow**
-
-- One-page checkout
-- Camera integration for proof upload
-- Payment method shortcuts
-- Real-time validation
-
-#### 6. Development Methodology
-
-**A. Mobile-First Development**
+### Generate JWT Secret
 
 ```bash
-# Development workflow
-1. Design mobile component
-2. Test on actual devices
-3. Enhance for tablet
-4. Optimize for desktop
-5. Cross-device testing
+# Generate a secure JWT secret
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
-**B. Testing Strategy**
+## 🔑 Authentication System
 
-- iPhone SE (small screen)
-- iPhone 12 Pro (standard)
-- iPad (tablet)
-- Android various sizes
-- Desktop breakpoints
+### User Registration Flow
 
-**C. Performance Monitoring**
+1. User submits registration form
+2. Password is hashed using bcryptjs
+3. User is created in MongoDB with role "user"
+4. JWT token is generated and set as HTTP-only cookie
+5. User is redirected to dashboard
 
-- First Contentful Paint < 1.5s
-- Largest Contentful Paint < 2.5s
-- Touch response time < 100ms
-- Bundle size < 200KB initial
+### User Login Flow
 
-#### 7. Implementation Timeline
+1. User submits email/password
+2. Password is verified against hashed password
+3. JWT token is generated and set as HTTP-only cookie
+4. User data is returned (excluding password)
 
-**Week 1: Foundation**
+### Token Management
 
-- Set up device detection
-- Create mobile component structure
-- Implement mobile navigation
-- Test basic responsive behavior
+- **Storage**: HTTP-only cookies for security
+- **Expiration**: 7 days
+- **Refresh**: Automatic on valid requests
+- **Logout**: Cookie deletion
 
-**Week 2: Core Features**
+## 👑 Admin Panel Setup
 
-- Mobile hero section
-- Certification flow optimization
-- User pathway mobile experience
-- Payment flow enhancement
+### Creating the First Admin User
 
-**Week 3: Polish & Performance**
+#### Method 1: Direct Database Insert
 
-- Animations and transitions
-- Performance optimization
-- Cross-device testing
-- Accessibility improvements
+```javascript
+// Connect to MongoDB and run this script
+use qonnected
 
-**Week 4: Advanced Features**
+db.users.insertOne({
+  email: "admin@qonnected.com",
+  password: "$2b$12$LQv3c1yqBwEHXk.C16mfg.X4qZkBTKxzYXWpgKFVqxf9Y1xGkYJvO", // password: "admin123"
+  fullName: "System Administrator",
+  role: "admin",
+  status: "active",
+  profileComplete: true,
+  emailVerified: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
+})
+```
 
-- Progressive Web App features
-- Offline functionality
-- Push notifications
-- Analytics integration
+#### Method 2: API Script
 
-#### 8. Visual Design Considerations
+Create a script file `scripts/create-admin.js`:
 
-**A. Mobile-Specific Design Elements**
+```javascript
+const bcrypt = require("bcryptjs");
+const { MongoClient } = require("mongodb");
 
-- **Thumb-friendly navigation zones**
-- **Larger touch targets** (minimum 44px)
-- **Reduced cognitive load** with simpler layouts
-- **Arabic typography** optimized for small screens
+async function createAdmin() {
+  const client = new MongoClient(process.env.MONGODB_URI);
 
-**B. Animation Strategy**
+  try {
+    await client.connect();
+    const db = client.db();
+    const users = db.collection("users");
 
-- **Micro-interactions** for feedback
-- **Page transitions** for continuity
-- **Loading states** for better UX
-- **Gesture animations** for intuitiveness
+    const hashedPassword = await bcrypt.hash("admin123", 12);
 
-### Benefits of This Approach
+    const admin = {
+      email: "admin@qonnected.com",
+      password: hashedPassword,
+      fullName: "System Administrator",
+      role: "admin",
+      status: "active",
+      profileComplete: true,
+      emailVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
-1. **🎯 Targeted UX**: Each device gets optimized experience
-2. **🔧 Maintainable**: Clean separation of concerns
-3. **⚡ Performance**: Load only what's needed
-4. **🧪 Testable**: Easier to test device-specific features
-5. **🔄 Scalable**: Easy to add new device types
+    const result = await users.insertOne(admin);
+    console.log("Admin user created:", result.insertedId);
+  } finally {
+    await client.close();
+  }
+}
 
-### Mobile Features Roadmap
+createAdmin().catch(console.error);
+```
 
-- 📱 **Phase 1**: Mobile navigation system
-- 🎨 **Phase 2**: Mobile-optimized certification flow
-- ⚡ **Phase 3**: Performance optimization
-- 🚀 **Phase 4**: Progressive Web App features
+Run the script:
 
-<div dir="rtl">
+```bash
+node scripts/create-admin.js
+```
 
-## المساهمة 🤝
+### Accessing Admin Panel
 
-نرحب بمساهماتكم في تطوير المنصة. يرجى اتباع إرشادات المساهمة في الملف `CONTRIBUTING.md`.
+1. Navigate to `/login`
+2. Login with admin credentials
+3. Access admin panel at `/admin`
 
-## الترخيص 📄
+### Admin Panel Features
 
-هذا المشروع مرخص تحت رخصة MIT. انظر ملف `LICENSE` للمزيد من التفاصيل.
+- **User Management**: `/admin/users`
 
-## الدعم 💬
+  - View all users
+  - Filter by role and status
+  - Update user roles
+  - Activate/deactivate users
 
-للمساعدة والاستفسارات، يمكنكم:
+- **Payments Management**: `/admin/payments`
 
-- فتح issue في GitHub
-- التواصل عبر البريد الإلكتروني: support@qonnected.com
-- زيارة موقعنا: [www.qonnected.com](https://www.qonnected.com)
+  - View payment requests
+  - Approve/reject payments
+  - Track payment status
 
-</div>
+- **Certifications Management**: `/admin/certifications`
+  - Manage certification offerings
+  - Update certification details
+
+## 🔌 API Endpoints
+
+### Authentication Endpoints
+
+```typescript
+POST /api/auth/signup
+Body: { email, password, fullName, phone? }
+Response: { success, user, message }
+
+POST /api/auth/signin
+Body: { email, password }
+Response: { success, user, message }
+
+POST /api/auth/logout
+Response: { success, message }
+
+GET /api/auth/me
+Response: { success, user }
+```
+
+### Admin Endpoints
+
+```typescript
+GET /api/admin/users
+Query: { role?, status?, page?, limit? }
+Response: { success, users, total, pagination }
+
+GET /api/admin/users/[id]
+Response: { success, user }
+
+PUT /api/admin/users/[id]
+Body: { fullName?, phone?, profileComplete? }
+Response: { success, user }
+
+PUT /api/admin/users/[id]/role
+Body: { role: "user" | "admin" }
+Response: { success, user }
+
+PUT /api/admin/users/[id]/status
+Body: { status: "active" | "inactive" | "pending" }
+Response: { success, user }
+
+DELETE /api/admin/users/[id]
+Response: { success, message }
+```
+
+### Payment Endpoints
+
+```typescript
+POST /api/payments
+Body: FormData with payment proof
+Response: { success, payment }
+
+GET /api/admin/payments
+Response: { success, payments }
+
+PUT /api/admin/payments/[id]/approve
+Response: { success, payment }
+
+PUT /api/admin/payments/[id]/reject
+Body: { reason? }
+Response: { success, payment }
+```
+
+## 📝 Migration Changes
+
+### Files Modified/Created
+
+#### 1. Database & Authentication (`lib/`)
+
+- **Created**: `lib/auth.ts` - Authentication utilities
+- **Updated**: `lib/mongodb.ts` - User collection management
+
+#### 2. API Routes (`app/api/`)
+
+- **Created**: `app/api/auth/signup/route.ts`
+- **Created**: `app/api/auth/signin/route.ts`
+- **Created**: `app/api/auth/logout/route.ts`
+- **Created**: `app/api/auth/me/route.ts`
+- **Updated**: `app/api/admin/users/route.ts`
+- **Created**: `app/api/admin/users/[id]/route.ts`
+- **Created**: `app/api/admin/users/[id]/role/route.ts`
+- **Created**: `app/api/admin/users/[id]/status/route.ts`
+
+#### 3. Context & Hooks (`context/`)
+
+- **Completely Rewritten**: `context/AuthContext.tsx`
+
+#### 4. Components (`components/`)
+
+- **Updated**: `components/PaymentFlow.tsx` - MongoDB auth integration
+- **Updated**: `components/CourseCard.tsx` - MongoDB auth integration
+- **Updated**: `components/Sidebar.tsx` - Login redirect updates
+
+#### 5. Pages (`app/`)
+
+- **Updated**: `app/pathway/page.tsx` - Auth context usage
+- **Updated**: `app/certifications/page.tsx` - Auth context usage
+- **Updated**: `app/major-courses/[majorId]/page.tsx` - Auth context usage
+
+### Key Changes Summary
+
+1. **Authentication Method**:
+
+   - Old: `netlifyIdentity.currentUser()`
+   - New: `useAuth()` hook with `isAuthenticated` and `user`
+
+2. **Login Flow**:
+
+   - Old: `netlifyIdentity.open("login")`
+   - New: `router.push("/login")`
+
+3. **User Data Structure**:
+
+   - Old: Netlify Identity user metadata
+   - New: MongoDB user document with custom fields
+
+4. **Admin Access**:
+   - Old: Netlify Identity roles
+   - New: MongoDB `role: "admin"` field
+
+## 🚀 Installation & Setup
+
+### 1. Clone Repository
+
+```bash
+git clone <repository-url>
+cd qonnected
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Environment Setup
+
+```bash
+cp .env.example .env.local
+# Edit .env.local with your MongoDB URI and JWT secret
+```
+
+### 4. Database Setup
+
+- Create MongoDB database
+- Create required indexes
+- Create first admin user (see Admin Panel Setup)
+
+### 5. Run Development Server
+
+```bash
+npm run dev
+```
+
+### 6. Build for Production
+
+```bash
+npm run build
+npm start
+```
+
+## 👥 User Roles Management
+
+### Role Types
+
+- **user**: Standard user with access to courses and certifications
+- **admin**: Full access including admin panel
+
+### Changing User Roles
+
+#### Via Admin Panel
+
+1. Login as admin
+2. Go to `/admin/users`
+3. Find user and click "Edit"
+4. Change role in dropdown
+5. Save changes
+
+#### Via API
+
+```bash
+curl -X PUT http://localhost:3000/api/admin/users/USER_ID/role \
+  -H "Content-Type: application/json" \
+  -d '{"role": "admin"}' \
+  -b "auth-token=YOUR_JWT_TOKEN"
+```
+
+#### Via Database
+
+```javascript
+db.users.updateOne(
+  { email: "user@example.com" },
+  { $set: { role: "admin", updatedAt: new Date() } }
+);
+```
+
+### User Status Management
+
+User statuses:
+
+- **active**: Can login and use platform
+- **inactive**: Cannot login
+- **pending**: Registration pending approval
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### 1. "Cannot connect to MongoDB"
+
+```
+Error: MongoServerError: Authentication failed
+```
+
+**Solution**: Check MongoDB URI in `.env.local`
+
+#### 2. "JWT token verification failed"
+
+```
+Error: JsonWebTokenError: invalid signature
+```
+
+**Solution**: Ensure JWT_SECRET is set correctly
+
+#### 3. "Admin panel access denied"
+
+```
+Error: 403 Forbidden
+```
+
+**Solution**: Check user role is set to "admin" in database
+
+#### 4. "Build errors after migration"
+
+```
+Type error: Cannot find module 'netlify-identity-widget'
+```
+
+**Solution**: Remove any remaining netlify-identity-widget imports
+
+### Debugging Authentication
+
+Enable auth debugging by adding to your component:
+
+```typescript
+const { user, isAuthenticated, loading } = useAuth();
+console.log("Auth Debug:", { user, isAuthenticated, loading });
+```
+
+### Database Queries for Debugging
+
+```javascript
+// Check user roles
+db.users.find({ role: "admin" });
+
+// Check user status
+db.users.find({ status: { $ne: "active" } });
+
+// Find specific user
+db.users.findOne({ email: "user@example.com" });
+```
+
+## 📞 Support
+
+For issues related to this migration or platform setup:
+
+1. Check this README for common solutions
+2. Review the Troubleshooting section
+3. Check MongoDB connection and JWT configuration
+4. Verify user roles in database
+
+## 🔄 Migration Checklist
+
+- [x] MongoDB database setup
+- [x] User collection with proper schema
+- [x] JWT authentication implementation
+- [x] API routes for auth and admin
+- [x] AuthContext with MongoDB integration
+- [x] Updated all components to use new auth
+- [x] Admin panel functionality
+- [x] User role management
+- [x] Payment system integration
+- [x] TypeScript compilation without errors
+- [x] All UI preserved and functional
+
+## 📜 License
+
+This project is proprietary software for QonnectEd educational platform.
 
 ---
 
-<div align="center">
-  <p>Built with ❤️ for the Arab developer community</p>
-</div>
+**Last Updated**: December 2024  
+**Migration Status**: ✅ Complete  
+**Platform Status**: �� Production Ready

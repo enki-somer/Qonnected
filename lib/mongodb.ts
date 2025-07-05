@@ -25,6 +25,31 @@ interface PaymentHistory {
   feedback?: string;
 }
 
+// User interface for MongoDB authentication
+interface User {
+  _id?: string;
+  id: string;
+  email: string;
+  password: string;
+  fullName: string;
+  phone?: string;
+  education?: string;
+  city?: string;
+  country?: string;
+  role: 'user' | 'admin';
+  status: 'active' | 'suspended';
+  createdAt: string;
+  updatedAt?: string;
+  lastLogin?: string;
+  emailVerified: boolean;
+  profileComplete: boolean;
+  metadata?: {
+    loginCount?: number;
+    lastIp?: string;
+    twoFactorEnabled?: boolean;
+  };
+}
+
 if (!process.env.MONGODB_URI) {
   throw new Error(
     'Please add your Mongo URI to .env.local'
@@ -82,6 +107,17 @@ export async function getPaymentsCollection(): Promise<Collection<Payment>> {
   }
 }
 
+export async function getUsersCollection(): Promise<Collection<User>> {
+  try {
+    const client = await clientPromise;
+    const db = client.db(process.env.MONGODB_DB || 'qonnected');
+    return db.collection<User>('users');
+  } catch (error) {
+    console.error('Failed to get users collection:', error);
+    throw error;
+  }
+}
+
 // Helper function to check database connection
 export async function checkDatabaseConnection() {
   try {
@@ -95,4 +131,4 @@ export async function checkDatabaseConnection() {
 }
 
 // Export types
-export type { Payment, PaymentHistory }; 
+export type { Payment, PaymentHistory, User }; 

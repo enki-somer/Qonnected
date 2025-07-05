@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Certification } from "@/types/certifications";
 import { certificationCategories } from "@/data/certifications";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import CertificationCard from "@/components/CertificationCard";
 import CertificationModal from "@/components/CertificationModal";
 import PaymentFlow from "@/components/PaymentFlow";
+import BackButton from "@/components/BackButton";
 
 // Arabic to English search mapping
 const arabicToEnglishMap: Record<string, string[]> = {
@@ -140,7 +141,7 @@ const getSearchTerms = (query: string): string[] => {
 };
 
 export default function CertificationsPage() {
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, openAuthModal } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCertification, setSelectedCertification] =
@@ -179,7 +180,7 @@ export default function CertificationsPage() {
     if (!isAuthenticated) {
       // Store the exam for after login
       sessionStorage.setItem("pendingBooking", JSON.stringify(exam));
-      login();
+      openAuthModal("login");
       return;
     }
     setSelectedCertification(exam);
@@ -246,6 +247,7 @@ export default function CertificationsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BackButton />
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">

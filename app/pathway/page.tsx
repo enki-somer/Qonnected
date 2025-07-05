@@ -29,7 +29,7 @@ import CertificationModal from "@/components/CertificationModal";
 import PreTestModal from "@/components/PreTestModal";
 import PaymentFlow from "@/components/PaymentFlow";
 import { majors } from "@/data/majors";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import netlifyIdentity from "netlify-identity-widget";
 import UserPathwaySection from "@/components/UserPathwaySection";
 import CelebrationScene from "@/components/CelebrationScene";
@@ -38,7 +38,7 @@ import { motion, AnimatePresence } from "framer-motion";
 function PathwayContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, openAuthModal } = useAuth();
   const [selectedMajor, setSelectedMajor] = useState<any>(null);
   const [relevantCertifications, setRelevantCertifications] = useState<any[]>(
     []
@@ -101,7 +101,7 @@ function PathwayContent() {
 
   const handlePreTest = (certification: any) => {
     if (!isAuthenticated) {
-      login();
+      openAuthModal("login");
       return;
     }
     setSelectedCertification(certification);
@@ -110,7 +110,7 @@ function PathwayContent() {
 
   const handleBookNow = (certification: any) => {
     if (!isAuthenticated) {
-      login();
+      openAuthModal("login");
       return;
     }
     setSelectedCertification(certification);
@@ -124,7 +124,7 @@ function PathwayContent() {
 
   const handleExploreCoursesClick = () => {
     if (!isAuthenticated) {
-      login();
+      openAuthModal("login");
       return;
     }
     router.push(`/major-courses/${selectedMajor.id}`);
@@ -225,15 +225,11 @@ function PathwayContent() {
               />
             </div>
             <div className="flex items-center flex-row-reverse">
-              <span className="text-lg sm:text-2xl font-bold text-accent">
-                Q
-              </span>
-              <span className="text-lg sm:text-2xl font-bold text-text group-hover:text-text/90 transition-colors">
+              <span className="text-2xl font-bold text-accent">Q</span>
+              <span className="text-2xl font-bold text-text group-hover:text-text/90 transition-colors">
                 onnect
               </span>
-              <span className="text-lg sm:text-2xl font-bold text-accent">
-                ED
-              </span>
+              <span className="text-2xl font-bold text-accent">ED</span>
             </div>
           </Link>
         </div>
@@ -407,7 +403,7 @@ function PathwayContent() {
           onBook={() => {
             if (!isAuthenticated) {
               setShowCertificationModal(false);
-              login();
+              openAuthModal("login");
               return;
             }
             setShowCertificationModal(false);
@@ -424,7 +420,7 @@ function PathwayContent() {
           onBook={() => {
             if (!isAuthenticated) {
               setShowPreTestModal(false);
-              login();
+              openAuthModal("login");
               return;
             }
             setShowPreTestModal(false);

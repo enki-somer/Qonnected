@@ -12,15 +12,20 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
+import React from "react";
 
 interface UserData {
-  id: string;
-  name: string;
+  _id: string;
+  fullName: string;
   email: string;
   role: "user" | "admin";
   status: "active" | "suspended";
-  joinDate: string;
-  lastLogin: string;
+  createdAt: string;
+  lastLoginAt?: string;
+  phone?: string;
+  education?: string;
+  city?: string;
+  country?: string;
 }
 
 export default function UsersPage() {
@@ -101,11 +106,15 @@ export default function UsersPage() {
 
   // Filter users based on search query
   const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!searchQuery.trim()) return true;
 
-    return matchesSearch;
+    const searchTerm = searchQuery.toLowerCase();
+    const matchesName =
+      user.fullName?.toLowerCase().includes(searchTerm) || false;
+    const matchesEmail =
+      user.email?.toLowerCase().includes(searchTerm) || false;
+
+    return matchesName || matchesEmail;
   });
 
   if (loading) {
@@ -200,14 +209,14 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {filteredUsers.map((user, index) => (
                 <tr
-                  key={user.id}
+                  key={user._id || `user-${index}`}
                   className="border-b border-[#ffffff1a] last:border-0"
                 >
                   <td className="whitespace-nowrap px-6 py-4">
                     <div>
-                      <div className="text-sm text-white">{user.name}</div>
+                      <div className="text-sm text-white">{user.fullName}</div>
                       <div className="text-sm text-[#8b95a5]">{user.email}</div>
                     </div>
                   </td>
@@ -244,10 +253,12 @@ export default function UsersPage() {
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 text-sm text-white">
-                    {new Date(user.joinDate).toLocaleDateString("ar-IQ")}
+                    {new Date(user.createdAt).toLocaleDateString("ar-IQ")}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 text-sm text-white">
-                    {new Date(user.lastLogin).toLocaleDateString("ar-IQ")}
+                    {user.lastLoginAt
+                      ? new Date(user.lastLoginAt).toLocaleDateString("ar-IQ")
+                      : "لم يسجل دخول"}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     <div className="flex items-center gap-2">
@@ -255,7 +266,7 @@ export default function UsersPage() {
                         onClick={() =>
                           setConfirmAction({
                             type: "role",
-                            userId: user.id,
+                            userId: user._id,
                             action:
                               user.role === "admin"
                                 ? "remove-admin"
@@ -279,7 +290,7 @@ export default function UsersPage() {
                         onClick={() =>
                           setConfirmAction({
                             type: "status",
-                            userId: user.id,
+                            userId: user._id,
                             action:
                               user.status === "active" ? "suspend" : "activate",
                           })
@@ -324,8 +335,8 @@ export default function UsersPage() {
                     ? "هل أنت متأكد من منح صلاحيات المدير لهذا المستخدم؟"
                     : "هل أنت متأكد من إزالة صلاحيات المدير من هذا المستخدم؟"
                   : confirmAction.action === "suspend"
-                  ? "هل أنت متأكد من إيقاف هذا الحساب؟"
-                  : "هل أنت متأكد من تنشيط هذا الحساب؟"}
+                    ? "هل أنت متأكد من إيقاف هذا الحساب؟"
+                    : "هل أنت متأكد من تنشيط هذا الحساب؟"}
               </p>
               <div className="flex justify-center gap-4 mt-6">
                 <button

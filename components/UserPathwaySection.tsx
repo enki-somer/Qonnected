@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import {
@@ -81,6 +81,7 @@ export default function UserPathwaySection({
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const router = useRouter();
   const isMobile = useIsMobile();
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Reset state when component mounts
   useEffect(() => {
@@ -91,6 +92,31 @@ export default function UserPathwaySection({
       setShowResults(false);
     }
   }, [initialStep]);
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        if (onClose) {
+          onClose();
+        } else {
+          setShowMajorSelection(false);
+          setSelectedUserType(null);
+        }
+      }
+    };
+
+    if (showMajorSelection) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMajorSelection, onClose]);
 
   const handleUserTypeSelect = (userTypeId: string) => {
     setSelectedUserType(userTypeId);
@@ -188,6 +214,7 @@ export default function UserPathwaySection({
         className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       >
         <motion.div
+          ref={modalRef}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
@@ -309,6 +336,7 @@ export default function UserPathwaySection({
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <motion.div
+              ref={modalRef}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}

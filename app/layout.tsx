@@ -3,7 +3,8 @@
 import "./globals.css";
 import { Noto_Kufi_Arabic } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import AuthModal from "@/components/AuthModal";
 import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import Head from "next/head";
@@ -16,14 +17,37 @@ const notoKufiArabic = Noto_Kufi_Arabic({
 
 const navigationRoutes = ["/", "/certifications", "/courses", "/settings"];
 
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isPathwayRoute = pathname?.startsWith("/pathway");
+  const { isAuthModalOpen, closeAuthModal, authModalMode } = useAuth();
+
+  return (
+    <>
+      {isPathwayRoute ? (
+        children
+      ) : (
+        <div className="min-h-screen">
+          <Sidebar />
+          <main className="mr-0 lg:mr-64 overflow-auto">{children}</main>
+        </div>
+      )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={closeAuthModal}
+        initialMode={authModalMode}
+      />
+    </>
+  );
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isPathwayRoute = pathname?.startsWith("/pathway");
-
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <Head>
@@ -41,14 +65,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <AuthProvider>
-            {isPathwayRoute ? (
-              children
-            ) : (
-              <div className="min-h-screen">
-                <Sidebar />
-                <main className="mr-0 lg:mr-64 overflow-auto">{children}</main>
-              </div>
-            )}
+            <LayoutContent>{children}</LayoutContent>
           </AuthProvider>
         </ThemeProvider>
       </body>

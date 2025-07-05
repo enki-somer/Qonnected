@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { courses, getCoursesByCategory } from "@/data/courses";
 import { majors } from "@/data/majors";
 import CourseCard from "@/components/CourseCard";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import { ArrowRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +13,7 @@ import Image from "next/image";
 export default function MajorCoursesPage() {
   const params = useParams();
   const router = useRouter();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, openAuthModal } = useAuth();
   const [selectedMajor, setSelectedMajor] = useState<any>(null);
   const [majorCourses, setMajorCourses] = useState<any[]>([]);
 
@@ -54,8 +54,8 @@ export default function MajorCoursesPage() {
   const handleCourseClick = (courseId: number) => {
     console.log("Course clicked:", courseId);
     if (!isAuthenticated) {
-      console.log("User not authenticated, redirecting to login");
-      login();
+      console.log("User not authenticated, opening auth modal");
+      openAuthModal("login");
       return;
     }
     console.log("Navigating to course:", `/courses/${courseId.toString()}`);
@@ -134,11 +134,7 @@ export default function MajorCoursesPage() {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {majorCourses.map((course) => (
-              <CourseCard
-                key={course.id}
-                course={course}
-                onEnroll={() => handleCourseClick(course.id)}
-              />
+              <CourseCard key={course.id} course={course} />
             ))}
           </div>
         </div>

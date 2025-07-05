@@ -56,7 +56,7 @@ const socialLinks = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, login, logout } = useAuth();
+  const { user, login, logout, openAuthModal } = useAuth();
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -131,14 +131,17 @@ export default function Sidebar() {
                 className="truncate text-text-muted group-hover:text-text transition-colors text-sm"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {user.user_metadata.full_name || user.email}
+                {user.fullName || user.email}
               </Link>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-2">
             <button
-              onClick={login}
+              onClick={() => {
+                openAuthModal("login");
+                setIsMobileMenuOpen(false);
+              }}
               className="group relative w-full overflow-hidden rounded-xl transition-all duration-300"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-accent-dark via-accent to-accent-light opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-gradient"></div>
