@@ -1,7 +1,30 @@
 import HeroSection from "@/components/HeroSection";
 //import FeaturedCourses from "@/components/FeaturedCourses";
 import UserPathwaySection from "@/components/UserPathwaySection";
-import RollingGallery from "@/components/RollingGallery/RollingGallery";
+import dynamic from "next/dynamic";
+
+// Dynamically import RollingGallery with loading fallback
+const RollingGallery = dynamic(
+  () => import("@/components/RollingGallery/RollingGallery"),
+  {
+    loading: () => (
+      <div className="relative h-[300px] w-full overflow-hidden bg-gradient-to-b from-primary-dark/50 to-primary/50 rounded-2xl">
+        <div className="flex h-full items-center justify-center">
+          <div className="flex flex-row gap-2">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="w-3 h-3 bg-white/60 rounded-full animate-bounce"
+                style={{ animationDelay: `${i * 0.15}s` }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    ssr: false, // Disable server-side rendering for this component
+  }
+);
 
 export default function Home() {
   return (

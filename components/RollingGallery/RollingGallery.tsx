@@ -7,9 +7,16 @@ import {
   useMotionValue,
   useAnimation,
   useTransform,
-  PanInfo,
-  ResolvedValues,
+  animate,
 } from "framer-motion";
+
+// Preload images for faster initial render
+const preloadImages = (images: Array<{ src: string }>) => {
+  images.forEach((image) => {
+    const img = new window.Image();
+    img.src = image.src;
+  });
+};
 
 // Define image dimensions for optimization
 const IMAGE_DIMENSIONS = {
@@ -86,18 +93,40 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
   images = [],
 }) => {
   const galleryImages = images.length > 0 ? images : CERTIFICATION_IMAGES;
-
   const [isScreenSizeSm, setIsScreenSizeSm] = useState<boolean>(false);
-  const [mounted, setMounted] = useState(false);
+  const rotateY = useMotionValue(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // Start preloading images immediately
+    preloadImages(galleryImages);
+
+    // Initialize screen size
     setIsScreenSizeSm(window.innerWidth <= 640);
 
     const handleResize = () => setIsScreenSizeSm(window.innerWidth <= 640);
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+
+    let animation: any;
+
+    const startAnimation = () => {
+      if (!isPaused && autoplay) {
+        animation = animate(rotateY, [0, -360], {
+          duration: 20,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop",
+        });
+      }
+    };
+
+    startAnimation();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      animation?.stop();
+    };
+  }, [autoplay, rotateY, isPaused]);
 
   const cylinderWidth: number = isScreenSizeSm ? 1100 : 1800;
   const faceCount: number = galleryImages.length;
@@ -105,82 +134,29 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
   const radius: number = cylinderWidth / (2 * Math.PI);
 
   const dragFactor: number = 0.05;
-  const rotation = useMotionValue(0);
-  const controls = useAnimation();
 
-  const transform = useTransform(
-    rotation,
-    (val: number) => `rotate3d(0,1,0,${val}deg)`
-  );
-
-  const startInfiniteSpin = (startAngle: number) => {
-    controls.start({
-      rotateY: [startAngle, startAngle - 360],
-      transition: {
-        duration: 20,
-        ease: "linear",
-        repeat: Infinity,
-      },
-    });
+  const handleDrag = (_: any, info: any) => {
+    setIsPaused(true);
+    rotateY.set(rotateY.get() + info.offset.x * dragFactor);
   };
 
-  useEffect(() => {
+  const handleDragEnd = (_: any, info: any) => {
     if (autoplay) {
-      const currentAngle = rotation.get();
-      startInfiniteSpin(currentAngle);
-    } else {
-      controls.stop();
-    }
-  }, [autoplay, controls, rotation]);
-
-  const handleUpdate = (latest: ResolvedValues) => {
-    if (typeof latest.rotateY === "number") {
-      rotation.set(latest.rotateY);
+      setIsPaused(false);
     }
   };
 
-  const handleDrag = (
-    _: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ): void => {
-    controls.stop();
-    rotation.set(rotation.get() + info.offset.x * dragFactor);
-  };
-
-  const handleDragEnd = (
-    _: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ): void => {
-    const finalAngle = rotation.get() + info.velocity.x * dragFactor;
-    rotation.set(finalAngle);
-    if (autoplay) {
-      startInfiniteSpin(finalAngle);
+  const handleMouseEnter = () => {
+    if (pauseOnHover && autoplay) {
+      setIsPaused(true);
     }
   };
 
-  const handleMouseEnter = (): void => {
-    if (autoplay && pauseOnHover) {
-      controls.stop();
+  const handleMouseLeave = () => {
+    if (pauseOnHover && autoplay) {
+      setIsPaused(false);
     }
   };
-
-  const handleMouseLeave = (): void => {
-    if (autoplay && pauseOnHover) {
-      const currentAngle = rotation.get();
-      startInfiniteSpin(currentAngle);
-    }
-  };
-
-  // Show loading state during SSR and until mounted
-  if (!mounted) {
-    return (
-      <div className="relative h-[300px] w-full overflow-hidden bg-gradient-to-b from-primary-dark/50 to-primary/50 rounded-2xl">
-        <div className="flex h-full items-center justify-center">
-          <div className="animate-pulse text-white/60">Loading...</div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="relative h-[300px] w-full overflow-hidden bg-gradient-to-b from-primary-dark/50 to-primary/50 rounded-2xl">
@@ -219,7 +195,7 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
         }}
       />
 
-      <div className="flex h-full items-center justify-center [perspective:1000px] [transform-style:preserve-3d]">
+      <div className="flex h-full items-center justify-center [perspective:1000px]">
         <motion.div
           drag="x"
           dragElastic={0}
@@ -227,12 +203,9 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
           onDragEnd={handleDragEnd}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          animate={controls}
-          onUpdate={handleUpdate}
           style={{
-            transform: transform,
-            rotateY: rotation,
             width: cylinderWidth,
+            rotateY,
             transformStyle: "preserve-3d",
           }}
           className="flex min-h-[200px] cursor-grab items-center justify-center [transform-style:preserve-3d]"
@@ -255,7 +228,7 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
                   className="pointer-events-none object-contain p-2"
                   priority={i < 4}
                   quality={95}
-                  loading="eager"
+                  loading={i < 4 ? "eager" : "lazy"}
                 />
               </div>
             </div>
