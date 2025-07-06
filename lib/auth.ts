@@ -157,20 +157,13 @@ export const authenticateUser = async (email: string, password: string): Promise
 // Get current user from request
 export const getCurrentUser = async (request: NextRequest): Promise<User | null> => {
   try {
-    const token = request.cookies.get('auth_token')?.value;
-    
-    if (!token) {
+    const userId = request.cookies.get('user_id')?.value;
+    if (!userId) {
       return null;
     }
-    
-    const decoded = verifyToken(token);
-    if (!decoded) {
-      return null;
-    }
-    
+
     const collection = await getUsersCollection();
-    const user = await collection.findOne({ id: decoded.userId });
-    
+    const user = await collection.findOne({ id: userId });
     return user;
   } catch (error) {
     console.error('Error getting current user:', error);
@@ -189,24 +182,6 @@ export const getUserById = async (userId: string): Promise<User | null> => {
     console.error('Error getting user by ID:', error);
     return null;
   }
-};
-
-// Update user
-export const updateUser = async (userId: string, updates: Partial<User>): Promise<User | null> => {
-  const collection = await getUsersCollection();
-  
-  const result = await collection.findOneAndUpdate(
-    { id: userId },
-    {
-      $set: {
-        ...updates,
-        updatedAt: new Date().toISOString(),
-      },
-    },
-    { returnDocument: 'after' }
-  );
-  
-  return result || null;
 };
 
 // Get all users (for admin)
@@ -241,6 +216,29 @@ export const getAllUsers = async (filters?: {
 // Check if user is admin
 export const isAdmin = (user: User): boolean => {
   return user.role === 'admin';
+};
+
+// Update user in MongoDB
+export const updateUser = async (userId: string, updates: Partial<User>): Promise<User | null> => {
+  try {
+    const collection = await getUsersCollection();
+    
+    // Update MongoDB
+    const result = await collection.findOneAndUpdate(
+      { id: userId },
+      { $set: { ...updates, updatedAt: new Date().toISOString() } },
+      { returnDocument: 'after' }
+    );
+
+    if (!result) {
+      throw new Error('User not found');
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
 };
 
 // Generate user ID

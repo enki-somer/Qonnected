@@ -5,21 +5,19 @@ export async function middleware(request: NextRequest) {
   // Check if the request is for admin routes (both frontend and API)
   if (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/api/admin')) {
     try {
-      // Get all required cookies
-      const token = request.cookies.get('auth_token')?.value
+      // Get required cookies
       const userRole = request.cookies.get('user_role')?.value
       const userId = request.cookies.get('user_id')?.value
       
       console.log('Middleware - Auth check:', {
-        hasToken: !!token,
         userRole,
         userId,
         path: request.nextUrl.pathname
       })
 
-      // If no token or user ID, redirect to login
-      if (!token || !userId) {
-        console.log('Middleware - No token or user ID')
+      // If no user ID, redirect to login
+      if (!userId) {
+        console.log('Middleware - No user ID')
         if (request.nextUrl.pathname.startsWith('/api/')) {
           return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }

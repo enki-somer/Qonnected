@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getPaymentsCollection, Payment, PaymentHistory } from '@/lib/mongodb';
+import { uploadPaymentProof } from '@/lib/cloudinary';
 
 // Type guard for itemType
 function isValidItemType(type: string): type is 'certification' | 'course' {
@@ -34,7 +35,6 @@ export async function POST(request: Request) {
     }
 
     const formData = await request.formData();
-    const proof = formData.get('proof') as File;
     const proofBase64 = formData.get('proofBase64') as string;
     const paymentId = formData.get('paymentId') as string;
     const itemName = formData.get('itemName') as string;
@@ -49,20 +49,20 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const itemType = rawItemType; // Now TypeScript knows this is 'certification' | 'course'
+    const itemType = rawItemType;
 
     console.log('Payment submission - Form data:', {
       paymentId,
       itemName,
       itemType,
       amount,
-      hasProof: !!proof,
+      hasProof: !!proofBase64,
       rawAmount: formData.get('amount')
     });
 
     if (!proofBase64 || !paymentId || !itemName || !itemType) {
       console.error('Payment submission - Missing fields:', {
-        hasProof: !!proof,
+        hasProof: !!proofBase64,
         paymentId,
         itemName,
         itemType
@@ -84,6 +84,9 @@ export async function POST(request: Request) {
       );
     }
 
+    // Upload image to Cloudinary first
+    const cloudinaryUrl = await uploadPaymentProof(proofBase64, paymentId);
+
     const collection = await getPaymentsCollection();
 
     const historyEntry: PaymentHistory = {
@@ -101,7 +104,7 @@ export async function POST(request: Request) {
       itemType,
       status: 'pending',
       createdAt: new Date().toISOString(),
-      proofImage: proofBase64,
+      proofImage: cloudinaryUrl, // Store Cloudinary URL instead of base64
       history: [historyEntry]
     };
 
@@ -109,7 +112,8 @@ export async function POST(request: Request) {
       paymentId,
       userId,
       userName,
-      amount
+      amount,
+      imageUrl: cloudinaryUrl
     });
 
     const result = await collection.insertOne(payment);

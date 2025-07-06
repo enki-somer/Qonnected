@@ -16,6 +16,7 @@ import React from "react";
 
 interface UserData {
   _id: string;
+  id?: string;
   fullName: string;
   email: string;
   role: "user" | "admin";
@@ -84,6 +85,11 @@ export default function UsersPage() {
     action: string
   ) => {
     try {
+      if (!userId) {
+        setError("Invalid user ID");
+        return;
+      }
+
       const response = await fetch(`/api/admin/users/${userId}/${actionType}`, {
         method: "POST",
         headers: {
@@ -93,7 +99,8 @@ export default function UsersPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update user");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update user");
       }
 
       // Refresh users list
@@ -266,7 +273,7 @@ export default function UsersPage() {
                         onClick={() =>
                           setConfirmAction({
                             type: "role",
-                            userId: user._id,
+                            userId: user.id || user._id,
                             action:
                               user.role === "admin"
                                 ? "remove-admin"
