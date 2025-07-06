@@ -27,6 +27,7 @@ interface PaymentFlowProps {
   isOpen: boolean;
   onClose: () => void;
   item: {
+    id: string;
     name: string;
     price: string;
     type: "certification" | "course";
@@ -202,6 +203,7 @@ export default function PaymentFlow({
       formData.append("proof", paymentProof);
       formData.append("proofBase64", await compressImage(paymentProof));
       formData.append("paymentId", paymentId);
+      formData.append("itemId", item.id);
       formData.append("itemName", item.name);
       formData.append("itemType", item.type);
       const numericAmount = Number(item.price.replace(/[^0-9.-]+/g, ""));
@@ -212,11 +214,12 @@ export default function PaymentFlow({
         body: formData,
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to submit payment");
+        throw new Error(data.error || "Failed to submit payment");
       }
 
-      const data = await response.json();
       if (data.success) {
         setPaymentStatus("pending");
         setShowCelebration(true);
@@ -226,6 +229,12 @@ export default function PaymentFlow({
     } catch (error) {
       console.error("Error submitting payment:", error);
       setPaymentStatus("error");
+      // Show error message to user
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to submit payment. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }

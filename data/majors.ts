@@ -15,6 +15,15 @@ export const majors = [
       "software-development",
       "swift-development",
       "javascript",
+      "html-css",
+      "html5",
+      "cybersecurity",
+      "network-security",
+      "networking",
+      "cisco-cyber-ops",
+      "cisco-professional",
+      "ccst",
+      "ic3",
     ],
   },
   {
@@ -191,15 +200,15 @@ export const majors = [
     courses: getCoursesByCategory("languages"),
     certifications: ["business-english", "it-english"],
   },
-  {
-    id: "marketing",
-    title: "التسويق",
+  { 
+    id: "engineering-technology",
+    title: "تقنيات هندسية",
     description:
-      "مسار متخصص في التسويق الرقمي والتقليدي. يتضمن شهادات معتمدة في برامج التصميم والتسويق.",
-    courseCategory: "marketing",
-    certCategory: "creative-design",
-    courses: getCoursesByCategory("marketing"),
-    certifications: ["photoshop", "illustrator", "indesign"],
+      "مسار متخصص في التصميم الهندسي والتصنيع. يتضمن شهادات معتمدة في برامج التصميم الهندسي.",
+    courseCategory: "design",
+    certCategory: "engineering-architecture",
+    courses: getCoursesByCategory("design"),
+    certifications: ["autocad", "revit", "fusion360", "3dsmax", "maya", "photoshop", "illustrator", "indesign"],
   },
   {
     id: "artificial-intelligence",
@@ -209,16 +218,7 @@ export const majors = [
     courseCategory: "ai",
     certCategory: "emerging-tech",
     courses: getCoursesByCategory("ai"),
-    certifications: ["artificial-intelligence", "cloud-computing", "databases"],
+    certifications: ["artificial-intelligence", "cloud-computing", "databases", "python"],
   },
-  {
-    id: "photography",
-    title: "التصوير الفوتوغرافي",
-    description:
-      "مسار متخصص في التصوير الفوتوغرافي الاحترافي. يتضمن شهادات معتمدة في برامج معالجة الصور.",
-    courseCategory: "photography",
-    certCategory: "creative-design",
-    courses: getCoursesByCategory("photography"),
-    certifications: ["photoshop", "illustrator", "dreamweaver"],
-  },
+
 ]; 

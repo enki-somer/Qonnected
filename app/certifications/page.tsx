@@ -408,6 +408,7 @@ export default function CertificationsPage() {
             setSelectedCertification(null);
           }}
           item={{
+            id: selectedCertification.id,
             name: selectedCertification.name,
             price: selectedCertification.price,
             type: "certification",

@@ -141,6 +141,7 @@ export default function CourseCard({ course, onEnroll }: CourseCardProps) {
         isOpen={isPaymentFlowOpen}
         onClose={() => setIsPaymentFlowOpen(false)}
         item={{
+          id: course.id.toString(),
           name: course.title,
           price: "150,000",
           type: "course",

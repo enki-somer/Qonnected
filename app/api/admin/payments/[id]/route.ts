@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getPaymentsCollection, Payment, PaymentHistory } from '@/lib/mongodb';
-import { sendPaymentApprovedEmail, sendPaymentRejectedEmail } from '@/lib/email';
+import { sendPaymentResultEmail } from '@/lib/email';
 
 // Helper to check if user is admin
 async function isAdmin(request: Request) {
@@ -24,13 +24,13 @@ export async function POST(
   });
 
   if (!await isAdmin(request)) {
-    console.log('Unauthorized access attempt');
+    //console.log('Unauthorized access attempt');
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const { action, feedback } = await request.json();
-    console.log('Processing payment action:', { action, hasFeedback: !!feedback });
+   // console.log('Processing payment action:', { action, hasFeedback: !!feedback });
 
     const paymentId = params.id;
 
@@ -106,29 +106,19 @@ export async function POST(
     // Send email notification based on action
     console.log('Attempting to send email notification');
     try {
-      if (action === 'approve') {
-        const emailResult = await sendPaymentApprovedEmail({
-          userName: payment.userEmail,
-          recipientName: payment.userName,
-          paymentId: payment.id,
+      const emailResult = await sendPaymentResultEmail(
+        payment.userName,
+        payment.userEmail,
+        payment.id,
+        {
           amount: payment.amount,
           itemName: payment.itemName,
-          itemType: payment.itemType,
-          feedback
-        });
-        console.log('Approval email result:', emailResult);
-      } else {
-        const emailResult = await sendPaymentRejectedEmail({
-          userName: payment.userEmail,
-          recipientName: payment.userName,
-          paymentId: payment.id,
-          amount: payment.amount,
-          itemName: payment.itemName,
-          itemType: payment.itemType,
-          feedback
-        });
-        console.log('Rejection email result:', emailResult);
-      }
+          itemType: payment.itemType
+        },
+        action === 'approve',
+        feedback
+      );
+      console.log('Payment result email sent:', emailResult);
     } catch (emailError) {
       console.error('Failed to send email notification:', emailError);
       // Don't throw here - we still want to return the updated payment

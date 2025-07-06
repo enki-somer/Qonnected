@@ -27,51 +27,40 @@ const IMAGE_DIMENSIONS = {
 // Optimized certification images with proper dimensions
 const CERTIFICATION_IMAGES = [
   {
-    src: "/images/optimized/moffice.webp",
+    src: "/images/optimized/mic.webp",
     alt: "Microsoft Office Certification",
     width: 176,
     height: 176,
   },
   {
+    src: "/images/optimized/ad.webp",
+    alt: "autodesk Certification",
+    width: 176,
+    height: 176,
+  },
+  {
+    src: "/images/optimized/pearson.webp",
+    alt: "pearson Certification",
+    width: 176,
+    height: 176,
+  },
+  {
     src: "/images/optimized/adobe.webp",
-    alt: "Adobe Certification",
+    alt: "adobe Certification",
     width: 176,
     height: 176,
   },
   {
-    src: "/images/optimized/cisco.webp",
-    alt: "Cisco Certification",
+    src: "/images/optimized/cert.webp",
+    alt: "certiport Certification",
     width: 176,
     height: 176,
   },
-  {
-    src: "/images/optimized/ic3.webp",
-    alt: "IC3 Certification",
-    width: 176,
-    height: 176,
-  },
-  {
-    src: "/images/optimized/pmi.webp",
-    alt: "PMI Certification",
-    width: 176,
-    height: 176,
-  },
-  {
-    src: "/images/optimized/fusion.webp",
-    alt: "Fusion Certification",
-    width: 176,
-    height: 176,
-  },
+
   {
     src: "/images/optimized/apple.webp",
     alt: "Apple Certification",
     width: 312,
-    height: 176,
-  },
-  {
-    src: "/images/optimized/ac.webp",
-    alt: "AutoCAD Certification",
-    width: 176,
     height: 176,
   },
 ];

@@ -32,7 +32,7 @@ const getCertificationLogo = (id: string): string => {
     case "3dsmax":
       return "/images/3dmax.png";
     case "maya":
-      return "/images/maya.png";
+      return "/images/Maya.png";
 
     // Creative Design
     case "photoshop":
@@ -76,7 +76,7 @@ const getCertificationLogo = (id: string): string => {
     case "esb":
       return "/images/ESP.png";
     case "business-english":
-      return "/images/ESP.png";
+      return "/images/businessenglish.png";
     case "toefl-ibt":
       return "/images/ibt.png";
     case "toefl-itp":
@@ -90,12 +90,13 @@ const getCertificationLogo = (id: string): string => {
     case "microsoft-fundamentals":
       return "/images/Moffice.png";
     case "computational-thinking":
-      return "/images/Moffice.png";
-    case "cybersecurity":
-    case "network-security":
-      return "/images/CISCO.png";
-    case "networking":
-      return "/images/CISCO.png";
+      return "/images/Computational-Think.png";
+    case "cybersecurity-it":
+      return "/images/itc.png";
+    case "network-security-it":
+      return "/images/networking-it.png";
+    case "networking-it":
+      return "/images/networking-it.png";
     case "cisco-cyber-ops":
       return "/images/ccna.png";
     case "cisco-professional":
@@ -107,7 +108,7 @@ const getCertificationLogo = (id: string): string => {
     case "it-english":
       return "/images/Languages.png";
     case "artificial-intelligence":
-      return "/images/openAi.webp";
+      return "/images/Art-Intel.png";
     case "cloud-computing":
     case "data-analysis":
       return "/images/online-analytical.png";

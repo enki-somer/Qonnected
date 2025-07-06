@@ -1,16 +1,32 @@
 import { v2 as cloudinary } from 'cloudinary';
 
+// Check for required environment variable
+if (!process.env.CLOUDINARY_URL) {
+  throw new Error('CLOUDINARY_URL environment variable is not set');
+}
+
+// Parse Cloudinary URL
+const cloudinaryUrl = process.env.CLOUDINARY_URL;
+const [protocol, credentials] = cloudinaryUrl.split('//');
+const [apiKey, rest] = credentials.split(':');
+const [apiSecret, cloudName] = rest.split('@');
+
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_URL?.split('@')[1],
-  api_key: process.env.CLOUDINARY_URL?.split('//')[1].split(':')[0],
-  api_secret: process.env.CLOUDINARY_URL?.split(':')[2].split('@')[0],
+  cloud_name: cloudName,
+  api_key: apiKey,
+  api_secret: apiSecret,
 });
 
 export async function uploadPaymentProof(base64Image: string, paymentId: string): Promise<string> {
   try {
+    // Remove data URL prefix if present
+    const imageData = base64Image.includes('base64,') 
+      ? base64Image.split('base64,')[1] 
+      : base64Image;
+
     // Upload the image to Cloudinary
-    const result = await cloudinary.uploader.upload(base64Image, {
+    const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${imageData}`, {
       folder: 'payment-proofs',
       public_id: paymentId,
       overwrite: true,

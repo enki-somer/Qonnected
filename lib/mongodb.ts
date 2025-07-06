@@ -9,6 +9,7 @@ interface Payment {
   amount: number;
   itemName: string;
   itemType: 'certification' | 'course';
+  itemId: string;  // ID of the course or certification
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
   proofImage: string;

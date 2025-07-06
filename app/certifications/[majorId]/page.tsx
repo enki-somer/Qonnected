@@ -183,6 +183,7 @@ export default function MajorCertificationsPage() {
             isOpen={showPaymentFlow}
             onClose={handleClosePaymentFlow}
             item={{
+              id: selectedCertification.id,
               name: selectedCertification.name,
               price: selectedCertification.price,
               type: "certification",
