@@ -431,7 +431,9 @@ export default function PaymentFlow({
                 </li>
                 <li className="flex items-center gap-2 text-[#8b95a5]">
                   <CheckCircle className="w-5 h-5 text-[#ffd700] flex-shrink-0" />
-                  <span>يمكنك متابعة حالة طلبك من صفحة طلباتي</span>
+                  <span>
+                    يمكنك متابعة الطلب من خلال البريد الإلكتروني المرسل لك
+                  </span>
                 </li>
               </ul>
             </div>

@@ -66,8 +66,6 @@ const CERTIFICATION_IMAGES = [
 ];
 
 interface RollingGalleryProps {
-  autoplay?: boolean;
-  pauseOnHover?: boolean;
   images?: Array<{
     src: string;
     alt: string;
@@ -76,15 +74,10 @@ interface RollingGalleryProps {
   }>;
 }
 
-const RollingGallery: React.FC<RollingGalleryProps> = ({
-  autoplay = true,
-  pauseOnHover = true,
-  images = [],
-}) => {
+const RollingGallery: React.FC<RollingGalleryProps> = ({ images = [] }) => {
   const galleryImages = images.length > 0 ? images : CERTIFICATION_IMAGES;
   const [isScreenSizeSm, setIsScreenSizeSm] = useState<boolean>(false);
   const rotateY = useMotionValue(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     // Start preloading images immediately
@@ -96,59 +89,27 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
     const handleResize = () => setIsScreenSizeSm(window.innerWidth <= 640);
     window.addEventListener("resize", handleResize);
 
-    let animation: any;
-
-    const startAnimation = () => {
-      if (!isPaused && autoplay) {
-        animation = animate(rotateY, [0, -360], {
-          duration: 20,
-          ease: "linear",
-          repeat: Infinity,
-          repeatType: "loop",
-        });
-      }
-    };
-
-    startAnimation();
+    // Start continuous animation
+    const animation = animate(rotateY, [0, -360], {
+      duration: 20,
+      ease: "linear",
+      repeat: Infinity,
+      repeatType: "loop",
+    });
 
     return () => {
       window.removeEventListener("resize", handleResize);
       animation?.stop();
     };
-  }, [autoplay, rotateY, isPaused]);
+  }, [rotateY]);
 
   const cylinderWidth: number = isScreenSizeSm ? 1100 : 1800;
   const faceCount: number = galleryImages.length;
   const faceWidth: number = (cylinderWidth / faceCount) * 1.5;
   const radius: number = cylinderWidth / (2 * Math.PI);
 
-  const dragFactor: number = 0.05;
-
-  const handleDrag = (_: any, info: any) => {
-    setIsPaused(true);
-    rotateY.set(rotateY.get() + info.offset.x * dragFactor);
-  };
-
-  const handleDragEnd = (_: any, info: any) => {
-    if (autoplay) {
-      setIsPaused(false);
-    }
-  };
-
-  const handleMouseEnter = () => {
-    if (pauseOnHover && autoplay) {
-      setIsPaused(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (pauseOnHover && autoplay) {
-      setIsPaused(false);
-    }
-  };
-
   return (
-    <div className="relative h-[300px] w-full overflow-hidden bg-gradient-to-b from-primary-dark/50 to-primary/50 rounded-2xl">
+    <div className="relative h-[300px] w-full overflow-hidden bg-gradient-to-b from-primary-dark/50 to-primary/50 rounded-2xl pointer-events-none">
       {/* Left shadow overlay */}
       <div
         className="absolute top-0 left-0 h-full w-[120px] z-10"
@@ -186,29 +147,23 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({
 
       <div className="flex h-full items-center justify-center [perspective:1000px]">
         <motion.div
-          drag="x"
-          dragElastic={0}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           style={{
             width: cylinderWidth,
             rotateY,
             transformStyle: "preserve-3d",
           }}
-          className="flex min-h-[200px] cursor-grab items-center justify-center [transform-style:preserve-3d]"
+          className="flex min-h-[200px] items-center justify-center [transform-style:preserve-3d]"
         >
           {galleryImages.map((image, i) => (
             <div
               key={i}
-              className="group absolute flex h-fit items-center justify-center p-[8%] [backface-visibility:hidden] md:p-[6%]"
+              className="absolute flex h-fit items-center justify-center p-[8%] [backface-visibility:hidden] md:p-[6%]"
               style={{
                 width: `${faceWidth}px`,
                 transform: `rotateY(${(360 / faceCount) * i}deg) translateZ(${radius}px)`,
               }}
             >
-              <div className="relative h-[120px] w-[200px] sm:h-[100px] sm:w-[180px] bg-white/5 backdrop-blur-sm rounded-xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.3)] group-hover:shadow-[0_16px_48px_rgba(0,0,0,0.5)] transition-all duration-300 ease-out group-hover:scale-110 group-hover:brightness-110">
+              <div className="relative h-[120px] w-[200px] sm:h-[100px] sm:w-[180px] bg-white/5 backdrop-blur-sm rounded-xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
                 <Image
                   src={image.src}
                   alt={image.alt}

@@ -16,7 +16,7 @@ const styles = {
   detailsItem: 'padding: 8px 0; border-bottom: 1px solid #eee; color: #4a4a4a;',
   button: 'display: inline-block; padding: 12px 24px; background-color: #FFD700; color: #1a1a1a; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px;',
   footer: 'text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; color: #666;',
-  logo: 'width: 150px; height: auto; margin-bottom: 15px; border-radius: 10px;',
+  logo: 'width: 150px; height: auto; margin-bottom: 15px; ',
 };
 
 // Email template for notifying admin about new payment
@@ -24,7 +24,7 @@ export const getAdminNotificationEmailTemplate = (userName: string, paymentId: s
   return `
     <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6; ${styles.container}">
       <div style="${styles.header}">
-        <img src="https://res.cloudinary.com/dc1omolee/image/upload/v1751816106/payment-proofs/PAY-5ijoxqsz0.jpg" alt="Qonnected Academy" style="${styles.logo}" />
+        <img src="https://qonnectedacademy.com/images/qonnected-logo.png" alt="Qonnected Academy" style="${styles.logo}" />
         <h2 style="${styles.title}">طلب دفع جديد</h2>
         <p style="${styles.subtitle}">تم استلام طلب دفع جديد يحتاج إلى مراجعة</p>
       </div>
@@ -112,8 +112,8 @@ export const getPaymentResultEmailTemplate = (
             <p style="color: #dc3545; margin: 10px 0;">${reason || 'لم يتم تحديد سبب'}</p>
             <p>إذا كان لديك أي استفسارات، يرجى التواصل معنا عبر:</p>
             <ul style="${styles.detailsList}">
-              <li style="${styles.detailsItem}">📧 البريد الإلكتروني: support@qonnectedacademy.com</li>
-              <li style="${styles.detailsItem}">📱 الهاتف: +1234567890</li>
+              <li style="${styles.detailsItem}">📧 البريد الإلكتروني: info@qonnectedacademy.com</li>
+              <li style="${styles.detailsItem}">📱 الهاتف: +9647871100101</li>
             </ul>
           </div>
         `}
@@ -135,16 +135,27 @@ export const sendAdminNotificationEmail = async (
 ) => {
   try {
     const response = await resend.emails.send({
-      from: "onboarding@resend.dev", // Temporary until domain verification
-      to: 'info@qonnectedacademy.com', // Admin email
+      from: "Qonnected Academy <info@qonnectedacademy.com>",
+      to: ['info@qonnectedacademy.com'],
       subject: '🔔 طلب دفع جديد - Qonnected Academy',
       html: getAdminNotificationEmailTemplate(userName, paymentId, paymentDetails),
-      replyTo: "info@qonnectedacademy.com" // Add reply-to address
+      replyTo: "info@qonnectedacademy.com"
     });
     
+    if (!response) {
+      throw new Error('No response received from email service');
+    }
+    
+    console.log('Admin notification email sent successfully:', response);
     return { success: true, data: response };
   } catch (error) {
     console.error('Error sending admin notification email:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+      });
+    }
     return { success: false, error };
   }
 };
