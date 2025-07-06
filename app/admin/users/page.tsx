@@ -15,8 +15,7 @@ import {
 import React from "react";
 
 interface UserData {
-  _id: string;
-  id?: string;
+  id: string;
   fullName: string;
   email: string;
   role: "user" | "admin";
@@ -85,11 +84,6 @@ export default function UsersPage() {
     action: string
   ) => {
     try {
-      if (!userId) {
-        setError("Invalid user ID");
-        return;
-      }
-
       const response = await fetch(`/api/admin/users/${userId}/${actionType}`, {
         method: "POST",
         headers: {
@@ -99,8 +93,7 @@ export default function UsersPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to update user");
+        throw new Error("Failed to update user");
       }
 
       // Refresh users list
@@ -218,7 +211,7 @@ export default function UsersPage() {
             <tbody>
               {filteredUsers.map((user, index) => (
                 <tr
-                  key={user._id || `user-${index}`}
+                  key={user.id || `user-${index}`}
                   className="border-b border-[#ffffff1a] last:border-0"
                 >
                   <td className="whitespace-nowrap px-6 py-4">
@@ -273,7 +266,7 @@ export default function UsersPage() {
                         onClick={() =>
                           setConfirmAction({
                             type: "role",
-                            userId: user.id || user._id,
+                            userId: user.id,
                             action:
                               user.role === "admin"
                                 ? "remove-admin"
@@ -297,7 +290,7 @@ export default function UsersPage() {
                         onClick={() =>
                           setConfirmAction({
                             type: "status",
-                            userId: user._id,
+                            userId: user.id,
                             action:
                               user.status === "active" ? "suspend" : "activate",
                           })
