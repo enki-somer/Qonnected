@@ -412,6 +412,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Payment Status Distribution */}
+        {/* Payment Status Distribution */}
         <div className="bg-[#ffffff0d] backdrop-blur-sm rounded-xl p-6 border border-[#ffffff1a]">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-medium text-white">
@@ -419,6 +420,32 @@ export default function AdminDashboard() {
             </h3>
             <PieChart className="w-5 h-5 text-[#8b95a5]" />
           </div>
+
+          {/* ADD THIS NEW LEGEND SECTION */}
+          <div className="flex flex-wrap gap-4 mb-4">
+            {data.charts.paymentStatus.map((entry, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-sm text-white">{entry.name}</span>
+                <span className="text-xs text-[#8b95a5]">
+                  ({entry.value} -{" "}
+                  {(
+                    (entry.value /
+                      data.charts.paymentStatus.reduce(
+                        (sum, item) => sum + item.value,
+                        0
+                      )) *
+                    100
+                  ).toFixed(1)}
+                  %)
+                </span>
+              </div>
+            ))}
+          </div>
+
           <ResponsiveContainer width="100%" height={300}>
             <RechartsPieChart>
               <Pie
@@ -426,12 +453,13 @@ export default function AdminDashboard() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(props: any) =>
-                  `${props.name} ${(props.percent * 100).toFixed(0)}%`
-                }
+                // REMOVE THIS LINE: label={(props: any) => `${props.name} ${(props.percent * 100).toFixed(0)}%`}
                 outerRadius={80}
+                innerRadius={40} // ADD THIS LINE
                 fill="#8884d8"
                 dataKey="value"
+                stroke="#ffffff1a" // ADD THIS LINE
+                strokeWidth={2} // ADD THIS LINE
               >
                 {data.charts.paymentStatus.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
@@ -443,6 +471,14 @@ export default function AdminDashboard() {
                   border: "1px solid #ffffff1a",
                   borderRadius: "8px",
                   color: "#ffffff",
+                }}
+                formatter={(value: number, name: string) => {
+                  const total = data.charts.paymentStatus.reduce(
+                    (sum, item) => sum + item.value,
+                    0
+                  );
+                  const percentage = ((value / total) * 100).toFixed(1);
+                  return [`${value} (${percentage}%)`, name];
                 }}
               />
             </RechartsPieChart>
