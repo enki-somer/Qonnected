@@ -9,13 +9,15 @@ import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import Head from "next/head";
 
+// Optimize font loading
 const notoKufiArabic = Noto_Kufi_Arabic({
   subsets: ["arabic"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "700"], // Preload only essential weights
   display: "swap",
+  preload: true,
+  fallback: ["Arial"],
+  adjustFontFallback: true,
 });
-
-const navigationRoutes = ["/", "/certifications", "/courses", "/settings"];
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -50,20 +52,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <Head>
-        <title>QonnectED - منصة التعليم والشهادات المهنية</title>
+    <html
+      lang="ar"
+      dir="rtl"
+      className={notoKufiArabic.className}
+      suppressHydrationWarning
+    >
+      <head>
+        <title>Qonnected Academy</title>
         <meta
           name="description"
           content="منصة QonnectED للتعليم والحصول على الشهادات المهنية المعتمدة"
         />
-        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <body
-        className={`${notoKufiArabic.className} bg-primary text-text dark`}
-        suppressHydrationWarning
-      >
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <body className="bg-primary text-text dark" suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider>
             <LayoutContent>{children}</LayoutContent>

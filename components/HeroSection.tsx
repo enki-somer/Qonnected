@@ -11,6 +11,7 @@ const MobileHeroSection = dynamic(
   () => import("./mobileView/MobileHeroSection"),
   {
     ssr: false,
+    loading: () => <div className="w-full h-full bg-primary-dark" />,
   }
 );
 

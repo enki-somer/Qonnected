@@ -90,11 +90,13 @@ export default function Sidebar() {
         >
           <div className="relative w-12 h-12 flex-shrink-0">
             <Image
-              src="/Qlogo.png"
+              src="/Qlogo.webp"
               alt="QonnectED Logo"
               width={48}
               height={48}
               className="object-contain w-full h-full"
+              priority={true} //priorty added since it's the first thing to render
+              quality={90} // to make sure the image is of good quality
             />
           </div>
           <div className="flex items-center flex-row-reverse">

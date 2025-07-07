@@ -20,8 +20,14 @@ const preloadImages = (images: Array<{ src: string }>) => {
 
 // Define image dimensions for optimization
 const IMAGE_DIMENSIONS = {
-  width: 88,
-  height: 88,
+  DEFAULT: {
+    width: 176,
+    height: 176,
+  },
+  MOBILE: {
+    width: 160,
+    height: 160,
+  },
 };
 
 // Optimized certification images with proper dimensions
@@ -29,38 +35,32 @@ const CERTIFICATION_IMAGES = [
   {
     src: "/images/optimized/mic.webp",
     alt: "Microsoft Office Certification",
-    width: 176,
-    height: 176,
+    ...IMAGE_DIMENSIONS.DEFAULT,
   },
   {
     src: "/images/optimized/ad.webp",
     alt: "autodesk Certification",
-    width: 176,
-    height: 176,
+    ...IMAGE_DIMENSIONS.DEFAULT,
   },
   {
     src: "/images/optimized/pearson.webp",
     alt: "pearson Certification",
-    width: 176,
-    height: 176,
+    ...IMAGE_DIMENSIONS.DEFAULT,
   },
   {
     src: "/images/optimized/adobe.webp",
     alt: "adobe Certification",
-    width: 176,
-    height: 176,
+    ...IMAGE_DIMENSIONS.DEFAULT,
   },
   {
     src: "/images/optimized/cert.webp",
     alt: "certiport Certification",
-    width: 176,
-    height: 176,
+    ...IMAGE_DIMENSIONS.DEFAULT,
   },
-
   {
     src: "/images/optimized/apple.webp",
     alt: "Apple Certification",
-    width: 312,
+    width: 176,
     height: 176,
   },
 ];
@@ -168,11 +168,15 @@ const RollingGallery: React.FC<RollingGalleryProps> = ({ images = [] }) => {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  sizes="(max-width: 640px) 180px, 200px"
-                  className="pointer-events-none object-contain p-2"
-                  priority={i < 4}
-                  quality={95}
-                  loading={i < 4 ? "eager" : "lazy"}
+                  sizes="(max-width: 640px) 160px, (max-width: 1024px) 176px, 176px"
+                  className="pointer-events-none object-contain p-2 opacity-0 transition-opacity duration-300"
+                  priority={i < 2}
+                  quality={85}
+                  loading={i < 2 ? "eager" : "lazy"}
+                  onLoad={(event) => {
+                    const img = event.target as HTMLImageElement;
+                    img.classList.add("opacity-100");
+                  }}
                 />
               </div>
             </div>

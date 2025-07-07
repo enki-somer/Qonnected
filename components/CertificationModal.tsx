@@ -23,15 +23,14 @@ import {
 const getCertificationLogo = (id: string): string => {
   switch (id) {
     case "mos-word":
-      return "/images/Microsoft 360.PNG";
+      return "/images/MS.png";
     case "mos-excel":
-      return "/images/Microsoft 360.PNG";
+      return "/images/EXCEL.png";
     case "adobe-photoshop":
-      return "/images/Photoshop.PNG";
+      return "/images/Photoshop.png";
     case "adobe-illustrator":
-      return "/images/Adobe.PNG";
-    case "autocad":
-      return "/images/Autocad.PNG";
+      return "/images/Ai.png";
+
     case "swift-level1":
       return "/images/swift.png";
     default:
