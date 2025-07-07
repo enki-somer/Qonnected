@@ -161,17 +161,21 @@ export default function PaymentFlow({
     if (file) {
       try {
         setIsCompressing(true);
-        setPaymentProof(file);
+        // Create preview immediately
         const url = URL.createObjectURL(file);
         setPreviewUrl(url);
+        setPaymentProof(file);
 
         // Compress and convert to base64
         const base64Data = await compressImage(file);
-        setPaymentProof(
-          new File([dataURLtoBlob(base64Data)], file.name, {
+        const compressedFile = new File(
+          [dataURLtoBlob(base64Data)],
+          file.name,
+          {
             type: "image/jpeg",
-          })
+          }
         );
+        setPaymentProof(compressedFile);
       } catch (error) {
         console.error("Error processing image:", error);
       } finally {
@@ -247,6 +251,14 @@ export default function PaymentFlow({
   const selectedPaymentMethod = PAYMENT_METHODS.find(
     (method) => method.id === selectedMethod
   );
+
+  const triggerFileInput = () => {
+    console.log("Triggering file input");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Reset the input
+      fileInputRef.current.click();
+    }
+  };
 
   const renderPaymentStatus = () => {
     switch (paymentStatus) {
@@ -332,6 +344,7 @@ export default function PaymentFlow({
               onChange={handleFileSelect}
               accept="image/*"
               className="hidden"
+              aria-label="Upload payment proof"
             />
 
             {previewUrl ? (
@@ -354,13 +367,16 @@ export default function PaymentFlow({
                     </div>
                   )}
                 </div>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full bg-[#ffffff0d] hover:bg-[#ffffff15] text-white font-medium py-3 rounded-xl transition-all duration-300"
-                  disabled={isCompressing || isSubmitting}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={triggerFileInput}
+                  onKeyPress={(e) => e.key === "Enter" && triggerFileInput()}
+                  className="w-full bg-[#ffffff0d] hover:bg-[#ffffff15] text-white font-medium py-3 rounded-xl transition-all duration-300 cursor-pointer"
+                  style={{ pointerEvents: "auto" }}
                 >
                   اختر صورة أخرى
-                </button>
+                </div>
                 <button
                   onClick={handlePaymentSubmit}
                   disabled={isCompressing || isSubmitting}
@@ -378,16 +394,10 @@ export default function PaymentFlow({
               </div>
             ) : (
               <div
-                onClick={() => fileInputRef.current?.click()}
+                onClick={triggerFileInput}
                 className="border-2 border-dashed border-[#ffffff1a] rounded-xl p-8 text-center cursor-pointer hover:border-[#ffffff33] transition-colors"
+                style={{ pointerEvents: "auto" }}
               >
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileSelect}
-                  accept="image/*"
-                  className="hidden"
-                />
                 <Upload className="w-12 h-12 text-[#ffffff4d] mx-auto mb-4" />
                 <p className="text-[#8b95a5] mb-2">
                   اضغط هنا لتحميل صورة إيصال الدفع

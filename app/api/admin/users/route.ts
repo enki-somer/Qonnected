@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, getAllUsers, updateUser, isAdmin } from '@/lib/auth';
+import { getPaymentsCollection } from '@/lib/mongodb';
 
 // GET /api/admin/users
 export async function GET(request: NextRequest) {
@@ -12,46 +13,99 @@ export async function GET(request: NextRequest) {
 
     // Get query parameters
     const { searchParams } = new URL(request.url);
-    const role = searchParams.get('role');
-    const status = searchParams.get('status');
     const search = searchParams.get('search');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const exportAll = searchParams.get('export') === 'true';
 
-    // Build filters
+    // Build filters (only search, no role/status filters needed)
     const filters: any = {};
-    if (role && role !== 'all') {
-      filters.role = role as 'user' | 'admin';
-    }
-    if (status && status !== 'all') {
-      filters.status = status as 'active' | 'suspended';
-    }
     if (search) {
       filters.search = search;
     }
 
-    // Fetch users
-    const users = await getAllUsers(filters);
+    // For export, get all users without pagination
+    let users;
+    let totalUsers = 0;
     
-    // Transform users to match the expected format
-    const transformedUsers = users.map(user => ({
-      id: user.id,
-      name: user.fullName,
-      email: user.email,
-      role: user.role,
-      status: user.status,
-      joinDate: user.createdAt,
-      lastLogin: user.lastLogin || user.createdAt,
-      phone: user.phone,
-      education: user.education,
-      city: user.city,
-      country: user.country,
-      profileComplete: user.profileComplete,
-      emailVerified: user.emailVerified,
-    }));
+    if (exportAll) {
+      users = await getAllUsers(filters);
+      totalUsers = users.length;
+    } else {
+      // Get paginated users
+      const skip = (page - 1) * limit;
+      users = await getAllUsers({ ...filters, skip, limit });
+      
+      // Get total count for pagination
+      const allUsers = await getAllUsers(filters);
+      totalUsers = allUsers.length;
+    }
+    
+    // Get payments collection to count payments and calculate spend per user
+    const paymentsCollection = await getPaymentsCollection();
+    
+    // Transform users and add payment counts + total spend
+    const transformedUsers = await Promise.all(
+      users.map(async (user) => {
+        // Count payments and calculate total spend for this user
+        const paymentStats = await paymentsCollection.aggregate([
+          { $match: { userId: user.id } },
+          {
+            $group: {
+              _id: "$status",
+              count: { $sum: 1 },
+              totalAmount: { $sum: "$amount" }
+            }
+          }
+        ]).toArray();
 
-    console.log(`Fetched ${transformedUsers.length} users from MongoDB`);
-    return NextResponse.json({ users: transformedUsers });
+        // Calculate payment statistics
+        const totalPayments = paymentStats.reduce((sum, item) => sum + item.count, 0);
+        const pendingPayments = paymentStats.find(item => item._id === 'pending')?.count || 0;
+        const approvedPayments = paymentStats.find(item => item._id === 'approved')?.count || 0;
+        const rejectedPayments = paymentStats.find(item => item._id === 'rejected')?.count || 0;
+        
+        // Calculate total spend (only approved payments)
+        const totalSpend = paymentStats.find(item => item._id === 'approved')?.totalAmount || 0;
+
+        return {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          phone: user.phone || null,
+          education: user.education || null,
+          city: user.city || null,
+          country: user.country || null,
+          createdAt: user.createdAt,
+          lastLoginAt: user.lastLogin || null,
+          emailVerified: user.emailVerified,
+          profileComplete: user.profileComplete,
+          paymentStats: {
+            total: totalPayments,
+            pending: pendingPayments,
+            approved: approvedPayments,
+            rejected: rejectedPayments,
+            totalSpend: totalSpend // Only approved payments
+          }
+        };
+      })
+    );
+
+    const response = {
+      users: transformedUsers,
+      pagination: exportAll ? null : {
+        currentPage: page,
+        totalPages: Math.ceil(totalUsers / limit),
+        totalUsers: totalUsers,
+        hasNext: page * limit < totalUsers,
+        hasPrev: page > 1
+      }
+    };
+
+    console.log(`Fetched ${transformedUsers.length} users from MongoDB with payment data and total spend${exportAll ? ' (export mode)' : ` (page ${page})`}`);
+    return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching users with payment data:', error);
     return NextResponse.json(
       { error: 'Failed to fetch users' },
       { status: 500 }
@@ -80,24 +134,16 @@ export async function POST(request: NextRequest) {
 
     console.log('Processing bulk user action:', { action, userIds });
 
-    // Handle bulk actions
+    // Handle bulk actions (keeping minimal functionality)
     const results = [];
     for (const userId of userIds) {
       try {
         let updates: Partial<any> = {};
         
         switch (action) {
-          case 'activate':
-            updates.status = 'active';
-            break;
-          case 'suspend':
-            updates.status = 'suspended';
-            break;
-          case 'make-admin':
-            updates.role = 'admin';
-            break;
-          case 'remove-admin':
-            updates.role = 'user';
+          case 'update-profile':
+            // Only allow profile updates, no role/status changes
+            updates = body.updates || {};
             break;
           default:
             throw new Error(`Unknown action: ${action}`);

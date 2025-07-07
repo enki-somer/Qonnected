@@ -20,11 +20,12 @@ const navigationRoutes = ["/", "/certifications", "/courses", "/settings"];
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isPathwayRoute = pathname?.startsWith("/pathway");
+  const isAdminRoute = pathname?.startsWith("/admin");
   const { isAuthModalOpen, closeAuthModal, authModalMode } = useAuth();
 
   return (
     <>
-      {isPathwayRoute ? (
+      {isPathwayRoute || isAdminRoute ? (
         children
       ) : (
         <div className="min-h-screen">

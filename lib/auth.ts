@@ -214,6 +214,8 @@ export const getAllUsers = async (filters?: {
   role?: 'user' | 'admin';
   status?: 'active' | 'suspended';
   search?: string;
+  skip?: number;
+  limit?: number;
 }): Promise<User[]> => {
   const collection = await getUsersCollection();
   
@@ -234,7 +236,18 @@ export const getAllUsers = async (filters?: {
     ];
   }
   
-  const users = await collection.find(query).sort({ createdAt: -1 }).toArray();
+  let cursor = collection.find(query).sort({ createdAt: -1 });
+  
+  // Apply pagination if provided
+  if (filters?.skip !== undefined) {
+    cursor = cursor.skip(filters.skip);
+  }
+  
+  if (filters?.limit !== undefined) {
+    cursor = cursor.limit(filters.limit);
+  }
+  
+  const users = await cursor.toArray();
   return users;
 };
 
