@@ -1,4 +1,5 @@
 import { MongoClient, MongoClientOptions, Collection } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 // Payment interface
 interface Payment {
@@ -28,7 +29,7 @@ interface PaymentHistory {
 
 // User interface for MongoDB authentication
 interface User {
-  _id?: string;
+  _id?: ObjectId;
   id: string;
   email: string;
   password: string;
@@ -38,16 +39,18 @@ interface User {
   city?: string;
   country?: string;
   role: 'user' | 'admin';
-  status: 'active' | 'suspended';
-  createdAt: string;
-  updatedAt?: string;
-  lastLogin?: string;
+  status: 'pending' | 'active' | 'suspended';
   emailVerified: boolean;
+  verificationToken?: string | null;
+  verificationExpires?: Date | null;
   profileComplete: boolean;
-  metadata?: {
-    loginCount?: number;
-    lastIp?: string;
-    twoFactorEnabled?: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin?: string;
+  metadata: {
+    loginCount: number;
+    lastFailedLogin?: string | null;
+    failedLoginAttempts: number;
   };
 }
 

@@ -1,10 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createUser, validateEmail, validatePassword, generateToken } from '@/lib/auth';
+import { generateVerificationCode, hashPassword } from '@/lib/auth';
+import { getUsersCollection } from '@/lib/mongodb';
+import { sendVerificationEmail } from '@/lib/email';
+import { Collection } from 'mongodb';
+import clientPromise from '@/lib/mongodb';
+
+interface PendingVerification {
+  email: string;
+  hashedPassword: string;
+  fullName: string;
+  phone?: string;
+  education?: string;
+  city?: string;
+  country?: string;
+  verificationCode: string;
+  verificationExpires: Date;
+  createdAt: string;
+}
+
+async function getPendingVerificationsCollection(): Promise<Collection<PendingVerification>> {
+  const client = await clientPromise;
+  const db = client.db(process.env.MONGODB_DB || 'qonnected');
+  return db.collection<PendingVerification>('pendingVerifications');
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { email, password, fullName, phone, education, city, country } = body;
+    const { email, password, fullName, phone, education, city, country } = await request.json();
 
     // Validate required fields
     if (!email || !password || !fullName) {
@@ -14,94 +36,73 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate email format
-    if (!validateEmail(email)) {
+    // Check if email already exists in users collection
+    const usersCollection = await getUsersCollection();
+    const existingUser = await usersCollection.findOne({ email });
+    if (existingUser) {
       return NextResponse.json(
-        { error: 'صيغة البريد الإلكتروني غير صحيحة' },
+        { error: 'البريد الإلكتروني مستخدم بالفعل' },
         { status: 400 }
       );
     }
 
-    // Validate password strength
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      return NextResponse.json(
-        { error: 'كلمة المرور غير قوية بما يكفي', details: passwordValidation.errors },
-        { status: 400 }
-      );
-    }
-
-    // Create user
-    const user = await createUser({
-      email: email.toLowerCase().trim(),
-      password,
-      fullName: fullName.trim(),
-      phone: phone?.trim(),
-      education: education?.trim(),
-      city: city?.trim(),
-      country: country?.trim(),
+    // Check if there's a pending verification for this email
+    const pendingVerifications = await getPendingVerificationsCollection();
+    const existingPending = await pendingVerifications.findOne({ 
+      email,
+      verificationExpires: { $gt: new Date() }
     });
 
-    // Generate JWT token
-    const token = generateToken(user);
+    // If there's an existing pending verification that hasn't expired, return the error
+    if (existingPending) {
+      return NextResponse.json(
+        { error: 'لديك طلب تسجيل معلق. يرجى إدخال رمز التحقق المرسل أو انتظار انتهاء صلاحيته' },
+        { status: 400 }
+      );
+    }
 
-    // Create response
-    const response = NextResponse.json({
+    // Generate verification code
+    const verificationCode = generateVerificationCode();
+    const verificationExpires = new Date();
+    verificationExpires.setMinutes(verificationExpires.getMinutes() + 10); // 10 minutes expiry
+
+    // Hash password
+    const hashedPassword = await hashPassword(password);
+
+    // Store verification data
+    const pendingVerification: PendingVerification = {
+      email,
+      hashedPassword,
+      fullName,
+      phone,
+      education,
+      city,
+      country,
+      verificationCode,
+      verificationExpires,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Remove any expired pending verifications for this email
+    await pendingVerifications.deleteMany({
+      email,
+      verificationExpires: { $lte: new Date() }
+    });
+
+    // Insert new pending verification
+    await pendingVerifications.insertOne(pendingVerification);
+
+    // Send verification email
+    await sendVerificationEmail(fullName, email, verificationCode, 'signup');
+
+    return NextResponse.json({
       success: true,
-      message: 'تم إنشاء الحساب بنجاح',
+      message: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني',
       user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        role: user.role,
-        status: user.status,
-        profileComplete: user.profileComplete,
-      },
+        email,
+        fullName,
+      }
     });
-
-    // Set auth cookie
-    response.cookies.set('auth_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    });
-
-    // Set user info cookies (for compatibility with existing code)
-    response.cookies.set('user_id', user.id, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    });
-
-    response.cookies.set('user_email', user.email, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    });
-
-    response.cookies.set('user_name', user.fullName, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    });
-
-    response.cookies.set('user_role', user.role, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    });
-
-    return response;
   } catch (error) {
     console.error('Signup error:', error);
     

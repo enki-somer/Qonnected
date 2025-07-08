@@ -3,6 +3,8 @@ import { getCurrentUser, isAdmin, getAllUsers } from '@/lib/auth';
 import { getPaymentsCollection } from '@/lib/mongodb';
 import { startOfWeek, startOfMonth, startOfYear, subDays, subWeeks, subMonths, format } from 'date-fns';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/admin/dashboard
 export async function GET(request: NextRequest) {
   try {

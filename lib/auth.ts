@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getUsersCollection, User } from './mongodb';
 import { NextRequest } from 'next/server';
+import crypto from 'crypto';
+import { sendVerificationEmail } from './email';
 
 // Re-export getUsersCollection for convenience
 export { getUsersCollection };
@@ -16,7 +18,8 @@ export const hashPassword = async (password: string): Promise<string> => {
   return await bcrypt.hash(password, saltRounds);
 };
 
-export const verifyPassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+// Password verification
+export const comparePasswords = async (password: string, hashedPassword: string): Promise<boolean> => {
   return await bcrypt.compare(password, hashedPassword);
 };
 
@@ -71,7 +74,17 @@ export const validatePassword = (password: string): { isValid: boolean; errors: 
   };
 };
 
-// User creation
+// Generate email verification token
+export const generateVerificationToken = (email: any) => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
+// Generate verification code
+export const generateVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Create user with verification code
 export const createUser = async (userData: {
   email: string;
   password: string;
@@ -80,21 +93,26 @@ export const createUser = async (userData: {
   education?: string;
   city?: string;
   country?: string;
-}): Promise<User> => {
+}) => {
   const collection = await getUsersCollection();
   
   // Check if user already exists
   const existingUser = await collection.findOne({ email: userData.email });
   if (existingUser) {
-    throw new Error('المستخدم مسجل بالفعل');
+    throw new Error('البريد الإلكتروني مستخدم بالفعل');
   }
   
   // Hash password
   const hashedPassword = await hashPassword(userData.password);
   
-  // Create user object
-  const user: User = {
-    id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  // Generate verification code
+  const verificationCode = generateVerificationCode();
+  const verificationExpires = new Date();
+  verificationExpires.setMinutes(verificationExpires.getMinutes() + 10); // 10 minutes expiry
+  
+  // Create user document
+  const user = {
+    id: generateUserId(),
     email: userData.email,
     password: hashedPassword,
     fullName: userData.fullName,
@@ -102,13 +120,18 @@ export const createUser = async (userData: {
     education: userData.education,
     city: userData.city,
     country: userData.country,
-    role: 'user',
-    status: 'active',
-    createdAt: new Date().toISOString(),
+    role: 'user' as const,
+    status: 'pending' as const,
     emailVerified: false,
-    profileComplete: !!(userData.phone && userData.education && userData.city && userData.country),
+    verificationCode,
+    verificationExpires,
+    profileComplete: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     metadata: {
       loginCount: 0,
+      lastFailedLogin: null,
+      failedLoginAttempts: 0,
     },
   };
   
@@ -117,8 +140,93 @@ export const createUser = async (userData: {
   if (!result.insertedId) {
     throw new Error('فشل في إنشاء المستخدم');
   }
+
+  // Send verification code email
+  await sendVerificationEmail(user.fullName, user.email, verificationCode);
   
-  return user;
+  return { ...user, id: result.insertedId.toString() };
+};
+
+// Verify code
+export const verifyCode = async (email: string, code: string) => {
+  const collection = await getUsersCollection();
+  
+  // Find user with code
+  const user = await collection.findOne({ 
+    email,
+    verificationCode: code,
+    verificationExpires: { $gt: new Date() } 
+  });
+  
+  if (!user) {
+    return { 
+      success: false, 
+      error: 'رمز التحقق غير صحيح أو منتهي الصلاحية' 
+    };
+  }
+  
+  // Update user
+  const result = await collection.updateOne(
+    { _id: user._id },
+    {
+      $set: {
+        emailVerified: true,
+        status: 'active',
+        verificationCode: null,
+        verificationExpires: null,
+        updatedAt: new Date().toISOString(),
+      }
+    }
+  );
+  
+  if (result.modifiedCount !== 1) {
+    return { 
+      success: false, 
+      error: 'فشل في تحديث حالة التحقق' 
+    };
+  }
+  
+  return { 
+    success: true, 
+    user: { ...user, id: user._id.toString() } 
+  };
+};
+
+// Regenerate verification code
+export const regenerateVerificationCode = async (email: string) => {
+  const collection = await getUsersCollection();
+  
+  // Find user
+  const user = await collection.findOne({ email });
+  if (!user) {
+    throw new Error('المستخدم غير موجود');
+  }
+  
+  if (user.emailVerified) {
+    throw new Error('البريد الإلكتروني مؤكد بالفعل');
+  }
+  
+  // Generate new code
+  const verificationCode = generateVerificationCode();
+  const verificationExpires = new Date();
+  verificationExpires.setMinutes(verificationExpires.getMinutes() + 10);
+  
+  // Update user
+  await collection.updateOne(
+    { _id: user._id },
+    {
+      $set: {
+        verificationCode,
+        verificationExpires,
+        updatedAt: new Date().toISOString(),
+      }
+    }
+  );
+  
+  // Send new verification code
+  await sendVerificationEmail(user.fullName, user.email, verificationCode);
+  
+  return { success: true };
 };
 
 // User authentication
@@ -132,7 +240,7 @@ export const authenticateUser = async (email: string, password: string): Promise
   }
   
   // Verify password
-  const isValidPassword = await verifyPassword(password, user.password);
+  const isValidPassword = await comparePasswords(password, user.password);
   if (!isValidPassword) {
     return null;
   }
@@ -259,4 +367,16 @@ export const isAdmin = (user: User): boolean => {
 // Generate user ID
 export const generateUserId = (): string => {
   return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+};
+
+// Get user by email
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  try {
+    const collection = await getUsersCollection();
+    const user = await collection.findOne({ email });
+    return user;
+  } catch (error) {
+    console.error('Error getting user by email:', error);
+    return null;
+  }
 }; 

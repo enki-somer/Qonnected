@@ -183,4 +183,75 @@ export const sendPaymentResultEmail = async (
     console.error('Error sending payment result email:', error);
     return { success: false, error };
   }
+};
+
+// Email template for verification code
+export const getVerificationEmailTemplate = (
+  userName: string, 
+  verificationCode: string,
+  type: 'signup' | 'reset' = 'signup'
+) => {
+  return `
+    <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6; ${styles.container}">
+      <div style="${styles.header}">
+        <img src="https://qonnectedacademy.com/images/qonnected-logo.png" alt="Qonnected Academy" style="${styles.logo}" />
+        <h2 style="${styles.title}">${type === 'signup' ? 'تأكيد البريد الإلكتروني' : 'استعادة كلمة المرور'}</h2>
+        <p style="${styles.subtitle}">مرحباً ${userName}</p>
+      </div>
+      
+      <div style="${styles.body}">
+        <div style="${styles.detailsBox}">
+          <h3 style="${styles.detailsTitle}">رمز التحقق الخاص بك</h3>
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+            <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">
+              ${verificationCode}
+            </span>
+          </div>
+          <p style="color: #4a4a4a; margin-bottom: 20px;">
+            ${type === 'signup' 
+              ? 'أدخل هذا الرمز في صفحة التسجيل لتأكيد بريدك الإلكتروني.'
+              : 'أدخل هذا الرمز لإعادة تعيين كلمة المرور الخاصة بك.'
+            }
+            ينتهي صلاحية الرمز خلال 10 دقائق.
+          </p>
+          <p style="color: #666; margin-top: 20px; font-size: 12px;">
+            ${type === 'signup'
+              ? 'إذا لم تقم بإنشاء حساب، يمكنك تجاهل هذا البريد الإلكتروني.'
+              : 'إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد الإلكتروني.'
+            }
+          </p>
+        </div>
+
+        <div style="${styles.footer}">
+          <p>شكراً لك،<br>فريق Qonnected Academy</p>
+          <small>هذا البريد تم إرساله تلقائياً، يرجى عدم الرد عليه</small>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+// Send verification code email
+export const sendVerificationEmail = async (
+  userName: string,
+  userEmail: string,
+  verificationCode: string,
+  type: 'signup' | 'reset' = 'signup'
+) => {
+  try {
+    const response = await resend.emails.send({
+      from: "Qonnected Academy <info@qonnectedacademy.com>",
+      to: userEmail,
+      subject: type === 'signup' 
+        ? '✉️ رمز التحقق - Qonnected Academy'
+        : '🔑 استعادة كلمة المرور - Qonnected Academy',
+      html: getVerificationEmailTemplate(userName, verificationCode, type),
+      replyTo: "info@qonnectedacademy.com"
+    });
+    
+    return { success: true, data: response };
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    return { success: false, error };
+  }
 }; 
